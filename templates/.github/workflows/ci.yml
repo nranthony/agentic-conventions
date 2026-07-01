@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  agent-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check CLAUDE.md sync
+        run: |
+          ./scripts/sync-agent-files.sh
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "CLAUDE.md files are out of sync. Please run scripts/sync-agent-files.sh locally and commit."
+            exit 1
+          fi
