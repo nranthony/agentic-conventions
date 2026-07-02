@@ -46,7 +46,7 @@ Two ideas carry the whole thing:
 │   └── runbooks/             # operational how-tos that aren't skills
 │
 └── work/                      # ACTIVE-WORK PROVENANCE (optional): the in-flight trail
-    └── NNNN-slug/             #   spec.md → plan.md → notes.md for a feature in progress
+    └── NNNN-slug/             #   spec.md → plan.md → notes.md; delete or archive on merge
 ```
 
 Per-language / per-package directories (each with its own `AGENTS.md` + generated `CLAUDE.md`) hang off this as needed; they hold the build/test/env specifics and are deliberately out of scope here.
@@ -69,7 +69,9 @@ add the rest only when a concrete need appears. Adopt in this order:
   it reflexively.
 - **Opt-in — heavier provenance (add for long-lived or high-autonomy repos):**
   `docs/rfcs/`, `docs/design/`, `work/`. If in-flight work is tracked outside the repo
-  (issues, ClickUp, etc.), skip `work/` entirely.
+  (issues, ClickUp, etc.), skip `work/` entirely. If you *do* use `work/`, give it an exit
+  rule: **delete a `NNNN-slug/` or move it under `work/archive/` when its PR merges** — a
+  stale `spec.md` left in place quietly poisons future agent searches and context.
 
 Rule of thumb: start at the core and let real need pull each further piece in. An empty
 `docs/rfcs/` no one uses is worse than not having it.
@@ -102,7 +104,7 @@ The lifecycle reads left to right: an **RFC** proposes → an **ADR** records th
 Design around this, because it's the difference between an elegant tree and an inert one.
 
 - **`AGENTS.md` (root and nested)** is auto-loaded. Cursor and Gemini/Antigravity read it natively; Claude Code reads it through the generated `CLAUDE.md` that imports it (`@AGENTS.md`). **Nearest file wins**, so keep the root lean and push specifics down.
-- **Skills** (`.agents/skills/<name>/SKILL.md`) are the *one* offload mechanism that auto-discovers and auto-triggers by description. Use them for procedures you want the agent to reach for on its own.
+- **Skills** (`.agents/skills/<name>/SKILL.md`) are the *one* offload mechanism that auto-discovers and auto-triggers by description. Each `SKILL.md` needs YAML frontmatter with a `name` and a sharp `description` — that description *is* the trigger the agent matches against, so write it for retrieval, not prose. (Claude Code reads this frontmatter natively; you don't need a separate parser or MCP shim to expose skills.) Use them for procedures you want the agent to reach for on its own.
 - **Everything under `docs/`, `ARCHITECTURE.md`, `work/`** is **not** auto-loaded. It's only seen if `AGENTS.md` links to it *and* the workflow tells the agent when to read it. That's fine — it keeps context lean — but it means `AGENTS.md` must act as an index, and the links must be **relative** (`[docs/adr/](docs/adr/)`), never absolute `file://` paths, so they stay portable across checkouts, zips, and containers.
 
 So the rule of thumb: **rules and the index** go in `AGENTS.md`; **procedures the agent should auto-invoke** become skills; **everything else** is referenced on demand.
@@ -171,7 +173,8 @@ When you begin work, in this order:
 - Non-trivial change: confirm it doesn't contradict an ADR; if it sets a new
   direction, write a short ADR (or an RFC first if it needs discussion).
 - After implementing: run the project's checks, reference the ADR/RFC in your
-  commit message, and update CHANGELOG.
+  commit message, and update CHANGELOG. If you used a work/ folder, delete it or
+  move it to work/archive/ so stale specs don't pollute future context.
 - If you learned something durable (a gotcha, a convention), write it back —
   a new ADR, a skill, or a line here — so the next session doesn't re-derive it.
 
@@ -231,11 +234,12 @@ ADRs are **append-only**: never rewrite an accepted one — supersede it with a 
 
 ```markdown
 ## What & why
-<Summary, and the ADR/RFC/issue this traces back to.>
+<Summary. Link the ADR/RFC/issue this traces back to, if there is one.>
 
 ## Checklist
-- [ ] Linked the decision record (ADR/RFC) if this changes direction
-- [ ] Updated CHANGELOG / docs as needed
+<!-- Skip any line that doesn't apply — not every repo keeps ADRs, RFCs, or a CHANGELOG. -->
+- [ ] Linked a decision record (ADR/RFC) — if this sets a new direction and the repo keeps them
+- [ ] Updated CHANGELOG / docs — if the repo keeps them and this is user-visible
 - [ ] Ran the project's checks
 - [ ] Touches a high-risk path? Rationale included + reviewer requested
 ```
