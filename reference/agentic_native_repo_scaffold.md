@@ -254,4 +254,41 @@ ADRs are **append-only**: never rewrite an accepted one — supersede it with a 
 4. Add `.claude/settings.json` (permissions + hooks) and the PR template; gitignore `AGENTS.local.md`, `**/AGENTS.local.md`, `.claude/settings.local.json`.
 5. Write the thin `CLAUDE.md` (`@AGENTS.md`) next to each `AGENTS.md` by hand — no generator (see "Entrypoint wiring").
 6. Keep `AGENTS.md` short. The moment it sprawls, move detail into a skill, an ADR, or a nested `AGENTS.md`.
-```
+
+---
+
+## Applying to an existing repo (brownfield)
+
+The checklist above assumes a blank repo. Most repos aren't blank — they already have a
+`README`, some docs, maybe a `CLAUDE.md`, CI, their own conventions. Here the scaffold is a
+**target shape to reconcile against**, not a set of files to stamp on top. The core rule:
+**the first two phases are read-only, and no file is edited until a human approves a plan.**
+
+Run it as five phases:
+
+1. **Orient (read-only).** Read this reference *and* the whole target repo. Inventory what
+   already maps to the scaffold — existing `CLAUDE.md`/`README`/`docs/`/CI/`CODEOWNERS`, any
+   decision log or conventions doc — and learn the repo's *actual* patterns.
+2. **Gap map (read-only).** For each scaffold piece, record `present (where) / partial /
+   absent` → `keep as-is / adopt / adapt / skip`, filtered through the lean-core tiers.
+   Reconcile names here: if the repo already has `docs/decisions/`, align to it — don't add
+   a parallel `docs/adr/`.
+3. **Reconcile the entry point.** If a *substantive* `CLAUDE.md` exists, **promote its
+   content to `AGENTS.md` and leave `CLAUDE.md` as the two-line stub** — a move, never a
+   flatten. If both exist, merge deliberately. Keep the root lean; push detail into nested
+   `AGENTS.md`.
+4. **Propose, then get sign-off.** Write the gap map + planned edits as a plan (or an
+   `IN_TRANSIT` doc) and stop. Human review is mandatory before any edit that changes
+   enforcement (`CODEOWNERS`, CI, branch protection) or touches security-sensitive files.
+5. **Apply in safe order, small commits.** Additive/mechanical first (split into
+   `AGENTS.md`, add `ARCHITECTURE.md`, nested entry points, gitignore) as one reviewable
+   commit; structural/risky changes (renames, path rewrites, CI) as separate *tested*
+   commits. Clean tree, review `git diff`, no push without approval. Optionally record the
+   adoption as a first ADR so the change documents itself.
+
+**Brownfield guardrails** (in addition to the general ones above):
+- **Match existing patterns over the template** — the repo's working conventions win.
+- **Don't rename things that work** just to match scaffold names; alias in `AGENTS.md` instead.
+- **No empty opt-in dirs** — don't create `docs/rfcs/` "for completeness."
+- **Move, never flatten** a substantive file.
+- **Read-only until the plan is approved.**
