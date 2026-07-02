@@ -53,6 +53,29 @@ Per-language / per-package directories (each with its own `AGENTS.md` + generate
 
 ---
 
+## Not everything at once — lean core vs. opt-in
+
+This is the full menu, not a mandatory checklist. Most repos want the lean core and
+add the rest only when a concrete need appears. Adopt in this order:
+
+- **Core (every repo):** `AGENTS.md`, the thin `CLAUDE.md`, `ARCHITECTURE.md`,
+  `README.md`, `.agents/skills/`, and gitignored `AGENTS.local.md`. This alone makes a
+  repo agent-native.
+- **Keep-ish (most repos):** `docs/adr/` for the durable "why", and a light
+  `.claude/settings.json`.
+- **Opt-in — team ceremony (add when others review/merge):** `CODEOWNERS`,
+  `CONTRIBUTING.md`, the PR template, CI gate checks. Solo, these are overhead — and
+  `CODEOWNERS` with the wrong owner actively changes approval requirements, so don't add
+  it reflexively.
+- **Opt-in — heavier provenance (add for long-lived or high-autonomy repos):**
+  `docs/rfcs/`, `docs/design/`, `work/`. If in-flight work is tracked outside the repo
+  (issues, ClickUp, etc.), skip `work/` entirely.
+
+Rule of thumb: start at the core and let real need pull each further piece in. An empty
+`docs/rfcs/` no one uses is worse than not having it.
+
+---
+
 ## The provenance chain — which file answers which question
 
 This is the core of "how agents know where to look." Each question has exactly one home, so neither an agent nor a human has to guess.
@@ -95,18 +118,13 @@ Generate thin per-tool entrypoints instead of symlinking — symlinks break on s
 @AGENTS.md
 ```
 
-A tiny script keeps them in sync; wire it into a pre-commit hook or CI so a new package missing its `CLAUDE.md` fails fast.
-
-```bash
-#!/usr/bin/env bash
-# scripts/sync-agent-files.sh — regenerate CLAUDE.md next to every AGENTS.md
-set -euo pipefail
-cd "$(git rev-parse --show-toplevel)"
-while IFS= read -r -d '' f; do
-  printf '# CLAUDE.md\n@AGENTS.md\n' > "$(dirname "$f")/CLAUDE.md"
-done < <(find . -name AGENTS.md -not -path './.git/*' -print0)
-echo "Synced CLAUDE.md entrypoints."
-```
+Write these by hand — there are only ever a handful, one per directory that has an
+`AGENTS.md`. **Deliberately no sync script.** An automated regenerator that walks the
+tree and writes `CLAUDE.md` next to every `AGENTS.md` will happily flatten a
+*substantive* hand-written `CLAUDE.md` into the two-line stub — a real footgun. When you
+add a new package with its own `AGENTS.md`, add the two-line `CLAUDE.md` beside it in the
+same commit. If you ever want a check, prefer a read-only CI assertion that *fails* when a
+`CLAUDE.md` is missing or malformed over anything that *writes* files.
 
 (`GEMINI.md` is no longer needed — the standalone Gemini CLI is retired and Antigravity reads `AGENTS.md` natively.)
 
@@ -230,6 +248,6 @@ ADRs are **append-only**: never rewrite an accepted one — supersede it with a 
 2. Create `docs/adr/` with the template and a first ADR — `0001-record-architecture-decisions.md` — so the practice is self-documenting.
 3. Add `.github/pull_request_template.md` and a CI workflow.
 4. Add `.claude/settings.json` (permissions + hooks) and the PR template; gitignore `AGENTS.local.md`, `**/AGENTS.local.md`, `.claude/settings.local.json`.
-5. Drop in `scripts/sync-agent-files.sh`, run it, and add a pre-commit/CI hook that runs it.
+5. Write the thin `CLAUDE.md` (`@AGENTS.md`) next to each `AGENTS.md` by hand — no generator (see "Entrypoint wiring").
 6. Keep `AGENTS.md` short. The moment it sprawls, move detail into a skill, an ADR, or a nested `AGENTS.md`.
 ```
