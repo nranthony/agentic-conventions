@@ -67,6 +67,9 @@ add the rest only when a concrete need appears. Adopt in this order:
   `CONTRIBUTING.md`, the PR template, CI gate checks. Solo, these are overhead — and
   `CODEOWNERS` with the wrong owner actively changes approval requirements, so don't add
   it reflexively.
+- **Opt-in — sandboxed execution (add only if agents edit this repo inside a restricted
+  sandbox):** a machine-managed environment notice at the top of `AGENTS.md` — see
+  "Environment notice" below.
 - **Opt-in — heavier provenance (add for long-lived or high-autonomy repos):**
   `docs/rfcs/`, `docs/design/`, `work/`. If in-flight work is tracked outside the repo
   (issues, ClickUp, etc.), skip `work/` entirely. If you *do* use `work/`, give it an exit
@@ -139,8 +142,66 @@ same commit. If you ever want a check, prefer a read-only CI assertion that *fai
 - **`.claude/settings.json`** — permission rules that set sensitive paths to `ask`/`deny`, and `PreToolUse` hooks that block edits to protected files. Commit this so it's shared.
 - **`CODEOWNERS` + branch protection** — force human review on high-risk paths.
 - **CI gate checks** — run the required verification whenever a protected path changes.
+- **Sandbox deny-lists** — when agents run inside a restricted sandbox, pair the
+  enforcement with an environment notice in `AGENTS.md` (next section).
 
 State the intent in `AGENTS.md` ("why"); enforce it in hooks/CI ("can't"). Don't conflate "the agent was told" with "the control exists."
+
+---
+
+## Environment notice (opt-in: sandboxed repos)
+
+When agents edit a repo from inside a restricted sandbox (denied network, blocked
+installs, no remote git, …), the sandbox's deny-list is the enforcement — but an agent
+that only discovers a restriction by hitting permission-denied will waste turns
+retrying, hunting for bypasses, or silently giving up. The fix is an **environment
+notice**: a block at the **very top** of the root `AGENTS.md`, before anything else,
+because it changes what every instruction below it means.
+
+This is the "advice" half of the previous section's advice-vs-enforcement split: the
+sandbox blocks the action; the notice tells the agent *not to fight the block*.
+
+Shape:
+
+```markdown
+<!-- BEGIN sandbox-notice (managed by <sandbox-tool> — do not edit here) -->
+## ⚠️ This repo may be edited by an agent inside `<sandbox-tool>`
+
+The agent's shell is restricted. The following **fail with permission-denied** —
+do not attempt them, retry them, or hunt for a workaround; treat them as a human step:
+
+- **No <capability>.** <denied commands>. <what to do instead — usually "stop and
+  ask the human">.
+- …
+
+**What works:** <the allowed toolset, stated positively>.
+<!-- END sandbox-notice -->
+```
+
+Three content rules make the notice effective; the exact denied-command list matters
+less than these:
+
+1. **State what fails, framed as "don't retry."** Name the denied commands so the
+   agent recognizes the denial as policy, not a transient error — and doesn't reach
+   for `bash -c` / `python -c` style workarounds (which a good sandbox also denies).
+2. **Reframe every denial as a human step.** "If a package is missing, stop and ask
+   the human to install it" turns a dead end into a plan the agent can hand back.
+3. **State what works.** Without an explicit allow-side ("read/edit files, local git,
+   run tests, `rg`/`jq`…"), agents over-avoid and start treating permitted actions as
+   risky too.
+
+Ownership rules:
+
+- **The sandbox tool owns the block.** The `BEGIN/END … (managed by <tool>)` markers
+  mean the tool regenerates it when the sandbox config changes; humans and agents
+  never edit inside the markers. This is why the block's *content* is deliberately
+  not templated in this repo — a copied deny-list drifts from the real sandbox config
+  the first time the sandbox is tweaked, and a stale notice is worse than none.
+- **The notice is per-repo, per-environment.** Repos not edited in a sandbox get no
+  block at all; don't add an empty or speculative one.
+- If the sandbox has no managing tool (a hand-maintained setup), the block can be
+  hand-written — keep the markers anyway, name the config it mirrors, and update it
+  in the same commit as any sandbox-config change.
 
 ---
 
