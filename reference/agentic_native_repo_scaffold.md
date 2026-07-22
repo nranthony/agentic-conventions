@@ -110,7 +110,9 @@ Design around this, because it's the difference between an elegant tree and an i
 - **Skills** (`.agents/skills/<name>/SKILL.md`) are the *one* offload mechanism that auto-discovers and auto-triggers by description. Each `SKILL.md` needs YAML frontmatter with a `name` and a sharp `description` — that description *is* the trigger the agent matches against, so write it for retrieval, not prose. (Claude Code reads this frontmatter natively; you don't need a separate parser or MCP shim to expose skills.) Use them for procedures you want the agent to reach for on its own.
 - **Everything under `docs/`, `ARCHITECTURE.md`, `work/`** is **not** auto-loaded. It's only seen if `AGENTS.md` links to it *and* the workflow tells the agent when to read it. That's fine — it keeps context lean — but it means `AGENTS.md` must act as an index, and the links must be **relative** (`[docs/adr/](docs/adr/)`), never absolute `file://` paths, so they stay portable across checkouts, zips, and containers.
 
-So the rule of thumb: **rules and the index** go in `AGENTS.md`; **procedures the agent should auto-invoke** become skills; **everything else** is referenced on demand.
+- **Slash commands** (`.claude/commands/*.md`) are the deliberate counterpart to skills: a saved prompt the human invokes by name (`/wrap-up`), never auto-loaded and never auto-triggered. Reach for one when a procedure is worth capturing but should fire only when a person decides it's warranted — a heavyweight end-of-thread wrap-up, a release checklist — rather than whenever a description happens to match. See `templates/.claude/commands/wrap-up.md` for a worked example. The fork is: **auto-invoke → skill; human-invoke → slash command.**
+
+So the rule of thumb: **rules and the index** go in `AGENTS.md`; **procedures the agent should auto-invoke** become skills; **procedures a human triggers on demand** become slash commands; **everything else** is referenced on demand.
 
 ---
 
