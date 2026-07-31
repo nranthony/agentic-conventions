@@ -1,16 +1,21 @@
-# Planning Toolkit Plan — how plans get requested, produced, and consumed
+# RFC: Planning toolkit — how plans get requested, produced, and consumed
 
-**Status:** Partially implemented (2026-07-30) — §3/§4 approved and shipped: `/make-plan`
-lives at `.claude/commands/make-plan.md` (+ template mirror), and "where plans live" is
-decided in [ADR-0003](adr/0003-where-plans-live.md). The §4 draft below is kept for the
-rationale; the shipped command is canonical. §5 items a/c/d/e remain open for discussion.
+- Status: Accepted → [ADR-0003](../adr/0003-where-plans-live.md), [ADR-0004](../adr/0004-skills-replace-slash-commands.md)
+- Author: nranthony + agent
+
+**Status detail:** Implemented (2026-07-31) — §3/§4 shipped: `/make-plan` lives at
+`.claude/skills/make-plan/SKILL.md` (+ template mirror; migrated from the commands slot
+per [ADR-0004](../adr/0004-skills-replace-slash-commands.md)), "where plans live" is decided
+in [ADR-0003](../adr/0003-where-plans-live.md), and all §5 items are settled (outcomes
+recorded inline in §5). The §4 draft below is kept for the rationale; the shipped skill is
+canonical.
 **Recorded:** 2026-07-30
 **Question that prompted it:** there is no unified, effective framework for asking an
 agent to produce a plan that fits our workflow and repo structures. Incoming material:
-[docs/incoming/gpt-5-6-terra_plan_prompt_skill_command_notes.md](incoming/gpt-5-6-terra_plan_prompt_skill_command_notes.md).
-**Concrete next action:** settle the remaining §5 discussion items (skill/command
-convergence ADR, `plansDirectory` in the settings template, `docs/incoming/` lifecycle,
-the `*_PLAN.md`-vs-rfcs question).
+`inbox/gpt-5-6-terra_plan_prompt_skill_command_notes.md` (ephemeral, gitignored —
+fully distilled into this doc).
+**Concrete next action:** none — remaining follow-ups live outside this doc
+(beads pilot → possible `/implement-task`).
 
 ---
 
@@ -30,10 +35,12 @@ Facts that changed since the GPT notes were written, and that the toolkit should
 - **Skills and slash commands have converged.** Both create `/name` invocations. Skills
   (`SKILL.md`) now carry `disable-model-invocation: true` (making a skill human-invoke
   only), supporting files (templates, examples, scripts), `allowed-tools`, `model`, and
-  `context: fork`. Official guidance now calls `.claude/commands/*.md` the legacy form
-  and recommends skills for new work. **The ADR-0002 fork (auto-invoke → skill,
-  human-invoke → command) survives conceptually but is now expressible inside one
-  mechanism** — see §5a.
+  `context: fork`. Commands are **not deprecated** — the docs say existing
+  `.claude/commands/` files "keep working", with no sunset announced — but skills are
+  recommended for new work because they can carry supporting files. **The ADR-0002 fork
+  (auto-invoke → skill, human-invoke → command) survives conceptually and is now also
+  expressible inside one mechanism** — see §5a. *(Corrected 2026-07-31: an earlier
+  draft overstated this as commands being "legacy".)*
 - **Built-in Plan and Explore subagents** exist for research fan-out during planning;
   custom `.claude/agents/*.md` support `permissionMode: plan` for read-only investigators.
 - Commands/skills can be made effectively read-only via `allowed-tools` (omit Write/Edit).
@@ -90,6 +97,9 @@ nothing in the GPT notes beats it); no other external planner earns a slot. The 
 *format* stays plain markdown in-repo so Cursor/Antigravity agents consume it identically.
 
 ## 4. Draft: `.claude/commands/make-plan.md`
+
+*(Historical draft, kept for the rationale — it shipped as a command 2026-07-30, then
+migrated to `.claude/skills/make-plan/SKILL.md` per ADR-0004 on 2026-07-31.)*
 
 To ship (with a genericised mirror in `templates/.claude/commands/`) once §5's ADR-0003
 question is settled. Draft:
@@ -169,14 +179,13 @@ if any · the suggested first task once approved.
 
 ## 5. Structure suggestions surfaced by this investigation (for discussion)
 
-**a) The skill/command convergence touches ADR-0002.** Claude Code now treats
-`.claude/commands/*.md` as legacy and recommends `SKILL.md` with
-`disable-model-invocation: true` for human-invoke-only procedures — the ADR-0002 fork
-becomes a frontmatter flag rather than a directory choice. Nothing breaks today
-(commands still work), but when EXAMPLE_SKILLS_PLAN's example skills ship, we should
-decide in one ADR whether `/wrap-up` and `/make-plan` migrate to skill form, and how
-that squares with the scaffold's cross-tool `.agents/skills/` slot. Until then, shipping
-`/make-plan` as a command keeps the repo consistent with ADR-0002.
+**a) The skill/command convergence touches ADR-0002.** *Settled 2026-07-31 — twice.*
+First pass: keep commands (they're not deprecated; identical `/name` invocation).
+Reversed the same day by owner decision, recorded in
+[ADR-0004](../adr/0004-skills-replace-slash-commands.md): one slot is simpler to
+distribute downstream, so `/wrap-up` and `/make-plan` migrated to
+`.claude/skills/<name>/SKILL.md` with default invocation (human **and** model),
+and the commands slot is gone. ADR-0002 is superseded.
 
 **b) Where plans live needs its own ADR (ADR-0003).** Three forces meet: the scaffold's
 `work/` tier (opt-in, with exit rule), beads' "no markdown plan directories" rule, and
@@ -185,19 +194,21 @@ plans live in `work/NNNN-slug/` under the exit rule; execution tracking lives in
 the beads "retire plans/" rule applies to task checklists, not design docs* — this is
 already implicit in the beads coexistence table but should be stated once, canonically.
 
-**c) `plansDirectory` in the settings template.** Optionally add
-`"plansDirectory": "./work/plans"` (gitignored) to `templates/.claude/settings.json` so
-ad-hoc plan-mode output stops evaporating in `~/.claude/plans/`. Cheap, reversible,
-worth considering alongside b).
+**c) `plansDirectory` in the settings template.** *Settled 2026-07-31: adopted.*
+`"plansDirectory": "./work/plans"` is set in `templates/.claude/settings.json` and this
+repo's own `.claude/settings.json`, with `work/plans/` gitignored (template
+`templates/.gitignore` + this repo's). `work/` won over `.claude/plans/` for tool
+neutrality — see the ADR-0003 addendum.
 
-**d) `docs/incoming/` has no home.** It's not in the AGENTS.md index and has no
-lifecycle. Suggest: an index line plus an exit rule mirroring `work/` — an incoming note
-gets distilled into a real doc/ADR (as this one does for the GPT notes) and is then
-deleted or archived. Otherwise it becomes exactly the stale-context trap the reference
-warns about.
+**d) `docs/incoming/` has no home.** *Settled 2026-07-31: renamed and gitignored.*
+Now top-level `inbox/` — the GTD-style drop location for paste-in material agents
+distill and then delete. Gitignored, so it is structurally incapable of becoming
+committed stale context; indexed in AGENTS.md as ephemeral, read only when pointed at
+it.
 
-**e) The `docs/*_PLAN.md` pattern is an informal RFC tier.** BEADS_ADOPTION_PLAN,
-EXAMPLE_SKILLS_PLAN, and now this file are proposals-under-discussion — the scaffold's
-`docs/rfcs/` role. Either bless the current pattern with an index line ("drafts under
-discussion → docs/*_PLAN.md") or adopt `docs/rfcs/` for real. Low urgency; worth
-settling before a fourth one appears.
+**e) The `docs/*_PLAN.md` pattern is an informal RFC tier.** *Settled 2026-07-31 —
+twice.* First pass blessed the informal pattern with an AGENTS.md index line. Reversed
+the same day by owner decision ([ADR-0005](../adr/0005-adopt-rfcs.md)): the formal
+`docs/rfcs/` tier is adopted — the three `*_PLAN.md` drafts became
+`rfcs/beads-adoption.md`, `rfcs/example-skills.md`, and this file, each with an RFC
+status header.

@@ -1,12 +1,16 @@
-# Example Skills for Scaffold Adopters — Draft
+# RFC: Example skills for scaffold adopters
 
-**Status:** Draft / for follow-up — not yet decided or implemented.
+- Status: Draft
+- Author: nranthony + agent
+
 **Recorded:** 2026-07-21
 **Question that prompted it:** what skills should repos adopting the reference scaffold have?
 **Concrete next action:** decide whether to ship `write-an-adr` and `bootstrap-nested-package`
-as worked examples under `templates/.agents/skills/`, and note them in the reference.
+as worked examples under `templates/.claude/skills/`, and note them in the reference.
 If adopted, this likely warrants an ADR (shipping example skills is a direction, like ADR-0002
-was for slash commands).
+was for slash commands). *(Paths updated 2026-07-31 per ADR-0004: the skills slot is
+`.claude/skills/` — Claude Code does not read `.agents/skills/` — and the separate
+commands slot is gone.)*
 
 ---
 
@@ -21,7 +25,9 @@ the trail needs updating — when a human would otherwise have to remember to nu
 
 A procedure earns a **skill** only if the agent should reach for it *on its own*, it *recurs*, and
 it's *self-contained* with a trigger sharp enough to match reliably. If a human should decide when
-to run it → **command**. If it's a one-line always-on rule → **`AGENTS.md`**, not a skill.
+to run it → still a skill (ADR-0004), but write the `description` to say *when it applies*, or set
+`disable-model-invocation: true` if it must never auto-fire. If it's a one-line always-on rule →
+**`AGENTS.md`**, not a skill.
 
 ## Tier 1 — scaffold-native skills (the strong ones)
 
@@ -52,7 +58,7 @@ begins; scaffolds `NNNN-slug/` with spec → plan → notes.
 
 **`close-work-item`** — the exit-rule enforcer. Fires when a PR merges / work is done; deletes or
 archives the `work/` folder so a stale `spec.md` doesn't poison future context. The *automatic*
-complement to the deliberate `/wrap-up` command (narrow trigger → safe as a skill).
+complement to the deliberate `/wrap-up` skill (narrow trigger → safe to auto-fire).
 
 **`promote-rfc-to-adr`** — for repos with `docs/rfcs/`. Fires when an RFC reaches a decision: writes
 the ADR, flips the RFC status to `Accepted → ADR-NNNN`.
@@ -66,9 +72,11 @@ templates:
 - **`add-a-migration`**, **`cut-a-release`**, **`add-an-endpoint`** — whatever recurring, error-prone
   procedure this codebase has. Rule: if you've explained it to an agent twice, it's a skill.
 
-## What *not* to make a skill
+## What *not* to auto-trigger
 
-- **`/wrap-up`, release checklist, brownfield adoption** → **commands** (heavyweight, human decides when).
+- **`/wrap-up`, release checklist, brownfield adoption** → skills whose `description` states the
+  narrow "when" (heavyweight, human usually decides) — add `disable-model-invocation: true` if one
+  misfires in practice.
 - **"Never commit secrets," "match existing patterns," "ask before adding a dependency"** →
   **`AGENTS.md` golden rules** (always-on, not a procedure to invoke).
 - **A `changelog-entry` "skill"** → borderline; better as a step inside `write-an-adr` /
@@ -76,7 +84,7 @@ templates:
 
 ## Meta-point for the reference
 
-The scaffold currently *describes* skills abstractly but ships zero examples. Tightest move
-(consistent with how `/wrap-up` was handled): add `write-an-adr` and `bootstrap-nested-package`
-into `templates/.agents/skills/` as worked examples, and note them in the reference — so adopters
+The scaffold now ships two worked skills (`/wrap-up`, `/make-plan`) but zero *auto-trigger-first*
+examples. Tightest move: add `write-an-adr` and `bootstrap-nested-package`
+into `templates/.claude/skills/` as worked examples, and note them in the reference — so adopters
 copy a working `description:` trigger instead of writing one from scratch (the part people get wrong).
