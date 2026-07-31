@@ -1,6 +1,6 @@
 # ADR-0002: Slash commands for deliberately-invoked procedures
 
-- Status: Accepted
+- Status: Superseded by [ADR-0004](0004-skills-replace-slash-commands.md)
 - Date: 2026-07-21
 - Deciders: nranthony + agent
 

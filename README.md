@@ -18,7 +18,8 @@ templates/   starting-point files to adapt by hand — NOT drop-in
 
 - `reference/agentic_native_repo_scaffold.md` — the generic agent-native repo blueprint.
 - `templates/` — `AGENTS.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, `CODEOWNERS`,
-  `.claude/settings.json`, `.github/pull_request_template.md`. Examples to tailor,
+  `.gitignore`, `.claude/settings.json`, `.claude/skills/` (shared skills like
+  `/wrap-up` and `/make-plan`), `.github/pull_request_template.md`. Examples to tailor,
   not files to copy verbatim.
 
 ## How an agent should apply these
@@ -39,7 +40,7 @@ templates/   starting-point files to adapt by hand — NOT drop-in
 Not every repo needs the whole blueprint. Default baseline:
 
 - **Core:** `AGENTS.md` + thin `CLAUDE.md` + `ARCHITECTURE.md` + `README.md` +
-  `.agents/skills/` + gitignored `AGENTS.local.md`.
+  `.claude/skills/` + gitignored `AGENTS.local.md`.
 - **Keep-ish:** `docs/adr/` (durable "why") and a light `.claude/settings.json`.
 - **Opt-in per repo, when the repo actually needs it:** `CODEOWNERS`,
   `CONTRIBUTING.md`, PR template, CI (`.github/workflows/`) — the team-ceremony tier;

@@ -17,7 +17,13 @@ only live `AGENTS.md` here.
 - What this repo is + how consumers use it → [README.md](README.md)
 - The canonical blueprint → [reference/agentic_native_repo_scaffold.md](reference/agentic_native_repo_scaffold.md)
 - Example files to adapt → [templates/](templates/)
+- Shared procedures → [.claude/skills/](.claude/skills/) (skills like `/wrap-up` and `/make-plan`; invocable by human or model — ADR-0004)
+- How consumers pull shared skills downstream → [docs/distributing-skills-downstream.md](docs/distributing-skills-downstream.md)
+- Proposals under discussion → [docs/rfcs/](docs/rfcs/) (Draft → Accepted → ADR-NNNN; template inside — ADR-0005)
 - Why decisions were made → [docs/adr/](docs/adr/) (append-only)
+- Cross-repo beads registry (prefixes, pinned version) → [conventions/beads/](conventions/beads/)
+- Visual one-page map of this repo → [docs/wiki/repo-map.html](docs/wiki/repo-map.html)
+- Ephemeral paste-in material → `inbox/` (gitignored; read only when pointed at it, distill into a real doc/ADR, then delete)
 
 There is no ARCHITECTURE.md — the layout above is the whole architecture.
 

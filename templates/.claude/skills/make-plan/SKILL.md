@@ -1,4 +1,5 @@
 ---
+name: make-plan
 description: Investigate the repo and produce a decision-ready implementation plan in work/NNNN-slug/ — planning only, no production edits. For changes big enough that the plan must outlive the session.
 argument-hint: <feature, problem, or desired outcome>
 ---

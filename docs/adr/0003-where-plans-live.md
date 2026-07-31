@@ -11,14 +11,14 @@ Three forces meet on the question "where does a plan produced for/by an agent li
 - The reference scaffold's opt-in `work/NNNN-slug/` tier (spec → plan → notes) carries
   an **exit rule** — delete or archive on merge — precisely because a stale plan left in
   the tree poisons future agent context.
-- The [Beads adoption plan](../BEADS_ADOPTION_PLAN.md) retires markdown plan/TODO files
+- The [Beads adoption RFC](../rfcs/beads-adoption.md) retires markdown plan/TODO files
   ("Do NOT use markdown TODO lists or plans/ directories for task tracking") in favor of
   bd issues as the execution ledger.
 - Claude Code's native plan mode now persists its plans to disk (`~/.claude/plans/` by
   default, redirectable via `plansDirectory`), with random filenames and no lifecycle.
 
 External advice collected in
-[docs/PLANNING_TOOLKIT_PLAN.md](../PLANNING_TOOLKIT_PLAN.md) recommended a fourth home —
+[docs/rfcs/planning-toolkit.md](../rfcs/planning-toolkit.md) recommended a fourth home —
 a permanent `docs/plans/<slug>.md` plus a `docs/status.md` working-memory file. Shipping
 the `/make-plan` command forced one canonical answer.
 
@@ -40,8 +40,16 @@ checklists**, not design docs. This was implicit in the adoption plan's coexiste
 table (specs/design docs are "Keep — WHAT"); this ADR states it canonically.
 
 Native plan-mode files are **drafts, not the durable artifact**. A plan becomes durable
-by landing in `work/` (typically via `/make-plan`). Whether to redirect `plansDirectory`
-into the repo remains open — see the toolkit plan §5c.
+by landing in `work/` (typically via `/make-plan`).
+
+**Addendum (2026-07-31):** `/make-plan` has since migrated from the commands slot to
+`.claude/skills/make-plan/SKILL.md` per
+[ADR-0004](0004-skills-replace-slash-commands.md); the Consequences below name the
+original command paths. Separately, the `plansDirectory` question is settled — redirect it to
+`./work/plans` (gitignored), adopted in `templates/.claude/settings.json` and this repo's
+own settings. `work/` was chosen over `.claude/plans/` for tool neutrality: nothing
+non-Claude looks inside `.claude/`, and drafts sitting beside `work/NNNN-slug/` make
+promotion a local move.
 
 ## Consequences
 

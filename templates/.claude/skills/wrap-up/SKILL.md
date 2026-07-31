@@ -1,5 +1,7 @@
 ---
+name: wrap-up
 description: Deliberate end-of-thread wrap-up — cross-check the repo's provenance trail before compact/clear. For complex, multi-issue threads only.
+argument-hint: [--dry-run]
 ---
 
 # Thread wrap-up
@@ -12,13 +14,21 @@ append-only."**
 > left context that needs cross-checking. A simple single-issue thread does **not** need
 > this — skip it rather than manufacture busywork.
 
+## Mode
+
+Check `$ARGUMENTS` for `--dry-run`. In **dry-run mode**, treat *everything* as
+propose-only: draft every change below — including the mechanical fixes normally applied
+directly — and write **nothing**. It's the way to preview the full wrap-up on a thread
+you're not ready to touch. Without the flag, run in normal mode (apply mechanical fixes,
+propose direction-setting ones) per §10.
+
 ## 0. Detect what this repo actually keeps (do this first)
 
 Look at the tree. This repo follows lean-core + opt-in, so **most repos will not have
 every file below.** Only run the steps for machinery that exists.
 
 - **Skip absent pieces silently** — do not report `ARCHITECTURE.md`, `docs/rfcs/`,
-  `work/`, `CHANGELOG.md`, `CODEOWNERS`, or `.agents/skills/` as "gaps" just because
+  `work/`, `CHANGELOG.md`, `CODEOWNERS`, or `.claude/skills/` as "gaps" just because
   they're missing. Their absence is usually a deliberate choice.
 - **Do not propose *adding* opt-in machinery** as part of a wrap-up. Standing up a new
   `docs/rfcs/`, `work/`, or CI gate is a direction-setting change that deserves its own
@@ -30,13 +40,18 @@ List what actually happened this thread: files changed, decisions made, conventi
 adopted or reversed, anything started then abandoned mid-approach, and any procedure
 that recurred enough to be worth capturing.
 
+If context is already thin and you're unsure what changed, don't guess — reconstruct
+from git: diff against the thread's starting commit (`git log`, `git diff <start>..`).
+
 ## 2. AGENTS.md / CLAUDE.md
 
 - Check the root `AGENTS.md` **and** any nested `AGENTS.md` in a directory touched this
   thread — is any rule, index link, or "where things live" entry now stale?
 - For every `AGENTS.md` that was **changed or added**, confirm its sibling `CLAUDE.md`
   is present and is still the two-line `@AGENTS.md` stub — never real content, never
-  missing. A new nested `AGENTS.md` with no `CLAUDE.md` beside it is a bug.
+  missing. A new nested `AGENTS.md` with no `CLAUDE.md` beside it is a bug — **except
+  under `templates/`** (or any example/placeholder tree), where a stub-less `AGENTS.md`
+  is example content the adopter fills in by hand, not a bug.
 
 ## 3. ARCHITECTURE.md *(only if the repo keeps one)*
 
@@ -66,7 +81,7 @@ If an RFC discussed this thread reached a decision, note it should move to
 - If still in flight, make sure `plan.md`/`notes.md` reflect where you *actually* left
   off, not the original plan.
 
-## 7. .agents/skills/ *(only if present)*
+## 7. .claude/skills/ *(only if present)*
 
 For any skill touched, confirm its frontmatter `description` still matches what it does
 — that description **is** the retrieval trigger, so a stale one means the skill stops
@@ -84,8 +99,10 @@ Add an entry if anything user-visible shipped.
   a procedure) that currently has no home? Propose where it should land — a new ADR, a
   new skill, or a line in `AGENTS.md` — so the next session doesn't re-derive it.
 
-## Apply vs. propose
+## 10. Apply vs. propose
 
+- **Dry-run overrides this section:** if invoked with `--dry-run` (see *Mode* above),
+  apply nothing — propose everything, mechanical fixes included.
 - **Apply directly** only the mechanical, non-direction-setting fixes: a stale index
   link, a missing/malformed `CLAUDE.md` stub, an out-of-date skill description, a
   CHANGELOG line for something already shipped.
@@ -93,7 +110,7 @@ Add an entry if anything user-visible shipped.
   supersessions, RFC status changes. Present these for review before committing.
 - Never push without approval.
 
-## 10. Flag anything ambiguous
+## 11. Flag anything ambiguous
 
 Instead of guessing: unsure whether a decision needs an ADR, whether a `work/` folder is
 really done, or how to word a skill trigger — list these separately for me.

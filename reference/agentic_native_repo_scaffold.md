@@ -22,15 +22,12 @@ Two ideas carry the whole thing:
 ├── CODEOWNERS                 # which paths require which reviewers (enforcement)
 ├── AGENTS.local.md            # gitignored personal context, imported by AGENTS.md if present
 │
-├── .agents/
-│   └── skills/                # reusable procedural know-how, auto-discoverable
-│       └── <skill-name>/
-│           └── SKILL.md       #   folder + SKILL.md with name/description frontmatter
-│
 ├── .claude/
 │   ├── settings.json          # committed: permissions + hooks (the enforcement layer)
 │   ├── settings.local.json    # gitignored personal overrides
-│   ├── commands/*.md          # repeatable workflows exposed as /slash-commands
+│   ├── skills/                # reusable procedures, auto-discoverable + /name invocable
+│   │   └── <skill-name>/
+│   │       └── SKILL.md       #   folder + SKILL.md with name/description frontmatter
 │   └── rules/*.md             # high-precedence hard rules (use sparingly)
 │
 ├── .github/
@@ -46,7 +43,8 @@ Two ideas carry the whole thing:
 │   └── runbooks/             # operational how-tos that aren't skills
 │
 └── work/                      # ACTIVE-WORK PROVENANCE (optional): the in-flight trail
-    └── NNNN-slug/             #   spec.md → plan.md → notes.md; delete or archive on merge
+    ├── NNNN-slug/             #   spec.md → plan.md → notes.md; delete or archive on merge
+    └── plans/                 #   gitignored: native plan-mode drafts (via plansDirectory)
 ```
 
 Per-language / per-package directories (each with its own `AGENTS.md` + generated `CLAUDE.md`) hang off this as needed; they hold the build/test/env specifics and are deliberately out of scope here.
@@ -59,7 +57,7 @@ This is the full menu, not a mandatory checklist. Most repos want the lean core 
 add the rest only when a concrete need appears. Adopt in this order:
 
 - **Core (every repo):** `AGENTS.md`, the thin `CLAUDE.md`, `ARCHITECTURE.md`,
-  `README.md`, `.agents/skills/`, and gitignored `AGENTS.local.md`. This alone makes a
+  `README.md`, `.claude/skills/`, and gitignored `AGENTS.local.md`. This alone makes a
   repo agent-native.
 - **Keep-ish (most repos):** `docs/adr/` for the durable "why", and a light
   `.claude/settings.json`.
@@ -75,6 +73,12 @@ add the rest only when a concrete need appears. Adopt in this order:
   (issues, ClickUp, etc.), skip `work/` entirely. If you *do* use `work/`, give it an exit
   rule: **delete a `NNNN-slug/` or move it under `work/archive/` when its PR merges** — a
   stale `spec.md` left in place quietly poisons future agent searches and context.
+  Pair it with `"plansDirectory": "./work/plans"` in `.claude/settings.json` (and
+  gitignore `work/plans/`) so Claude Code's native plan-mode drafts land beside the
+  durable plans instead of evaporating in `~/.claude/plans/`; a draft becomes durable by
+  being promoted to `work/NNNN-slug/plan.md`. Repos that skip `work/` should drop the
+  `plansDirectory` line when adapting the settings template. The `work/` slot stays
+  tool-neutral — plans are plain markdown any agent runtime can consume.
 
 Rule of thumb: start at the core and let real need pull each further piece in. An empty
 `docs/rfcs/` no one uses is worse than not having it.
@@ -92,7 +96,7 @@ This is the core of "how agents know where to look." Each question has exactly o
 | **Why** does this exist / why this way? | `docs/adr/` | Numbered, append-only, status-tracked |
 | What change is being *proposed*? | `docs/rfcs/` | Discussion before a decision |
 | What changed, and when? | `CHANGELOG.md` + commit messages | Reverse-chronological |
-| How do I *do* a recurring task? | `.agents/skills/<name>/SKILL.md` | Self-contained, auto-triggered |
+| How do I *do* a recurring task? | `.claude/skills/<name>/SKILL.md` | Self-contained; `/name` + auto-trigger |
 | Operational how-to (not a skill) | `docs/runbooks/` | Step-by-step |
 | Who must approve changes here? | `CODEOWNERS` | Path → reviewer |
 | What's in flight right now? | `work/NNNN-slug/` | spec → plan → notes |
@@ -107,12 +111,12 @@ The lifecycle reads left to right: an **RFC** proposes → an **ADR** records th
 Design around this, because it's the difference between an elegant tree and an inert one.
 
 - **`AGENTS.md` (root and nested)** is auto-loaded. Cursor and Gemini/Antigravity read it natively; Claude Code reads it through the generated `CLAUDE.md` that imports it (`@AGENTS.md`). **Nearest file wins**, so keep the root lean and push specifics down.
-- **Skills** (`.agents/skills/<name>/SKILL.md`) are the *one* offload mechanism that auto-discovers and auto-triggers by description. Each `SKILL.md` needs YAML frontmatter with a `name` and a sharp `description` — that description *is* the trigger the agent matches against, so write it for retrieval, not prose. (Claude Code reads this frontmatter natively; you don't need a separate parser or MCP shim to expose skills.) Use them for procedures you want the agent to reach for on its own.
+- **Skills** (`.claude/skills/<name>/SKILL.md`) are the *one* offload mechanism for procedures: auto-discovered, invocable by the human as `/name` (with `$ARGUMENTS` / `argument-hint`), *and* auto-triggerable by the agent when the `description` matches. Each `SKILL.md` needs YAML frontmatter with a `name` and a sharp `description` — that description *is* the trigger the agent matches against, so write it for retrieval, not prose, and make it say *when* the skill applies so heavyweight ones don't misfire. For a procedure that must only ever run when a human asks, set `disable-model-invocation: true` in its frontmatter. (Claude Code does **not** read the `.agents/skills/` cross-tool location some other runtimes propose — use `.claude/skills/`; revisit if that changes.)
 - **Everything under `docs/`, `ARCHITECTURE.md`, `work/`** is **not** auto-loaded. It's only seen if `AGENTS.md` links to it *and* the workflow tells the agent when to read it. That's fine — it keeps context lean — but it means `AGENTS.md` must act as an index, and the links must be **relative** (`[docs/adr/](docs/adr/)`), never absolute `file://` paths, so they stay portable across checkouts, zips, and containers.
 
-- **Slash commands** (`.claude/commands/*.md`) are the deliberate counterpart to skills: a saved prompt the human invokes by name (`/wrap-up`), never auto-loaded and never auto-triggered. Reach for one when a procedure is worth capturing but should fire only when a person decides it's warranted — a heavyweight end-of-thread wrap-up, a release checklist — rather than whenever a description happens to match. See `templates/.claude/commands/wrap-up.md` for a worked example. The fork is: **auto-invoke → skill; human-invoke → slash command.**
+- **Slash commands (`.claude/commands/*.md`) → migrate to skills.** Claude Code merged commands into skills: a skill creates the same `/name` invocation with the same frontmatter, plus supporting files and invocation control. Commands still work and aren't deprecated, but keep **one** slot — move each `commands/foo.md` to `skills/foo/SKILL.md` (add `name:` frontmatter; on a name collision the skill wins). The old fork "auto-invoke → skill; human-invoke → command" is now the per-skill `disable-model-invocation` flag. See [ADR-0004](../docs/adr/0004-skills-replace-slash-commands.md).
 
-So the rule of thumb: **rules and the index** go in `AGENTS.md`; **procedures the agent should auto-invoke** become skills; **procedures a human triggers on demand** become slash commands; **everything else** is referenced on demand.
+So the rule of thumb: **rules and the index** go in `AGENTS.md`; **procedures** — whether the agent reaches for them or a human invokes them — become skills; **everything else** is referenced on demand.
 
 ---
 
@@ -227,7 +231,7 @@ When you begin work, in this order:
 - System map & boundaries → [ARCHITECTURE.md](ARCHITECTURE.md)
 - Why decisions were made → [docs/adr/](docs/adr/)
 - Proposals under discussion → [docs/rfcs/](docs/rfcs/)
-- How-to procedures → [.agents/skills/](.agents/skills/) and [docs/runbooks/](docs/runbooks/)
+- How-to procedures → [.claude/skills/](.claude/skills/) and [docs/runbooks/](docs/runbooks/)
 - What changed → [CHANGELOG.md](CHANGELOG.md)
 - Per-package specifics → that package's own AGENTS.md (nearest file wins)
 
