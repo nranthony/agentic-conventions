@@ -1,6 +1,6 @@
 # ADR-0005: Adopt docs/rfcs/ as the proposal tier
 
-- Status: Accepted
+- Status: Superseded by [ADR-0006](0006-proposals-are-work-items.md)
 - Date: 2026-07-31
 - Deciders: nranthony + agent
 

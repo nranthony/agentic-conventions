@@ -1,13 +1,14 @@
-# RFC: Distributing skills beyond this repo — surfaces outside the checkout
+# Proposal: Distributing skills beyond this repo — surfaces outside the checkout
 
 - Status: Draft
 - Author: nranthony + agent
+- Migrated from `docs/rfcs/skills-beyond-this-repo.md` ([ADR-0006](../../docs/adr/0006-proposals-are-work-items.md))
 
 ## Summary
 
 The shared skills (`/make-plan`, `/wrap-up`) now have one home
-([ADR-0004](../adr/0004-skills-replace-slash-commands.md)) and a consumer guide for
-*repo* distribution ([distributing-skills-downstream.md](../distributing-skills-downstream.md)).
+([ADR-0004](../../docs/adr/0004-skills-replace-slash-commands.md)) and a consumer guide for
+*repo* distribution ([distributing-skills-downstream.md](../../docs/distributing-skills-downstream.md)).
 This RFC proposes the directions that reach **outside any repo checkout**: the user-scope
 install, the container-sandbox refresh script, claude.ai / Desktop upload (with
 per-surface variants and a packaging recipe), the Skills API, and plugin marketplaces.
@@ -60,7 +61,7 @@ builds. Lives in the **sandbox repo**, not here.
 - Upload is always a human step (Settings → Features/Capabilities), separately per
   surface; the recipe just produces the artifact.
 - Repo-rules note: a packaging recipe mutates nothing downstream, so it is compatible
-  with [ADR-0001](../adr/0001-reference-not-automation.md)'s spirit — but a `justfile`
+  with [ADR-0001](../../docs/adr/0001-reference-not-automation.md)'s spirit — but a `justfile`
   + variants convention is direction-setting, so accepting this RFC section should
   produce an ADR.
 

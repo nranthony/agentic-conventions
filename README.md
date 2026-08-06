@@ -44,7 +44,8 @@ Not every repo needs the whole blueprint. Default baseline:
 - **Keep-ish:** `docs/adr/` (durable "why") and a light `.claude/settings.json`.
 - **Opt-in per repo, when the repo actually needs it:** `CODEOWNERS`,
   `CONTRIBUTING.md`, PR template, CI (`.github/workflows/`) — the team-ceremony tier;
-  and `docs/rfcs/`, `docs/design/`, `work/` — the heavier provenance tier.
+  and `docs/design/`, `work/` (numbered items carrying proposals *and* in-flight
+  plans) — the heavier provenance tier.
 
 ## Tiers (what does NOT belong here)
 - **User-global** personal config/skills live in `~/.claude/` (back that up separately).

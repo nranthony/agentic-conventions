@@ -1,7 +1,9 @@
-# RFC: Beads adoption — Agentic Conventions repos
+# Beads adoption — cross-repo rollout plan
 
-- Status: Accepted (in rollout — pilot live in project_zenbu; scoped by [ADR-0003](../adr/0003-where-plans-live.md))
+- Status: Accepted (in rollout — pilot live in project_zenbu; scoped by [ADR-0003](../../docs/adr/0003-where-plans-live.md))
 - Author: nranthony + agent
+- Migrated from `docs/rfcs/beads-adoption.md` ([ADR-0006](../../docs/adr/0006-proposals-are-work-items.md)) — this is a
+  cross-repo playbook, not a proposal under discussion; §2.3 below always named this location.
 
 **Target:** Upstream Beads (`bd`), Go + Dolt backend — https://github.com/gastownhall/beads
 **Strategy:** Implement in the conventions repo first → pilot one repo → roll out repo-by-repo → evaluate per repo before promoting.

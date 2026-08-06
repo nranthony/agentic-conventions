@@ -1,7 +1,8 @@
-# RFC: Example skills for scaffold adopters
+# Proposal: Example skills for scaffold adopters
 
 - Status: Draft
 - Author: nranthony + agent
+- Migrated from `docs/rfcs/example-skills.md` ([ADR-0006](../../docs/adr/0006-proposals-are-work-items.md))
 
 **Recorded:** 2026-07-21
 **Question that prompted it:** what skills should repos adopting the reference scaffold have?

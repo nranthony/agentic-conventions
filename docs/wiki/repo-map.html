@@ -113,10 +113,10 @@
     <h3>🗂 docs/ — decisions &amp; drafts</h3>
     <p>The durable “why” and the proposals on their way to becoming one.</p>
     <ul>
-      <li><code>docs/adr/</code> — append-only decisions (0001–0005)</li>
-      <li><code>docs/rfcs/</code> — proposals under discussion (Draft → Accepted → ADR-NNNN)</li>
+      <li><code>docs/adr/</code> — append-only decisions (0001–0006)</li>
+      <li><code>work/NNNN-slug/</code> — numbered proposals &amp; in-flight items (proposal → spec → plan → notes; distill → ADR, then archive)</li>
       <li><code>docs/distributing-skills-downstream.md</code> — consumer guidance</li>
-      <li><code>conventions/beads/</code> — cross-repo bd prefix registry + pinned version</li>
+      <li><code>conventions/beads/</code> — cross-repo bd registry + rollout plan (ADOPTION.md)</li>
     </ul>
   </div>
   <div class="zone eph">
@@ -125,7 +125,6 @@
     <ul>
       <li><code>inbox/</code> — paste-in material → distill into a doc/ADR → delete</li>
       <li><code>work/plans/</code> — native plan-mode drafts → promote to <code>work/NNNN-slug/</code></li>
-      <li><code>work/NNNN-slug/</code> — in-flight spec→plan→notes; delete/archive on merge</li>
     </ul>
   </div>
 </div>
@@ -134,7 +133,7 @@
 <div class="flow">
   <div class="step"><b>inbox/</b><span>raw notes, pasted docs</span></div>
   <div class="arr">→</div>
-  <div class="step"><b>docs/rfcs/</b><span>proposal under discussion</span></div>
+  <div class="step"><b>work/NNNN-slug/</b><span>proposal.md under discussion</span></div>
   <div class="arr">→</div>
   <div class="step"><b>docs/adr/</b><span>decision recorded, append-only</span></div>
   <div class="arr">→</div>
@@ -157,8 +156,10 @@ travels, personal paths never do.</p>
     Plans live in <code>work/</code> (exit rule); execution tracking in beads where adopted.</div>
   <div class="adr"><b>ADR-0004 <span class="tag">Accepted</span></b>
     Skills replace commands: one slot, <code>/name</code> + auto-trigger, simpler distribution.</div>
-  <div class="adr"><b>ADR-0005 <span class="tag">Accepted</span></b>
-    Proposals live in <code>docs/rfcs/</code> — the <code>*_PLAN.md</code> pattern is retired.</div>
+  <div class="adr"><b>ADR-0005 <span class="tag old">Superseded</span></b>
+    Proposals live in <code>docs/rfcs/</code> — retired the <code>*_PLAN.md</code> pattern; folded into work items by ADR-0006.</div>
+  <div class="adr"><b>ADR-0006 <span class="tag">Accepted</span></b>
+    Proposals are <code>work/NNNN-slug/</code> items — one numbered pipeline; distill to an ADR, then archive. <code>docs/rfcs/</code> retired.</div>
 </div>
 
 <h2>Planning toolset (layered)</h2>

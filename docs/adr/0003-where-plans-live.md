@@ -11,14 +11,14 @@ Three forces meet on the question "where does a plan produced for/by an agent li
 - The reference scaffold's opt-in `work/NNNN-slug/` tier (spec → plan → notes) carries
   an **exit rule** — delete or archive on merge — precisely because a stale plan left in
   the tree poisons future agent context.
-- The [Beads adoption RFC](../rfcs/beads-adoption.md) retires markdown plan/TODO files
+- The [Beads adoption plan](../../conventions/beads/ADOPTION.md) retires markdown plan/TODO files
   ("Do NOT use markdown TODO lists or plans/ directories for task tracking") in favor of
   bd issues as the execution ledger.
 - Claude Code's native plan mode now persists its plans to disk (`~/.claude/plans/` by
   default, redirectable via `plansDirectory`), with random filenames and no lifecycle.
 
 External advice collected in
-[docs/rfcs/planning-toolkit.md](../rfcs/planning-toolkit.md) recommended a fourth home —
+[the planning-toolkit proposal](../../work/archive/0002-planning-toolkit/proposal.md) recommended a fourth home —
 a permanent `docs/plans/<slug>.md` plus a `docs/status.md` working-memory file. Shipping
 the `/make-plan` command forced one canonical answer.
 

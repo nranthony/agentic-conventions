@@ -1,12 +1,15 @@
-# RFC: Planning toolkit — how plans get requested, produced, and consumed
+# Proposal: Planning toolkit — how plans get requested, produced, and consumed
 
-- Status: Accepted → [ADR-0003](../adr/0003-where-plans-live.md), [ADR-0004](../adr/0004-skills-replace-slash-commands.md)
+- Status: Accepted → [ADR-0003](../../../docs/adr/0003-where-plans-live.md), [ADR-0004](../../../docs/adr/0004-skills-replace-slash-commands.md)
 - Author: nranthony + agent
+- **Archived** ([ADR-0006](../../../docs/adr/0006-proposals-are-work-items.md); migrated from
+  `docs/rfcs/planning-toolkit.md`). Historical record — the shipped skills and the ADRs
+  above are canonical, not this file.
 
 **Status detail:** Implemented (2026-07-31) — §3/§4 shipped: `/make-plan` lives at
 `.claude/skills/make-plan/SKILL.md` (+ template mirror; migrated from the commands slot
-per [ADR-0004](../adr/0004-skills-replace-slash-commands.md)), "where plans live" is decided
-in [ADR-0003](../adr/0003-where-plans-live.md), and all §5 items are settled (outcomes
+per [ADR-0004](../../../docs/adr/0004-skills-replace-slash-commands.md)), "where plans live" is decided
+in [ADR-0003](../../../docs/adr/0003-where-plans-live.md), and all §5 items are settled (outcomes
 recorded inline in §5). The §4 draft below is kept for the rationale; the shipped skill is
 canonical.
 **Recorded:** 2026-07-30
@@ -182,7 +185,7 @@ if any · the suggested first task once approved.
 **a) The skill/command convergence touches ADR-0002.** *Settled 2026-07-31 — twice.*
 First pass: keep commands (they're not deprecated; identical `/name` invocation).
 Reversed the same day by owner decision, recorded in
-[ADR-0004](../adr/0004-skills-replace-slash-commands.md): one slot is simpler to
+[ADR-0004](../../../docs/adr/0004-skills-replace-slash-commands.md): one slot is simpler to
 distribute downstream, so `/wrap-up` and `/make-plan` migrated to
 `.claude/skills/<name>/SKILL.md` with default invocation (human **and** model),
 and the commands slot is gone. ADR-0002 is superseded.
@@ -208,7 +211,7 @@ it.
 
 **e) The `docs/*_PLAN.md` pattern is an informal RFC tier.** *Settled 2026-07-31 —
 twice.* First pass blessed the informal pattern with an AGENTS.md index line. Reversed
-the same day by owner decision ([ADR-0005](../adr/0005-adopt-rfcs.md)): the formal
+the same day by owner decision ([ADR-0005](../../../docs/adr/0005-adopt-rfcs.md)): the formal
 `docs/rfcs/` tier is adopted — the three `*_PLAN.md` drafts became
 `rfcs/beads-adoption.md`, `rfcs/example-skills.md`, and this file, each with an RFC
 status header.

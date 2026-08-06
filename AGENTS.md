@@ -19,9 +19,10 @@ only live `AGENTS.md` here.
 - Example files to adapt → [templates/](templates/)
 - Shared procedures → [.claude/skills/](.claude/skills/) (skills like `/wrap-up` and `/make-plan`; invocable by human or model — ADR-0004)
 - How consumers pull shared skills downstream → [docs/distributing-skills-downstream.md](docs/distributing-skills-downstream.md)
-- Proposals under discussion → [docs/rfcs/](docs/rfcs/) (Draft → Accepted → ADR-NNNN; template inside — ADR-0005)
-- Why decisions were made → [docs/adr/](docs/adr/) (append-only)
-- Cross-repo beads registry (prefixes, pinned version) → [conventions/beads/](conventions/beads/)
+- Proposals & in-flight items → [work/](work/) (NNNN-slug/: proposal → spec → plan → notes;
+  distill durable rationale to an ADR, then archive — lifecycle + template in [work/README.md](work/README.md); ADR-0006)
+- Why decisions were made → [docs/adr/](docs/adr/) (append-only; template at [docs/adr/0000-template.md](docs/adr/0000-template.md))
+- Cross-repo beads registry & rollout plan (prefixes, pinned version, ADOPTION.md) → [conventions/beads/](conventions/beads/)
 - Visual one-page map of this repo → [docs/wiki/repo-map.html](docs/wiki/repo-map.html)
 - Ephemeral paste-in material → `inbox/` (gitignored; read only when pointed at it, distill into a real doc/ADR, then delete)
 
