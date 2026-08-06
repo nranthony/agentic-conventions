@@ -19,8 +19,9 @@ templates/   starting-point files to adapt by hand — NOT drop-in
 - `reference/agentic_native_repo_scaffold.md` — the generic agent-native repo blueprint.
 - `templates/` — `AGENTS.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, `CODEOWNERS`,
   `.gitignore`, `.claude/settings.json`, `.claude/skills/` (shared skills like
-  `/wrap-up` and `/make-plan`), `.github/pull_request_template.md`. Examples to tailor,
-  not files to copy verbatim.
+  `/wrap-up` and `/make-plan`), `.github/pull_request_template.md`,
+  `docs/adr/0000-template.md`, `work/README.md` (item lifecycle + proposal template).
+  Examples to tailor, not files to copy verbatim.
 
 ## How an agent should apply these
 1. Read `reference/` and `templates/` as the *desired shape*.
