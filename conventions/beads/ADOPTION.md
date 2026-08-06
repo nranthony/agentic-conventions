@@ -103,7 +103,7 @@ This project uses bd (beads) for issue tracking.
 - File bd issues during code reviews instead of inline TODO comments.
 - Use `bd remember "insight"` for persistent project memory; do NOT create MEMORY.md files.
 - Do NOT use markdown TODO lists or plans/ directories for task tracking.
-  (Scope per [ADR-0003](../adr/0003-where-plans-live.md): this retires task *checklists*;
+  (Scope per agentic-conventions ADR-0003, "where plans live": this retires task *checklists*;
   design-layer plans in `work/NNNN-slug/` stay, linking the bd epic instead.)
 - Link discovered work with discovered-from; use blocks/parent-child for ordering.
 - At session end run "land the plane": sync git state, update/close issues,
