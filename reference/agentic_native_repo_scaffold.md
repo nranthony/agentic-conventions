@@ -38,12 +38,13 @@ Two ideas carry the whole thing:
 │   ├── adr/                   # DECISION PROVENANCE: numbered, append-only records
 │   │   ├── 0000-template.md
 │   │   └── 0001-record-architecture-decisions.md
-│   ├── rfcs/                  # proposals under discussion (precede an ADR)
 │   ├── design/                # durable design references
 │   └── runbooks/             # operational how-tos that aren't skills
 │
-└── work/                      # ACTIVE-WORK PROVENANCE (optional): the in-flight trail
-    ├── NNNN-slug/             #   spec.md → plan.md → notes.md; delete or archive on merge
+└── work/                      # ACTIVE-WORK PROVENANCE (optional): proposals + the in-flight trail
+    ├── README.md              #   the item lifecycle + proposal template
+    ├── NNNN-slug/             #   proposal.md → spec.md → plan.md → notes.md
+    ├── archive/               #   closed items, distilled first (durable "why" → docs/adr/)
     └── plans/                 #   gitignored: native plan-mode drafts (via plansDirectory)
 ```
 
@@ -69,19 +70,28 @@ add the rest only when a concrete need appears. Adopt in this order:
   sandbox):** a machine-managed environment notice at the top of `AGENTS.md` — see
   "Environment notice" below.
 - **Opt-in — heavier provenance (add for long-lived or high-autonomy repos):**
-  `docs/rfcs/`, `docs/design/`, `work/`. If in-flight work is tracked outside the repo
-  (issues, ClickUp, etc.), skip `work/` entirely. If you *do* use `work/`, give it an exit
-  rule: **delete a `NNNN-slug/` or move it under `work/archive/` when its PR merges** — a
-  stale `spec.md` left in place quietly poisons future agent searches and context.
+  `docs/design/` and `work/` — one numbered folder per unit of in-flight work,
+  **proposals included**: an item starts as `work/NNNN-slug/proposal.md`
+  (`Draft | In review | Accepted → ADR-NNNN | Rejected`) and grows
+  `spec.md`/`plan.md`/`notes.md` in the same folder if accepted. If in-flight work is
+  tracked outside the repo (issues, ClickUp, etc.), skip `work/` entirely. `work/`
+  carries an exit rule: **when the work merges or the question resolves, distill
+  anything durable out (decision rationale → an ADR; reference knowledge → docs/ or a
+  skill), then move the folder under `work/archive/`** — or delete it if nothing
+  durable remains. A stale `spec.md` left active quietly poisons future agent searches
+  and context; an archived one is explicitly historical.
   Pair it with `"plansDirectory": "./work/plans"` in `.claude/settings.json` (and
   gitignore `work/plans/`) so Claude Code's native plan-mode drafts land beside the
   durable plans instead of evaporating in `~/.claude/plans/`; a draft becomes durable by
   being promoted to `work/NNNN-slug/plan.md`. Repos that skip `work/` should drop the
   `plansDirectory` line when adapting the settings template. The `work/` slot stays
   tool-neutral — plans are plain markdown any agent runtime can consume.
+  *(Team-scale alternative: repos where collaborators genuinely discuss proposals
+  asynchronously in-file can keep a classic `docs/rfcs/` as the proposal home instead —
+  same status header, proposals persisting in place after resolution.)*
 
 Rule of thumb: start at the core and let real need pull each further piece in. An empty
-`docs/rfcs/` no one uses is worse than not having it.
+`work/` no one uses is worse than not having it.
 
 ---
 
@@ -94,7 +104,7 @@ This is the core of "how agents know where to look." Each question has exactly o
 | What are the rules, and where is everything? | `AGENTS.md` | Short, indexed, links out |
 | What does the system look like? | `ARCHITECTURE.md` | One diagram + boundaries |
 | **Why** does this exist / why this way? | `docs/adr/` | Numbered, append-only, status-tracked |
-| What change is being *proposed*? | `docs/rfcs/` | Discussion before a decision |
+| What change is being *proposed*? | `work/NNNN-slug/proposal.md` | Status-tracked; distilled into an ADR on acceptance |
 | What changed, and when? | `CHANGELOG.md` + commit messages | Reverse-chronological |
 | How do I *do* a recurring task? | `.claude/skills/<name>/SKILL.md` | Self-contained; `/name` + auto-trigger |
 | Operational how-to (not a skill) | `docs/runbooks/` | Step-by-step |
@@ -102,7 +112,7 @@ This is the core of "how agents know where to look." Each question has exactly o
 | What's in flight right now? | `work/NNNN-slug/` | spec → plan → notes |
 | How does a change get merged? | `CONTRIBUTING.md` | Process |
 
-The lifecycle reads left to right: an **RFC** proposes → an **ADR** records the decision → **work/** tracks the implementation → the **CHANGELOG** and commit (referencing the ADR) record the outcome. That chain is the provenance: any line of code can be traced back to the decision and the reasoning that produced it.
+The lifecycle reads left to right, mostly inside one numbered folder: a **proposal** (`work/NNNN-slug/proposal.md`) proposes → an **ADR** records the decision → the same item's **plan.md/notes.md** track the implementation → the **CHANGELOG** and commit (referencing the ADR) record the outcome, and the item archives. That chain is the provenance: any line of code can be traced back to the decision and the reasoning that produced it.
 
 ---
 
@@ -230,7 +240,7 @@ When you begin work, in this order:
 ## Where things live
 - System map & boundaries → [ARCHITECTURE.md](ARCHITECTURE.md)
 - Why decisions were made → [docs/adr/](docs/adr/)
-- Proposals under discussion → [docs/rfcs/](docs/rfcs/)
+- Proposals & in-flight work → [work/](work/) (NNNN-slug/: proposal → spec → plan → notes)
 - How-to procedures → [.claude/skills/](.claude/skills/) and [docs/runbooks/](docs/runbooks/)
 - What changed → [CHANGELOG.md](CHANGELOG.md)
 - Per-package specifics → that package's own AGENTS.md (nearest file wins)
@@ -238,10 +248,11 @@ When you begin work, in this order:
 ## How to move forward (the loop)
 - Trivial change (typo, local fix): just do it, then update CHANGELOG if user-visible.
 - Non-trivial change: confirm it doesn't contradict an ADR; if it sets a new
-  direction, write a short ADR (or an RFC first if it needs discussion).
-- After implementing: run the project's checks, reference the ADR/RFC in your
-  commit message, and update CHANGELOG. If you used a work/ folder, delete it or
-  move it to work/archive/ so stale specs don't pollute future context.
+  direction, write a short ADR (or a work-item proposal.md first if it needs discussion).
+- After implementing: run the project's checks, reference the ADR/proposal in your
+  commit message, and update CHANGELOG. If you used a work/ folder, distill anything
+  durable (ADR/docs), then archive or delete it so stale specs don't pollute future
+  context.
 - If you learned something durable (a gotcha, a convention), write it back —
   a new ADR, a skill, or a line here — so the next session doesn't re-derive it.
 
@@ -282,10 +293,26 @@ verification step <cmd>, and a CODEOWNERS review. See enforcement in
 
 ADRs are **append-only**: never rewrite an accepted one — supersede it with a new record and flip the old one's status. That immutability is what makes the decision history trustworthy.
 
-### `docs/rfcs/TEMPLATE.md`
+### `work/README.md` (the item lifecycle + proposal template)
 
 ```markdown
-# RFC: <title>
+# work/ — proposals and in-flight items
+
+One numbered folder per unit of work, proposals included. NNNN is the next
+free number across active and archived items; numbers are never reused.
+
+Files inside an item (each optional except whichever starts it):
+proposal.md ("should we do this?", status-tracked) · spec.md (pinned
+what/why) · plan.md (implementation plan) · notes.md (running notes).
+
+Exit rule: when the work merges or the question resolves, distill anything
+durable out (decision rationale → an ADR; reference knowledge → docs/ or a
+skill), then move the folder to work/archive/ — or delete it if nothing
+durable remains. Archived items are historical records, never current intent.
+
+## Proposal template
+
+# Proposal: <title>
 
 - Status: Draft | In review | Accepted → ADR-NNNN | Rejected
 - Author: <name / agent>
@@ -301,11 +328,11 @@ ADRs are **append-only**: never rewrite an accepted one — supersede it with a 
 
 ```markdown
 ## What & why
-<Summary. Link the ADR/RFC/issue this traces back to, if there is one.>
+<Summary. Link the ADR/proposal/issue this traces back to, if there is one.>
 
 ## Checklist
-<!-- Skip any line that doesn't apply — not every repo keeps ADRs, RFCs, or a CHANGELOG. -->
-- [ ] Linked a decision record (ADR/RFC) — if this sets a new direction and the repo keeps them
+<!-- Skip any line that doesn't apply — not every repo keeps ADRs, a proposal tier, or a CHANGELOG. -->
+- [ ] Linked a decision record (ADR / work-item proposal) — if this sets a new direction and the repo keeps them
 - [ ] Updated CHANGELOG / docs — if the repo keeps them and this is user-visible
 - [ ] Ran the project's checks
 - [ ] Touches a high-risk path? Rationale included + reviewer requested
@@ -356,6 +383,6 @@ Run it as five phases:
 **Brownfield guardrails** (in addition to the general ones above):
 - **Match existing patterns over the template** — the repo's working conventions win.
 - **Don't rename things that work** just to match scaffold names; alias in `AGENTS.md` instead.
-- **No empty opt-in dirs** — don't create `docs/rfcs/` "for completeness."
+- **No empty opt-in dirs** — don't create `work/` (or any proposal tier) "for completeness."
 - **Move, never flatten** a substantive file.
 - **Read-only until the plan is approved.**

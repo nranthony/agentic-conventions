@@ -7,7 +7,7 @@
   - The sibling CLAUDE.md must be a two-line "@AGENTS.md" stub, written by hand.
     NEVER overwrite a repo's existing substantive CLAUDE.md with that stub.
   - Lines below only reference the lean core (ARCHITECTURE, docs/adr/, skills).
-    Opt-in pieces (RFCs, runbooks, CHANGELOG, work/) live in the commented block —
+    Opt-in pieces (work/, runbooks, CHANGELOG) live in the commented block —
     move a line out of the comment only when the repo actually adopts the piece.
 
   Optional: tooling (e.g. windows-ai-sandbox) may inject a managed notice block
@@ -30,10 +30,10 @@ When you begin work, in this order:
 - How-to procedures → [.claude/skills/](.claude/skills/) (invocable as /name; auto-triggered by description)
 - Per-package specifics → that package's own AGENTS.md (nearest file wins)
 <!-- Opt-in — move a line above only when the repo adopts the piece:
-- Proposals under discussion → [docs/rfcs/](docs/rfcs/)
+- Proposals & in-flight work → [work/](work/) (NNNN-slug/: proposal → spec → plan → notes;
+  distill durable rationale to an ADR, then archive — see work/README.md)
 - Operational runbooks (how-tos that aren't skills) → [docs/runbooks/](docs/runbooks/)
 - What changed → [CHANGELOG.md](CHANGELOG.md)
-- What's in flight → [work/](work/) (NNNN-slug/: spec → plan → notes; delete or archive on merge)
 -->
 
 ## How to move forward (the loop)
@@ -42,8 +42,8 @@ When you begin work, in this order:
   direction, write a short ADR first.
 - After implementing: run the project's checks and reference the ADR in your
   commit message. If the repo keeps a CHANGELOG, add a line for anything
-  user-visible; if you used a work/ folder, delete it or move it to
-  work/archive/ so stale specs don't pollute future context.
+  user-visible; if you used a work/ folder, distill anything durable (ADR/docs),
+  then archive or delete it so stale specs don't pollute future context.
 - If you learned something durable (a gotcha, a convention), write it back —
   a new ADR, a skill, or a line here — so the next session doesn't re-derive it.
 
