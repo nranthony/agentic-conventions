@@ -13,10 +13,14 @@
   Optional: tooling (e.g. windows-ai-sandbox) may inject a managed notice block
   here describing shell restrictions. Leave a BEGIN/END marker pair if you use it;
   do not hand-edit managed blocks.
+
+  Optional: cite where these conventions came from, if that helps this repo's
+  contributors — e.g. a "Conventions: <url>" line below. Skip it when an external
+  link is noise here, or when the source repo isn't readable by everyone on this
+  project: a dead link is worse than no link.
 -->
 
-A project following the agent-native repository blueprint. See the conventions:
-https://github.com/nranthony/agentic-conventions
+A project following the agent-native repository blueprint.
 
 ## Start here
 When you begin work, in this order:

@@ -26,6 +26,9 @@ only live `AGENTS.md` here.
   distill durable rationale to an ADR, then archive — lifecycle + template in [work/README.md](work/README.md); ADR-0006)
 - Why decisions were made → [docs/adr/](docs/adr/) (append-only; template at [docs/adr/0000-template.md](docs/adr/0000-template.md))
 - Cross-repo beads registry & rollout plan (prefixes, pinned version, ADOPTION.md) → [conventions/beads/](conventions/beads/)
+- What changed **for consumers** → [CHANGELOG.md](CHANGELOG.md) (the plugin's user-visible
+  surface only — skills, blueprint, templates. Internal churn stays in ADRs, `work/`, and
+  the commit log.)
 - Visual one-page map of this repo → [docs/wiki/repo-map.html](docs/wiki/repo-map.html)
 - Ephemeral paste-in material → `inbox/` (gitignored; read only when pointed at it, distill into a real doc/ADR, then delete)
 
@@ -39,4 +42,7 @@ There is no ARCHITECTURE.md — the layout above is the whole architecture.
 - Templates must stay generic: no real owners, tokens, or repo-specific paths.
 - After touching `reference/`, `templates/`, or the shared skills, run `just sync-plugin` and
   `just validate`. `just check-plugin-sync` and `just check-skill-mirrors` catch the drift.
+  If the change alters what a consumer receives, add a CHANGELOG entry and bump `version` in
+  `plugins/myconv/.claude-plugin/plugin.json` — an unbumped version means consumers never
+  see the change.
 - Commit locally with clear messages; never push without approval.

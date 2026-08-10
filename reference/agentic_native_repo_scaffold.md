@@ -86,9 +86,9 @@ add the rest only when a concrete need appears. Adopt in this order:
   being promoted to `work/NNNN-slug/plan.md`. Repos that skip `work/` should drop the
   `plansDirectory` line when adapting the settings template. The `work/` slot stays
   tool-neutral — plans are plain markdown any agent runtime can consume.
-  *(Team-scale alternative: repos where collaborators genuinely discuss proposals
-  asynchronously in-file can keep a classic `docs/rfcs/` as the proposal home instead —
-  same status header, proposals persisting in place after resolution.)*
+  There is deliberately **one** proposal home. A separate `docs/rfcs/` tier was tried and
+  retired: two numbered pipelines meant every proposal needed a "which one?" decision, and
+  the answer to "what's proposed?" and "what's in flight?" turned out to be the same folder.
 
 Rule of thumb: start at the core and let real need pull each further piece in. An empty
 `work/` no one uses is worse than not having it.
