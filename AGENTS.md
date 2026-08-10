@@ -19,6 +19,9 @@ only live `AGENTS.md` here.
 - Example files to adapt → [templates/](templates/)
 - Shared procedures → [.claude/skills/](.claude/skills/) (skills like `/wrap-up` and `/make-plan`; invocable by human or model — ADR-0004)
 - How consumers pull shared skills downstream → [docs/distributing-skills-downstream.md](docs/distributing-skills-downstream.md)
+- The distributable plugin → [plugins/myconv/](plugins/myconv/) + [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)
+  (`/myconv:apply-conventions`, `:make-plan`, `:wrap-up` — ADR-0007). Its `reference/` and
+  `templates/` copies are **generated**: edit the root originals, then `just sync-plugin`.
 - Proposals & in-flight items → [work/](work/) (NNNN-slug/: proposal → spec → plan → notes;
   distill durable rationale to an ADR, then archive — lifecycle + template in [work/README.md](work/README.md); ADR-0006)
 - Why decisions were made → [docs/adr/](docs/adr/) (append-only; template at [docs/adr/0000-template.md](docs/adr/0000-template.md))
@@ -34,4 +37,6 @@ There is no ARCHITECTURE.md — the layout above is the whole architecture.
   (README is the summary, reference is the full write-up).
 - Direction-setting changes (e.g. re-adding any automation) get an ADR first.
 - Templates must stay generic: no real owners, tokens, or repo-specific paths.
+- After touching `reference/`, `templates/`, or the shared skills, run `just sync-plugin` and
+  `just validate`. `just check-plugin-sync` and `just check-skill-mirrors` catch the drift.
 - Commit locally with clear messages; never push without approval.

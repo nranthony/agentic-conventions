@@ -25,12 +25,14 @@ Pick by *what varies* and *who else consumes it*.
 | Mode | Mechanism | Best when | Cost |
 |------|-----------|-----------|------|
 | **User-scope** | Copy into `~/.claude/skills/<name>/` | You personally want it in every repo you open, one machine, no collaborators | Not versioned, not shared; drifts silently |
-| **Plugin + marketplace** | Package the `.claude/` slot as a Claude Code plugin; `/plugin install` from a marketplace (a git repo) | Distributing a versioned toolkit to many repos and/or collaborators | Setup overhead; is a direction-setting change (wants its own ADR) |
+| **Plugin + marketplace** | Package the `.claude/` slot as a Claude Code plugin; `/plugin install` from a marketplace (a git repo) | Distributing a versioned toolkit to many repos and/or collaborators | Setup overhead; skills become namespaced (`/myconv:wrap-up`) |
 | **Per-repo vendored copy** | Copy the generic `skills/<name>/` folder into the target repo's own `.claude/skills/`, adapt if needed | The skill should be committed with the repo, adapted per repo, or seeded into a runtime | Vendored copies drift from upstream until re-synced |
 
-The first two are covered well by Claude Code natively. The rest of this doc is about the
-third — specifically the **runtime / container** variant, which has sharp edges the naive
-symlink hits.
+The first two are covered well by Claude Code natively — and mode 2 is now **adopted**: this
+repo is its own marketplace, shipping the `myconv` plugin
+([ADR-0007](adr/0007-plugin-distribution.md)). The rest of this doc is about the third —
+specifically the **runtime / container** variant, which has sharp edges the naive symlink
+hits, and which ADR-0007 resolves by seeding the *plugin* rather than loose skills.
 
 ## The runtime / container case
 
@@ -60,6 +62,39 @@ The one machine-specific fact is *where this repo lives*. Keep it out of git as 
 pointer** — an env var (`CONVENTIONS_DIR=…`) or a `.local`-suffixed file — read by a
 refresh script. Never a symlink: a symlink's very existence encodes the personal path into
 the tree, which is the leak a repo-scan is trying to remove.
+
+### Rule 4 — Don't back up a derived cache; reconcile it, and warn
+
+**If the consumer's copy is reproducible from a tracked source, treat it as a derived cache and
+converge it on every start — don't snapshot it.** Git is already the backup. A refresh that
+snapshots what it replaces is solving a problem the tracked source has solved, and it creates a
+worse one.
+
+The failure it creates: a backup written **inside** the scanned skills directory —
+`<name>.bak.<stamp>/` beside `<name>/` — is still discovered, and both copies load.
+
+- **A vendored plugin collides.** Two directories declaring the same `name` in
+  `.claude-plugin/plugin.json` are the same plugin; one wins, the other reports *"Not loaded —
+  same plugin name"*. Observed: the **backup** wins. The refresh silently reactivates the copy
+  it was meant to replace, and still prints success.
+- **A loose skill doesn't collide, but still loads.** Skills are listed by directory name, so
+  the stale copy appears as a second entry, spends description tokens every session, and stays
+  reachable by description-match auto-invocation — serving instructions that were replaced
+  precisely because they were wrong.
+
+Both verified in a sandbox profile on 2026-08-10, where the stale twin was directing an audit
+skill at a file the audit package does not contain.
+
+The deeper point is that snapshotting is a symptom of **create-only seeding** — a consumer that
+only copies when a file is *missing* can never deliver an edit, so someone has to remember a
+refresh command, and drift is the default. Converging instead removes that axis. Two guardrails
+make convergence safe: **warn before overwriting** a locally-diverged copy, naming it and the
+source of truth; and **scope the prune** to a recorded manifest rather than mirroring the
+source — `claude plugin init` scaffolds into the same directory, so "delete anything not in the
+template" destroys an agent's own work. Report unrecognised directories; leave them alone.
+
+*Fallback:* where a copy genuinely isn't reproducible and must be kept, put it in a sibling tree
+(`backups/skills/<name>.<stamp>/`), never inside the scan root.
 
 ### Why not a symlink here
 

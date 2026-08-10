@@ -1,0 +1,15 @@
+{
+  "name": "agentic-conventions",
+  "description": "Cross-repo agent conventions: the agent-native repo blueprint, templates, and shared skills.",
+  "owner": {
+    "name": "nranthony"
+  },
+  "plugins": [
+    {
+      "name": "myconv",
+      "source": "./plugins/myconv",
+      "version": "0.1.0",
+      "description": "The agent-native repo blueprint plus /myconv:make-plan and /myconv:wrap-up."
+    }
+  ]
+}

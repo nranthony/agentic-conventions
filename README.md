@@ -14,6 +14,7 @@ editing the repo has the judgment; the reference just tells it the desired shape
 ```
 reference/   the blueprint write-up (the "why" and full layout)
 templates/   starting-point files to adapt by hand — NOT drop-in
+plugins/     the same material packaged as a Claude Code plugin (generated payload)
 ```
 
 - `reference/agentic_native_repo_scaffold.md` — the generic agent-native repo blueprint.
@@ -22,6 +23,21 @@ templates/   starting-point files to adapt by hand — NOT drop-in
   `/wrap-up` and `/make-plan`), `.github/pull_request_template.md`,
   `docs/adr/0000-template.md`, `work/README.md` (item lifecycle + proposal template).
   Examples to tailor, not files to copy verbatim.
+
+## Getting it onto a machine
+
+This repo is also its own plugin marketplace ([ADR-0007](docs/adr/0007-plugin-distribution.md)),
+so the blueprint and skills travel without a checkout:
+
+```
+/plugin marketplace add <owner>/agentic-conventions
+/plugin install myconv@agentic-conventions
+```
+
+That gives every repo on the machine `/myconv:apply-conventions`, `/myconv:make-plan` and
+`/myconv:wrap-up`. For closed-egress containers, copy `plugins/myconv/` into the profile's
+persistent `~/.claude/skills/myconv/` instead — it loads as `myconv@skills-dir` with no
+network and no install step.
 
 ## How an agent should apply these
 1. Read `reference/` and `templates/` as the *desired shape*.

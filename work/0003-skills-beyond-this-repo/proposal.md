@@ -51,6 +51,11 @@ builds. Lives in the **sandbox repo**, not here.
   `templates/.claude/skills/<name>/variants/<target>/SKILL.md`; the recipe swaps the
   variant in when a target is named. One source of truth per surface, no hand-editing
   at export time.
+  - **If this ships, `just sync-plugin` must exclude `variants/`** ([ADR-0007](../../docs/adr/0007-plugin-distribution.md)).
+    It currently copies `templates/` wholesale into the plugin payload, so claude.ai-only skill
+    bodies would ride into every consumer and every seeded container. Downstream consumers
+    stripping `variants/` at their end are depth-sensitive and will miss the plugin-nested copy —
+    the sandbox found exactly that bug in its own sync script. Fix it here, at the source.
 - First variant: **make-plan for claude.ai** — same planning contract (evidence,
   Confirmed/Inferred/Needs-decision, non-goals, validation, approval gate); §1–§2
   rewritten: orient from attached files / Project knowledge instead of the tree, output
