@@ -24,9 +24,11 @@ plugin, and a relative path out of the payload resolves nowhere.
    (denied), and never fall back to raw HTTP against the ClickUp API.
 2. **`.myclickup.toml` at the repo root?** If absent, this repo has no tracker link. Say
    so and stop — do not create one uninvited; it is an opt-in piece.
-3. **`workspace_id` non-empty?** If empty, stop. An empty pin makes myclickup fall back to
-   the token's first workspace, which is the wrong-workspace trap the pin exists to close.
-   Do not guess an ID.
+3. **`workspace_id` non-empty?** If empty, stop — the repo is declared-but-not-pinned, and
+   every workspace-scoped call would fail with `HTTP 400: Invalid workspace id`. **Do not
+   guess an ID**: an absent key falls back to the token's first workspace with a warning,
+   and a wrong one resolves silently against another workspace's board. Only a correct pin
+   is safe, so ask for it.
 4. Read `[statuses]` from that file. **Never hard-code a status name** — names vary per
    Space, which is the same reason completion is judged by `status_type`.
 5. `myclickup status` — if the cache is stale or absent, `myclickup sync` first.

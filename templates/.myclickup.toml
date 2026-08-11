@@ -6,10 +6,12 @@
 # myclickup rejects the file outright if a top-level key contains "token" or "key".
 
 # --- FILL THIS IN. Leave it empty rather than guessing. --------------------
-# An empty workspace_id makes myclickup fall back to the token's first
-# workspace AND WARN. A valid-but-wrong ID resolves SILENTLY against another
-# workspace's board. Empty fails loud; wrong fails quietly. Never ship a
-# "sensible default" here.
+# Three behaviours, verified against myclickup 0.2.0:
+#   key absent entirely -> falls back to the token's FIRST workspace, warning
+#   present but empty   -> HTTP 400 "Invalid workspace id" on any call
+#   present but wrong   -> resolves SILENTLY against another workspace's board
+# Empty is the loudest of the three, which is why it ships empty. Never ship a
+# "sensible default" here — a wrong ID is the one failure nothing surfaces.
 workspace_id = ""    # REQUIRED once set. The API boundary, not a scope.
 # list_id    = ""    # optional: default target for `myclickup create`
 

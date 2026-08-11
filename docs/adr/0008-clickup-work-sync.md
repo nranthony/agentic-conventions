@@ -72,7 +72,8 @@ and asymmetrically.**
    semantic-role → status-name map live in `[work_sync]` and `[statuses]`, which
    `myclickup` ignores. **The template ships `workspace_id` empty**: an empty pin falls
    back with a warning, a valid-but-wrong pin resolves silently against another
-   workspace's board.
+   workspace's board. *(The mechanism here was stated wrongly — see Erratum. The decision
+   stands and the reasoning strengthens.)*
 
 8. **Sync is human-invoked.** `/clickup-pull` (read-only against ClickUp) and
    `/clickup-report` (`--dry-run` first, always). Scheduled polling is the agreed future
@@ -136,3 +137,32 @@ and asymmetrically.**
   once in `templates/CODEOWNERS`.
 - **`Needs Input` as a sixth status.** Rejected as redundant — `In Progress` already means
   a human has it.
+
+## Erratum (2026-08-11, same day) — the empty-pin mechanism
+
+Decision 7 said an empty `workspace_id` "falls back with a warning". **It does not.**
+Observed against myclickup 0.2.0 while trying to enumerate workspaces:
+
+- `Client.__init__` assigns `self._workspace_id = self.config.workspace_id`, and the
+  `teams[0]` fallback is guarded by `if self._workspace_id is None`. An empty **string**
+  is not `None`, so the guard is skipped.
+- `config.resolve()` returns `""` — not `None` — when the pin is present but empty.
+
+So there are **three** behaviours, not two:
+
+| Pin state | Behaviour |
+|---|---|
+| key absent entirely | falls back to `teams[0]`, **with a warning** |
+| present but empty | `HTTP 400: Invalid workspace id` on any workspace-scoped call |
+| present but wrong | resolves **silently** against another workspace's board |
+
+The decision is unchanged and the argument for it gets stronger: empty is the *loudest* of
+the three, not the middle one. It also maps cleanly onto the three-state "tracker link"
+definition — no link / declared-but-not-pinned / linked — where the middle state now has a
+concrete, observable failure rather than a warning that never fires.
+
+Recorded as an erratum rather than an edit: ADRs here are append-only, and the decision did
+not change — only a supporting claim about tool behaviour, which was asserted from reading
+`client.py` without running it. Downstream copies of the wrong wording (both
+`.myclickup.toml` files, the `clickup-pull` preflight, `AGENTS.md`, the CHANGELOG) were
+corrected directly, since those are operational rather than historical.

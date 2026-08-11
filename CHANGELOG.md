@@ -51,7 +51,7 @@ to a remote, so no consumer has this version.
   its ID is filled in — so "no tracker link" has a checkable meaning rather than being a
   vibe.
 - **`templates/.myclickup.toml`** — opt-in, non-secret tracker pins with `workspace_id`
-  deliberately **empty**. An empty pin falls back with a warning; a defaulted one resolves
+  deliberately **empty**. An empty pin fails loudly on use; a defaulted one resolves
   silently against another workspace's board. Carries `[work_sync].scope` for repos that
   own only a corner of a shared workspace, and a semantic-role → status-name map.
 - **`templates/.gitignore` ignores `.cache/`** — tool snapshot caches are regenerable and

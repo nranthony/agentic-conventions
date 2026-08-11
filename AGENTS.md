@@ -30,8 +30,8 @@ only live `AGENTS.md` here.
 - ClickUp ↔ `work/` sync (two projections of one item; pull identity in, push status/comments
   back, never plans) → [ADR-0008](docs/adr/0008-clickup-work-sync.md), config in
   [.myclickup.toml](.myclickup.toml), skills `/clickup-pull` + `/clickup-report`.
-  **`workspace_id` is intentionally empty** — a workspace for agentic work isn't set up yet,
-  so the skills stop rather than run against the token's first workspace.
+  **`workspace_id` is intentionally empty** — pending the real ID, so the skills stop at
+  preflight rather than act against the wrong board.
 - What changed **for consumers** → [CHANGELOG.md](CHANGELOG.md) (the plugin's user-visible
   surface only — skills, blueprint, templates. Internal churn stays in ADRs, `work/`, and
   the commit log.)

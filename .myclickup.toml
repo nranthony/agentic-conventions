@@ -5,11 +5,13 @@
 #
 # How this repo uses it → docs/adr/0008-clickup-work-sync.md
 #
-# STATUS: intentionally unpinned. A dedicated workspace for agentic work is
-# not set up yet. Until `workspace_id` is filled in, myclickup falls back to
-# the token's first workspace AND WARNS — which is the intended loud failure.
-# Do not paste a "close enough" ID here: a valid-but-wrong pin resolves
-# silently against someone else's board.
+# STATUS: intentionally unpinned, pending the workspace ID.
+# Three behaviours, verified against myclickup 0.2.0:
+#   key absent entirely -> falls back to the token's FIRST workspace, warning
+#   present but empty   -> HTTP 400 "Invalid workspace id" on any call
+#   present but wrong   -> resolves SILENTLY against another workspace's board
+# Empty is the loudest, so it stays empty until the real ID is known. Do not
+# paste a "close enough" ID here — that is the one failure nothing surfaces.
 
 workspace_id = ""    # REQUIRED once set. The API boundary, not a scope.
 # list_id    = ""    # optional: default target for `myclickup create`

@@ -124,11 +124,18 @@ fails (`client.py:127-145`):
 
 | Template ships | Adopting repo forgets to change it | Failure mode |
 |---|---|---|
-| **empty** | falls back to `teams[0]` **with a warning** naming the workspace | loud — **chosen** |
+| **empty** | `HTTP 400: Invalid workspace id` on any workspace-scoped call | loud — **chosen** |
+| the key removed | falls back to `teams[0]` **with a warning** naming the workspace | noticeable |
 | a real ID | resolves cleanly to *someone else's board* | **silent** |
 
-The docstring for that fallback calls it "the wrong-workspace trap the pin exists to
-close". Shipping a default ID would re-open the trap for every adopting repo, and this
+> **Corrected 2026-08-11**, after observing the behaviour rather than reading for it: this
+> table originally claimed an empty pin *falls back with a warning*. It does not — the
+> `teams[0]` fallback is guarded by `is None`, and an empty string is not `None`. Empty is
+> the loudest of the three, so the conclusion is unchanged and the argument is stronger.
+> Full detail in the ADR-0008 erratum.
+
+The `teams[0]` fallback's own docstring calls it "the wrong-workspace trap the pin exists
+to close". Shipping a default ID would re-open the trap for every adopting repo, and this
 repo has already paid for that lesson once — `templates/CODEOWNERS` previously shipped
 real owner handles, silently gating every PR in the adopting repo on someone who was not
 watching (CHANGELOG, Fixed).
