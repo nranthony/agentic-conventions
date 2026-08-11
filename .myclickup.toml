@@ -5,15 +5,15 @@
 #
 # How this repo uses it → docs/adr/0008-clickup-work-sync.md
 #
-# STATUS: intentionally unpinned, pending the workspace ID.
 # Three behaviours, verified against myclickup 0.2.0:
 #   key absent entirely -> falls back to the token's FIRST workspace, warning
 #   present but empty   -> HTTP 400 "Invalid workspace id" on any call
 #   present but wrong   -> resolves SILENTLY against another workspace's board
-# Empty is the loudest, so it stays empty until the real ID is known. Do not
-# paste a "close enough" ID here — that is the one failure nothing surfaces.
+# Only a correct pin is safe. Never paste a "close enough" ID — a wrong one is
+# the single failure nothing surfaces.
 
-workspace_id = ""    # REQUIRED once set. The API boundary, not a scope.
+workspace_id = "90141509251"    # "The Vault" — the agentic-tools workspace.
+                                # The API boundary, not a scope: see [work_sync].
 # list_id    = ""    # optional: default target for `myclickup create`
 
 
@@ -30,8 +30,15 @@ workspace_id = ""    # REQUIRED once set. The API boundary, not a scope.
 #   ["Space/Folder/List", ...]  a subsection
 #   ["Space"]                   a whole Space
 #   []                          the whole workspace
+#
+# [] on purpose: The Vault is dedicated to agentic tooling, so the whole
+# workspace IS the scope. Narrow this only if it grows unrelated areas.
 scope = []
 
+# As of 2026-08-11 the workspace holds one Space and one List, both still on
+# ClickUp's default names ("Space" (90147033108) / "List" (901419010749)).
+# Set `queue` to the real path once they are named — a path pinned to a
+# default name breaks silently on rename.
 # queue     = "Space/Folder/List"   # where `Ready for Agent` is watched
 # wip_limit = 3                     # max items concurrently `Agent Working`
 

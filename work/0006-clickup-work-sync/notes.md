@@ -23,16 +23,21 @@ ClickUp workspace. Archiving now would file an unproven design as settled histor
 
 ## Blocked on a human
 
-1. **Create the agentic-work ClickUp workspace.** Deliberately deferred — no suitable
-   workspace exists yet, which is why the pin is empty rather than pointed at one of the
-   four the token already sees.
-2. **Add two statuses to the chosen Space**, giving:
+1. ~~Create the agentic-work workspace.~~ **Done** — "The Vault" (`90141509251`), pinned
+   2026-08-11. `whoami` resolves it cleanly with no fallback warning.
+2. ~~Fill `workspace_id` and `[work_sync].scope`.~~ **Done** — scope is `[]` (the whole
+   workspace) since The Vault is dedicated to agentic tooling.
+3. **Add two statuses to the Space**, giving:
    `To Do → Ready for Agent → Agent Working → In Progress → In Review → Complete`.
    Both new ones must be `custom` type — created as `done` they would silently read as
-   finished. No CLI can define statuses; this is a ClickUp UI step.
-3. **Fill `workspace_id` and `[work_sync].scope`** in `.myclickup.toml`.
+   finished. **Still outstanding**: no CLI can define statuses, and `myclickup spaces`
+   normalises its payload to id+name so the current status set isn't even readable from
+   here. ClickUp UI step.
+4. **Name the Space and List.** Both are still on ClickUp's defaults ("Space"
+   `90147033108` / "List" `901419010749`), so `[work_sync].queue` is left unset — a path
+   pinned to a default name breaks silently on rename.
 
-## Unverified until step 3 lands
+## Unverified until a real task exists
 
 Everything below is reasoned from the ClickUp API shape and the myclickup source, never
 observed:
