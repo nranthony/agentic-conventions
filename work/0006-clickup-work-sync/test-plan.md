@@ -8,26 +8,34 @@ Legend: **[done]** already exercised · **[setup]** needs something built in Cli
 
 ---
 
-## 0. Prerequisite — the missing statuses
+## 0. Statuses — what is known, and what cannot be known from here
 
-The Codebase Space currently has four statuses, verified from live task payloads:
-
-| Status | `status_type` |
-|---|---|
-| `to do` | open |
-| `ready for agent` | custom |
-| `in review` | custom |
-| `complete` | closed |
-
-**Two are missing and every write test depends on them:** `Agent Working` and
-`In Progress`. Both must be **custom** type — created as `done` they would silently read
-as finished and break the completion rule. Target order (cosmetic, but it is the intended
-reading):
+The six statuses exist in the Codebase Space, created in the ClickUp UI:
 
     To Do → Ready for Agent → Agent Working → In Progress → In Review → Complete
 
-Do **W8 below before creating them** — it is the only chance to test the
-status-does-not-exist failure for free.
+**This cannot be verified from inside the sandbox.** `myclickup` has no read path to a
+Space's or List's status set: nothing in it requests `/list/{id}`, and `spaces` / `lists`
+normalise their payloads to `{id, name}` before emitting. The only place a status appears
+is inside an individual task.
+
+That matters because it rules out the obvious shortcut. Sampling the statuses of existing
+tasks shows which statuses are **in use**, never which exist — a status no task currently
+sits in is invisible to that method. An earlier draft of this plan made exactly that
+mistake and concluded two statuses were missing when they were not.
+
+**Verified from task payloads (i.e. currently in use):** `to do` (open),
+`ready for agent` (custom), `in review` (custom), `complete` (closed).
+**Not yet observed on any task, which says nothing about existence:** `Agent Working`,
+`In Progress`.
+
+The only way to confirm a status from here is to **set it** — which is test W1. A
+successful `update --status "Agent Working"` is the confirmation; there is no read-only
+substitute.
+
+> Upstream gap: this is the third missing read surface in `myclickup`, alongside no
+> `workspaces` command and `spaces --json` dropping everything but id and name. A
+> `myclickup statuses --list <path>` would close it, and the API already returns the array.
 
 ---
 
@@ -76,7 +84,7 @@ what lands on a human-facing board.
 | **W5** [run] | `claim` self-assigns without touching anything else | Any unassigned task |
 | **W6** [setup] | Fan-out reports **once on the parent**, listing child slugs — not N comments | Re-use `86bbc89p1` + its two children |
 | **W7** [run] | Dry-run fidelity: the printed request matches what is actually sent, including the resolved status name and epoch-ms dates | Any write |
-| **W8** [run] | **Do this FIRST, before creating the statuses.** Setting a status that does not exist fails loudly rather than silently no-opping | Try `--status "Agent Working"` today |
+| **W8** [run] | Setting a status that does not exist fails loudly rather than silently no-opping | Use a deliberately fake name — `--status "Nonexistent Status"`. Runnable at any time; do **not** use a real status name for this |
 
 ### Negative tests — the skill's discipline, not the API's
 
@@ -95,9 +103,9 @@ These verify the agent refuses, so they need no fixture. Ask for each and confir
 
 Cheapest path to the most coverage:
 
-1. **Run W8 now**, before anything else — it is free and unrepeatable once the statuses exist.
-2. **Create `Agent Working` + `In Progress`** (custom type). Unblocks every write test.
-3. **Run R7** — no setup, closes the dependency-direction gap.
+1. **Run W1** on a fixture task — it doubles as the only available confirmation that
+   `Agent Working` exists, since no read path can tell us (§0).
+2. **Run R7** — no setup, closes the dependency-direction gap.
 4. **Build the small fixtures**: R8 and R9 (blocker states) are the highest value, since the
    gate is the rule that makes the graph actionable.
 5. **Build R10** (Folder + List) and **R15** (second List) together — same few clicks, and
