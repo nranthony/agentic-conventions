@@ -45,9 +45,19 @@ plugin, and a relative path out of the payload resolves nowhere.
 That emits the raw ClickUp object — `parent`, `dependencies`, `linked_tasks` and
 `custom_fields` are all present, not just the fields the human formatter prints.
 
-With `--subtasks`: fetch the parent, then each child, and create **one item per child**,
-each carrying `ClickUp-parent`. Ask first if there are more than a handful — a fan-out of
-twenty items is rarely what was wanted.
+With `--subtasks`: **the parent payload does not list its children.** `GET /task/{id}`
+has no `subtasks` array (the only `subtasks` string in it is inside `sharing.public_fields`
+— don't be fooled). Children are discoverable only from *their* side, via `parent`:
+
+    myclickup sync
+    myclickup tasks --list "<path>" --all --json   # includes subtasks
+
+then select the entries whose `parent` equals the target ID, and create **one item per
+child**, each carrying `ClickUp-parent`. Ask first if there are more than a handful — a
+fan-out of twenty items is rarely what was wanted.
+
+Note that relations often sit on the **children**, not the parent: a parent can show empty
+`dependencies` while a child is genuinely blocked. Read each child's own payload.
 
 ## Create the item
 
@@ -85,8 +95,15 @@ Rules that make this worth having:
   carries (`"0006 - testing"` → `testing`) so the local number stays the only number in the
   path. If what remains is too thin to identify the item later, say so and propose a better
   slug rather than creating `work/0007-testing/` and moving on.
-- **`blocked-by` / `blocks` come from `dependencies`**, split by its `type` field;
-  `related` comes from `linked_tasks`.
+- **`blocked-by` / `blocks` come from `dependencies`, split by direction — not by `type`.**
+  One edge is stored as `{"task_id": A, "depends_on": B, "type": 1, ...}` and appears
+  **identically on both A and B**, so the record alone tells you nothing about which side
+  you are on. `type` is the same on both sides and is not the direction. Compare against
+  the task you fetched:
+  - `task_id` == this task → this task is **blocked-by** `depends_on`
+  - `depends_on` == this task → this task **blocks** `task_id`
+
+  `related` comes from `linked_tasks`, which is a separate array.
 - **Never write a bare ID.** Every relation carries either `→ work/NNNN-slug/` when that
   task has also been pulled, or its title plus last-seen status when it has not. A bare ID
   cannot be reasoned about, which is the definition of decorative.

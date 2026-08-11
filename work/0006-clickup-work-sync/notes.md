@@ -62,9 +62,37 @@ these findings are absorbed). Three things surfaced:
 Also set `[work_sync].queue = "Codebase/Agentic Conventions"` now that the Space and List
 have real names.
 
-**Still unexercised:** the dependency graph (`dependencies` and `linked_tasks` were both
-empty), `--subtasks` fan-out, re-pull diffing, and every write path — `/clickup-report`
-cannot run until the two statuses exist in the Space.
+## Second live pull — 2026-08-11, subtask fan-out + blocker
+
+Fixture: `86bbc89p1` "Continue Clickup Sync testing" `[ready for agent]` with two children
+(`86bbc89xm`, `86bbc89yp`), and `86bbc8ahm` `[in reveiw]` blocking the second child.
+Pulled to `work/0008-testing-task-1/` and `work/0009-testing-task-2/`. Two more defects,
+both found *before* writing the items:
+
+4. **Defect — subtasks are not discoverable from the parent.** `GET /task/{id}` has no
+   `subtasks` array; the only `subtasks` string in the payload is inside
+   `sharing.public_fields`. The skill's `--subtasks` instruction ("fetch the parent, then
+   each child") had no mechanism behind it. Children are visible only from *their* side
+   via `parent`, so the route is `myclickup tasks --list <path> --all --json` filtered on
+   `parent == <id>`. Fixed in the skill.
+5. **Defect — dependency direction is not `type`.** One edge is stored as
+   `{"task_id": A, "depends_on": B, "type": 1}` and appears **identically on both A and
+   B** — `type` was `1` on both sides of the same edge. The skill said to split
+   `blocked-by` / `blocks` "by its `type` field", which would have inverted half of all
+   relations. Direction comes from comparing `task_id` / `depends_on` against the task you
+   fetched. Fixed.
+
+Also observed: **relations sit on the children, not the parent.** `86bbc89p1` reports
+`dependencies: []` while its second child is genuinely blocked — so a fan-out must read
+each child's own payload, not infer from the parent. Noted in the skill.
+
+**The blocker gate fired correctly.** `86bbc8ahm` is `status_type: custom` (not
+`done`/`closed`), so `work/0009` is marked BLOCKED and carries the named blocker plus its
+last-seen status rather than a bare ID.
+
+**Still unexercised:** `linked_tasks` / `ClickUp-related` (no fixture has one), re-pull
+diffing, and every write path — `/clickup-report` cannot run until the two agent statuses
+exist in the Space.
 
 ## Unverified until a real task exists
 
