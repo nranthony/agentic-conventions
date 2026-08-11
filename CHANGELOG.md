@@ -32,6 +32,25 @@ to a remote, so no consumer has this version.
 - **Seeded delivery for closed-egress containers** — copying `plugins/myconv/` into a
   profile's `~/.claude/skills/` loads it as `myconv@skills-dir` with no network and no
   install step, covering every repo in that profile's workspace.
+- **`/myconv:clickup-pull` and `/myconv:clickup-report`** — pull a ClickUp task into a
+  `work/NNNN-slug/` item, and report status changes or short hurdle comments back. The
+  pull is read-only against ClickUp; the report dry-runs every write first. Both require
+  the `myclickup` CLI and a repo-root `.myclickup.toml` with a pinned workspace, and stop
+  with a plain message when either is missing — so they are inert in repos that don't use
+  a tracker.
+- **External-tracker guidance in the blueprint** ([ADR-0008](docs/adr/0008-clickup-work-sync.md))
+  — a tracker and `work/` are two projections of one item, not competing homes, so the
+  blueprint no longer tells you to skip `work/` when a tracker is in use. Adds the
+  partial-sync rule (pull intent in; push back only status and short comments; plans and
+  notes cross neither way) and a provenance-table row.
+- **`templates/.myclickup.toml`** — opt-in, non-secret tracker pins with `workspace_id`
+  deliberately **empty**. An empty pin falls back with a warning; a defaulted one resolves
+  silently against another workspace's board. Carries `[work_sync].scope` for repos that
+  own only a corner of a shared workspace, and a semantic-role → status-name map.
+- **`templates/.gitignore` ignores `.cache/`** — tool snapshot caches are regenerable and
+  can carry customer-identifying names (a ClickUp cache holds space and list titles). The
+  cache directory is created by ordinary read commands, not just an explicit sync, so an
+  adopting repo would otherwise pick it up as untracked content.
 
 ### Changed
 

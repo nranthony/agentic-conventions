@@ -1,0 +1,43 @@
+# myclickup pins for this repo — non-secret by design (myclickup ADR-0005).
+# Workspace and list IDs are configuration, not secrets: they are worthless
+# without a token, and any token holder enumerates them with one API call.
+# A TOKEN NEVER BELONGS IN THIS FILE, on any platform.
+#
+# How this repo uses it → docs/adr/0008-clickup-work-sync.md
+#
+# STATUS: intentionally unpinned. A dedicated workspace for agentic work is
+# not set up yet. Until `workspace_id` is filled in, myclickup falls back to
+# the token's first workspace AND WARNS — which is the intended loud failure.
+# Do not paste a "close enough" ID here: a valid-but-wrong pin resolves
+# silently against someone else's board.
+
+workspace_id = ""    # REQUIRED once set. The API boundary, not a scope.
+# list_id    = ""    # optional: default target for `myclickup create`
+
+
+# ---------------------------------------------------------------------------
+# Below here is read by the ClickUp sync skills, not by myclickup itself.
+# myclickup loads this file and ignores tables it does not know (config.py
+# _read_pins), so these are forward-compatible today.
+# ---------------------------------------------------------------------------
+
+[work_sync]
+# Which part of the workspace this repo draws work from. The queue is
+# scope x status: `scope` says which lists to scan, `statuses.agent_ready`
+# says which tasks in them are queued.
+#   ["Space/Folder/List", ...]  a subsection
+#   ["Space"]                   a whole Space
+#   []                          the whole workspace
+scope = []
+
+# queue     = "Space/Folder/List"   # where `Ready for Agent` is watched
+# wip_limit = 3                     # max items concurrently `Agent Working`
+
+[statuses]
+# Semantic role -> the status name as spelled in THIS workspace's Space.
+# A mapping, not a list: status names vary per Space, which is the same
+# reason completion is judged by status_type and never by name.
+agent_ready   = "Ready for Agent"
+agent_working = "Agent Working"
+human_active  = "In Progress"
+review        = "In Review"

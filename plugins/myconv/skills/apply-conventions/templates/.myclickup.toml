@@ -1,0 +1,43 @@
+# myclickup pins — OPT-IN. Only add this file if this repo links work to ClickUp.
+# A repo with no tracker link should not carry an unused config file.
+#
+# Non-secret by design: workspace and list IDs are configuration, not secrets —
+# worthless without a token. A TOKEN NEVER BELONGS IN THIS FILE, on any platform.
+# myclickup rejects the file outright if a top-level key contains "token" or "key".
+
+# --- FILL THIS IN. Leave it empty rather than guessing. --------------------
+# An empty workspace_id makes myclickup fall back to the token's first
+# workspace AND WARN. A valid-but-wrong ID resolves SILENTLY against another
+# workspace's board. Empty fails loud; wrong fails quietly. Never ship a
+# "sensible default" here.
+workspace_id = ""    # REQUIRED once set. The API boundary, not a scope.
+# list_id    = ""    # optional: default target for `myclickup create`
+
+
+# ---------------------------------------------------------------------------
+# Read by the ClickUp sync skills, not by myclickup itself. myclickup ignores
+# tables it does not know, so these are safe to carry.
+# ---------------------------------------------------------------------------
+
+[work_sync]
+# Which part of the workspace this repo draws work from — a repo may own a
+# whole workspace or one corner of a shared one. The queue is scope x status:
+# `scope` says which lists to scan, `statuses.agent_ready` says which tasks
+# in them are queued.
+#   ["Space/Folder/List", ...]  a subsection
+#   ["Space"]                   a whole Space
+#   []                          the whole workspace
+scope = []
+
+# queue     = "Space/Folder/List"   # where `Ready for Agent` is watched
+# wip_limit = 3                     # max items concurrently `Agent Working`
+
+[statuses]
+# Semantic role -> the status name as spelled in YOUR workspace. Adjust the
+# right-hand side to match; the left-hand keys are what the skills look up.
+# Status names vary per Space, which is why this is a mapping and not a list —
+# and why completion is judged by status_type, never by name.
+agent_ready   = "Ready for Agent"
+agent_working = "Agent Working"
+human_active  = "In Progress"
+review        = "In Review"

@@ -21,6 +21,7 @@ Two ideas carry the whole thing:
 ├── CONTRIBUTING.md            # how a change gets proposed → reviewed → merged
 ├── CODEOWNERS                 # which paths require which reviewers (enforcement)
 ├── AGENTS.local.md            # gitignored personal context, imported by AGENTS.md if present
+├── .myclickup.toml            # opt-in: committed non-secret tracker pins (no tokens, IDs empty not defaulted)
 │
 ├── .claude/
 │   ├── settings.json          # committed: permissions + hooks (the enforcement layer)
@@ -74,7 +75,9 @@ add the rest only when a concrete need appears. Adopt in this order:
   **proposals included**: an item starts as `work/NNNN-slug/proposal.md`
   (`Draft | In review | Accepted → ADR-NNNN | Rejected`) and grows
   `spec.md`/`plan.md`/`notes.md` in the same folder if accepted. If in-flight work is
-  tracked outside the repo (issues, ClickUp, etc.), skip `work/` entirely. `work/`
+  tracked outside the repo (issues, ClickUp, Linear, etc.), you may still want `work/` —
+  see the external-tracker bullet below; skip it only if nothing needs a reference
+  bundle deeper than a ticket. `work/`
   carries an exit rule: **when the work merges or the question resolves, distill
   anything durable out (decision rationale → an ADR; reference knowledge → docs/ or a
   skill), then move the folder under `work/archive/`** — or delete it if nothing
@@ -89,6 +92,21 @@ add the rest only when a concrete need appears. Adopt in this order:
   There is deliberately **one** proposal home. A separate `docs/rfcs/` tier was tried and
   retired: two numbered pipelines meant every proposal needed a "which one?" decision, and
   the answer to "what's proposed?" and "what's in flight?" turned out to be the same folder.
+
+- **Opt-in — external tracker link (add when a tracker holds the backlog of record):** a
+  tracker and `work/` are **two projections of one item**, not competing homes for it. The
+  tracker answers *what needs doing, in what order, how it connects to the bigger picture*
+  — for a human, at a glance, including non-code work. `work/` answers *what an agent must
+  load to do this well*. Link them with an optional pointer in the work item's
+  front-matter and sync **partially and asymmetrically**: pull identity and intent in on
+  activation; push back only status transitions and short comments on hurdles or changes
+  of direction. Plans, notes, specs and diffs cross in **neither** direction — a tracker's
+  value is being low-cognitive-load, and pasting markdown into it destroys that. The
+  mapping is deliberately not 1:1 (one ticket may become several items; items and tickets
+  may each exist alone), so the link is a pointer and never a folder-naming scheme. Keep
+  tracker config in a committed, non-secret pins file with any ID left **empty rather than
+  defaulted** — an empty pin fails loudly, a wrong one resolves silently against someone
+  else's board. Recorded as **ADR-0008** in the conventions repo.
 
 Rule of thumb: start at the core and let real need pull each further piece in. An empty
 `work/` no one uses is worse than not having it.
@@ -110,6 +128,7 @@ This is the core of "how agents know where to look." Each question has exactly o
 | Operational how-to (not a skill) | `docs/runbooks/` | Step-by-step |
 | Who must approve changes here? | `CODEOWNERS` | Path → reviewer |
 | What's in flight right now? | `work/NNNN-slug/` | spec → plan → notes |
+| Where does this sit in the plan / who else cares? | the external tracker | linked from the work item's front-matter (opt-in) |
 | How does a change get merged? | `CONTRIBUTING.md` | Process |
 
 The lifecycle reads left to right, mostly inside one numbered folder: a **proposal** (`work/NNNN-slug/proposal.md`) proposes → an **ADR** records the decision → the same item's **plan.md/notes.md** track the implementation → the **CHANGELOG** and commit (referencing the ADR) record the outcome, and the item archives. That chain is the provenance: any line of code can be traced back to the decision and the reasoning that produced it.

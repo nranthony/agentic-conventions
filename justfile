@@ -14,10 +14,13 @@ default:
 sync-plugin:
     mkdir -p {{PAYLOAD}}/reference {{PAYLOAD}}/templates
     mkdir -p {{PLUGIN}}/skills/make-plan {{PLUGIN}}/skills/wrap-up
+    mkdir -p {{PLUGIN}}/skills/clickup-pull {{PLUGIN}}/skills/clickup-report
     cp -r reference/. {{PAYLOAD}}/reference/
     cp -r templates/. {{PAYLOAD}}/templates/
     cp templates/.claude/skills/make-plan/SKILL.md {{PLUGIN}}/skills/make-plan/SKILL.md
     cp templates/.claude/skills/wrap-up/SKILL.md {{PLUGIN}}/skills/wrap-up/SKILL.md
+    cp templates/.claude/skills/clickup-pull/SKILL.md {{PLUGIN}}/skills/clickup-pull/SKILL.md
+    cp templates/.claude/skills/clickup-report/SKILL.md {{PLUGIN}}/skills/clickup-report/SKILL.md
     @echo "synced → {{PLUGIN}} (review 'git diff' before committing)"
 
 # Fail if the plugin copy has drifted from the canonical sources.
@@ -31,6 +34,8 @@ check-plugin-sync:
     diff -r templates {{PAYLOAD}}/templates || status=1
     diff templates/.claude/skills/make-plan/SKILL.md {{PLUGIN}}/skills/make-plan/SKILL.md || status=1
     diff templates/.claude/skills/wrap-up/SKILL.md {{PLUGIN}}/skills/wrap-up/SKILL.md || status=1
+    diff templates/.claude/skills/clickup-pull/SKILL.md {{PLUGIN}}/skills/clickup-pull/SKILL.md || status=1
+    diff templates/.claude/skills/clickup-report/SKILL.md {{PLUGIN}}/skills/clickup-report/SKILL.md || status=1
     if [ "$status" -ne 0 ]; then
       echo "plugin payload is out of sync — run 'just sync-plugin'" >&2
       exit 1
@@ -46,4 +51,6 @@ validate:
 check-skill-mirrors:
     diff .claude/skills/make-plan/SKILL.md templates/.claude/skills/make-plan/SKILL.md
     diff .claude/skills/wrap-up/SKILL.md templates/.claude/skills/wrap-up/SKILL.md
+    diff .claude/skills/clickup-pull/SKILL.md templates/.claude/skills/clickup-pull/SKILL.md
+    diff .claude/skills/clickup-report/SKILL.md templates/.claude/skills/clickup-report/SKILL.md
     @echo "live skills match their template mirrors"

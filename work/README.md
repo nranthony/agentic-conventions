@@ -30,6 +30,25 @@ Archived items are historical records: never treat an archived `proposal.md` or
 `work/plans/` is gitignored scratch space for native plan-mode drafts
 (`plansDirectory`); a draft becomes durable by promotion into an item.
 
+## External tracker link (optional)
+
+An item may point at a ClickUp task — the two are separate projections of one piece of
+work, not duplicates ([ADR-0008](../docs/adr/0008-clickup-work-sync.md)). The pointer
+lives in the item's front-matter and is created by `/clickup-pull`:
+
+```markdown
+- Synced: 2026-08-11 — pushed: Agent Working
+- ClickUp: 86abc123 — https://app.clickup.com/t/86abc123
+- ClickUp-status: Agent Working
+- ClickUp-path: <Space / Folder / List>
+- ClickUp-blocked-by: 86dep001 — "Vendor API credentials" — not pulled, status: To Do
+```
+
+Two rules carry the weight: it is a **snapshot, not a mirror** (a gate decision re-reads
+live), and a blocker that is not `done`/`closed` **stops the work**. Reporting back
+(`/clickup-report`) is limited to a status change and a short comment — plans and notes
+never cross.
+
 ## Proposal template
 
 ```markdown
