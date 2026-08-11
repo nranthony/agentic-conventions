@@ -59,6 +59,11 @@ why it shipped minimal.
   makes `work/` the single in-flight pipeline — a pre-existing tension this sits on top of.
   Not reconciled; if beads later lands the chain becomes ClickUp → bd → `work/` and
   ADR-0008 needs superseding.
-- **Whether `apply-conventions` should place the ClickUp skills into repos with no tracker
-  link.** They are inert there (description names the requirement, preflight stops), but
-  the placement judgment is currently unstated.
+## Resolved after the wrap-up
+
+- **`apply-conventions` and the ClickUp skills.** Settled: it does **not** place them in a
+  repo with no tracker link, and it now asks for the workspace ID and scope up front
+  rather than leaving a half-configured pins file behind. Unlinked, the skills would be
+  the dead instructions that skill's own guardrail forbids. (`a27d9d3`)
+- **"Tracker link" is defined** in the blueprint's external-tracker bullet — a property of
+  the repo, one test, three states. (`3e0e661`)
