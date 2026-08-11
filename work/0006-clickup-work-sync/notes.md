@@ -37,6 +37,35 @@ ClickUp workspace. Archiving now would file an unproven design as settled histor
    `90147033108` / "List" `901419010749`), so `[work_sync].queue` is left unset — a path
    pinned to a default name breaks silently on rename.
 
+## First live pull — 2026-08-11, task `86bbc7we3`
+
+Ran `/clickup-pull 86bbc7we3` against The Vault → `Codebase / Agentic Conventions`.
+Preflight, fetch, path resolution and item creation all worked; the pull is read-only and
+touched nothing on the board. Produced `work/0007-testing/` (a test fixture — delete once
+these findings are absorbed). Three things surfaced:
+
+1. **Defect — status names come back lower-cased.** The API returns
+   `status.status == "ready for agent"` however it is typed in the UI, so an exact match
+   against `[statuses] agent_ready = "Ready for Agent"` finds nothing. Would have broken
+   the `agent_working` count and, later, the whole poller filter. Fixed: both skills and
+   the pins file now say match case-insensitively, send the mapped spelling on writes.
+2. **Design confirmed, for a second reason.** `GET /task/{id}` returns `space` as a bare
+   `{id}` (as expected) *and* a `folder` of `{"name": "hidden", "hidden": true}` for a list
+   sitting directly under a Space. Reading that field verbatim would have written
+   `Codebase / hidden / Agentic Conventions`. Resolving from cached `hierarchy.json`
+   avoids both problems; the skill now states why so nobody "simplifies" it back.
+3. **Gap — slug derivation.** Title `0006 - testing` yielded `work/0007-testing/`: the
+   leading reference collides confusingly with local numbering, and what remains does not
+   identify the item. Skill now says strip the leading reference and propose a better slug
+   rather than creating a thin one silently.
+
+Also set `[work_sync].queue = "Codebase/Agentic Conventions"` now that the Space and List
+have real names.
+
+**Still unexercised:** the dependency graph (`dependencies` and `linked_tasks` were both
+empty), `--subtasks` fan-out, re-pull diffing, and every write path — `/clickup-report`
+cannot run until the two statuses exist in the Space.
+
 ## Unverified until a real task exists
 
 Everything below is reasoned from the ClickUp API shape and the myclickup source, never

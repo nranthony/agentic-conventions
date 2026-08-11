@@ -36,7 +36,10 @@ it.
    (denied), and never fall back to raw HTTP against the ClickUp API.
 2. **`.myclickup.toml` present, `workspace_id` non-empty?** If not, stop — same rule as
    `/clickup-pull`. Never guess an ID.
-3. Resolve the target status through `[statuses]`, never by hard-coded name.
+3. Resolve the target status through `[statuses]`, never by hard-coded name. **Compare
+   case-insensitively** — ClickUp returns status names lower-cased (`"ready for agent"`)
+   whatever the UI shows, so an exact match against `"Ready for Agent"` finds nothing.
+   Send the `[statuses]` spelling on writes; read back case-insensitively.
 4. Read the item's `ClickUp:` front-matter. No pointer means nothing to report — say so
    rather than guessing which task was meant.
 5. **Re-read the task live** (`myclickup task <id> --json`) before deciding anything. The

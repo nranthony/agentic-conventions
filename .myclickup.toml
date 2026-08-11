@@ -35,17 +35,17 @@ workspace_id = "90141509251"    # "The Vault" — the agentic-tools workspace.
 # workspace IS the scope. Narrow this only if it grows unrelated areas.
 scope = []
 
-# As of 2026-08-11 the workspace holds one Space and one List, both still on
-# ClickUp's default names ("Space" (90147033108) / "List" (901419010749)).
-# Set `queue` to the real path once they are named — a path pinned to a
-# default name breaks silently on rename.
-# queue     = "Space/Folder/List"   # where `Ready for Agent` is watched
-# wip_limit = 3                     # max items concurrently `Agent Working`
+queue = "Codebase/Agentic Conventions"   # where `Ready for Agent` is watched
+# wip_limit = 3                          # max concurrently `Agent Working`
 
 [statuses]
 # Semantic role -> the status name as spelled in THIS workspace's Space.
 # A mapping, not a list: status names vary per Space, which is the same
 # reason completion is judged by status_type and never by name.
+#
+# MATCH CASE-INSENSITIVELY. ClickUp returns these lower-cased whatever the UI
+# shows ("ready for agent"), so an exact match against the values below finds
+# nothing. Observed 2026-08-11 on task 86bbc7we3.
 agent_ready   = "Ready for Agent"
 agent_working = "Agent Working"
 human_active  = "In Progress"

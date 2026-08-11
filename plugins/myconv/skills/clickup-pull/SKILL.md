@@ -31,6 +31,9 @@ plugin, and a relative path out of the payload resolves nowhere.
    is safe, so ask for it.
 4. Read `[statuses]` from that file. **Never hard-code a status name** — names vary per
    Space, which is the same reason completion is judged by `status_type`.
+   **Compare case-insensitively.** ClickUp returns status names lower-cased
+   (`"ready for agent"`) regardless of how they were typed in the UI, so an exact match
+   against a `[statuses]` value like `"Ready for Agent"` silently finds nothing.
 5. `myclickup status` — if the cache is stale or absent, `myclickup sync` first.
 6. If `[work_sync].wip_limit` is set, count existing items whose `ClickUp-status` matches
    the `agent_working` name. At or over the limit, **warn and ask** before adding another.
@@ -73,8 +76,15 @@ repo's own proposal template headings below it.
 
 Rules that make this worth having:
 
-- **`ClickUp-path` comes from the cache.** `GET /task/{id}` returns `space` as a bare ID;
-  resolve the `Space / Folder / List` path from cached `hierarchy.json`.
+- **`ClickUp-path` comes from the cache, never from the task payload.** Two reasons:
+  `GET /task/{id}` returns `space` as a bare `{id}` with no name, *and* its `folder` field
+  reads `{"name": "hidden", "hidden": true}` for any list that sits directly under a Space.
+  Reading that field verbatim writes a path like `Codebase / hidden / Agentic Conventions`.
+  Resolve from cached `hierarchy.json` instead, which omits the implicit folder entirely.
+- **Slug from the task title, cleaned.** Strip any leading work-item reference the title
+  carries (`"0006 - testing"` → `testing`) so the local number stays the only number in the
+  path. If what remains is too thin to identify the item later, say so and propose a better
+  slug rather than creating `work/0007-testing/` and moving on.
 - **`blocked-by` / `blocks` come from `dependencies`**, split by its `type` field;
   `related` comes from `linked_tasks`.
 - **Never write a bare ID.** Every relation carries either `→ work/NNNN-slug/` when that
