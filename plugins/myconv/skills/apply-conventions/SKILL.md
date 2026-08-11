@@ -31,14 +31,28 @@ then decide what this particular repo should get.
    `docs/adr/` and a light `.claude/settings.json` for most repos. Treat `CODEOWNERS`,
    `CONTRIBUTING.md`, PR template and CI as team-ceremony opt-ins, and `work/` as the heavier
    provenance tier. An empty `work/` no one uses is worse than not having it.
-4. **Present the plan before writing.** List what you would add, adapt, or leave alone, with
+4. **Settle the tracker link — ask, don't assume.** A repo is *linked* when a committed
+   pins file (`.myclickup.toml`) exists with its workspace ID filled in; see the
+   blueprint's external-tracker bullet for the three states. Resolve it now rather than
+   leaving a half-configured repo behind:
+   - **No pins file** → ask whether this repo's work is tracked in ClickUp. If no, skip
+     the file *and* the `clickup-pull` / `clickup-report` skills entirely and move on.
+   - **Yes, or a file exists with an empty ID** → ask for the workspace ID and the scope
+     (which Space/Folder/List this repo draws work from, or the whole workspace), then
+     write them in. **Never invent or guess an ID** — a valid-but-wrong one resolves
+     silently against someone else's board. If the human doesn't have it to hand, leave
+     the ID empty, say the repo is declared-but-not-pinned, and place neither skill yet.
+   - Only place the two ClickUp skills once the ID is actually set. They are useless
+     without it, and they carry a `myclickup` CLI dependency — note it if that CLI isn't
+     on the target machine; the skills stop cleanly, but the human should know why.
+5. **Present the plan before writing.** List what you would add, adapt, or leave alone, with
    the reasoning. Get agreement. With `--audit`, stop here and report the gap only.
-5. **Apply by hand.** Adapt each template to this repo — real paths, real owner, the repo's
+6. **Apply by hand.** Adapt each template to this repo — real paths, real owner, the repo's
    existing voice. Never paste a template verbatim if the repo's own patterns differ; the
    repo wins.
-6. **Wire the entrypoint.** Each `AGENTS.md` gets a thin `CLAUDE.md` beside it containing a
+7. **Wire the entrypoint.** Each `AGENTS.md` gets a thin `CLAUDE.md` beside it containing a
    heading and `@AGENTS.md` — nothing else.
-7. **Review the diff** before committing, and commit locally with a clear message.
+8. **Review the diff** before committing, and commit locally with a clear message.
 
 ## Guardrails
 
@@ -48,6 +62,9 @@ then decide what this particular repo should get.
   `CODEOWNERS` silently changes who must approve every PR.
 - **Templates are examples.** If a template mentions a path, tool, or section this repo does
   not have, drop it rather than importing dead instructions.
+- **Never place the ClickUp skills in a repo with no tracker link.** Unlinked, they are
+  exactly the dead instructions the rule above forbids — and the pins file is opt-in, so
+  don't create one just to justify placing them.
 - **Work on a clean tree**, and never push without approval.
 - **No secrets, no personal paths, no machine-specific values** in anything you write.
 

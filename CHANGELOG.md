@@ -32,6 +32,10 @@ to a remote, so no consumer has this version.
 - **Seeded delivery for closed-egress containers** — copying `plugins/myconv/` into a
   profile's `~/.claude/skills/` loads it as `myconv@skills-dir` with no network and no
   install step, covering every repo in that profile's workspace.
+- **`/myconv:apply-conventions` now settles the tracker link explicitly.** It asks whether
+  the repo's work is tracked in ClickUp and, if so, for the workspace ID and scope to write
+  in — rather than leaving a half-configured pins file behind. A repo with no link gets
+  neither the file nor the ClickUp skills, so nothing dead is placed.
 - **`/myconv:clickup-pull` and `/myconv:clickup-report`** — pull a ClickUp task into a
   `work/NNNN-slug/` item, and report status changes or short hurdle comments back. The
   pull is read-only against ClickUp; the report dry-runs every write first. Both require
