@@ -42,7 +42,10 @@ to a remote, so no consumer has this version.
   — a tracker and `work/` are two projections of one item, not competing homes, so the
   blueprint no longer tells you to skip `work/` when a tracker is in use. Adds the
   partial-sync rule (pull intent in; push back only status and short comments; plans and
-  notes cross neither way) and a provenance-table row.
+  notes cross neither way) and a provenance-table row. Defines what a **tracker link**
+  actually is — a property of the repo with one test, the committed pins file and whether
+  its ID is filled in — so "no tracker link" has a checkable meaning rather than being a
+  vibe.
 - **`templates/.myclickup.toml`** — opt-in, non-secret tracker pins with `workspace_id`
   deliberately **empty**. An empty pin falls back with a warning; a defaulted one resolves
   silently against another workspace's board. Carries `[work_sync].scope` for repos that

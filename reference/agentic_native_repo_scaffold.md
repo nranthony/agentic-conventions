@@ -103,10 +103,24 @@ add the rest only when a concrete need appears. Adopt in this order:
   of direction. Plans, notes, specs and diffs cross in **neither** direction — a tracker's
   value is being low-cognitive-load, and pasting markdown into it destroys that. The
   mapping is deliberately not 1:1 (one ticket may become several items; items and tickets
-  may each exist alone), so the link is a pointer and never a folder-naming scheme. Keep
-  tracker config in a committed, non-secret pins file with any ID left **empty rather than
-  defaulted** — an empty pin fails loudly, a wrong one resolves silently against someone
-  else's board. Recorded as **ADR-0008** in the conventions repo.
+  may each exist alone), so the link is a pointer and never a folder-naming scheme.
+  Keep tracker config in a committed, non-secret pins file with any ID left **empty rather
+  than defaulted** — an empty pin fails loudly, a wrong one resolves silently against
+  someone else's board.
+
+  **"Tracker link" is a property of the repo, not of an item**, and it has one operational
+  test: *does that committed pins file exist with its workspace/project ID filled in?*
+  Three states, and the middle one is real rather than a half-configured accident —
+
+  | State | Test | Behaviour |
+  |---|---|---|
+  | No link | no pins file | tracker tooling inert; the file is opt-in and never created uninvited |
+  | Declared, not pinned | file exists, ID empty | intent recorded but unusable — tooling stops and says why |
+  | Linked | file exists, ID set | tooling operates, within the configured scope |
+
+  A ticket URL in a commit message or a doc is a *mention*, not a link. What makes a repo
+  linked is the committed configuration that gives tracker tooling somewhere to point.
+  Recorded as **ADR-0008** in the conventions repo.
 
 Rule of thumb: start at the core and let real need pull each further piece in. An empty
 `work/` no one uses is worse than not having it.
