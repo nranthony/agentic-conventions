@@ -6,12 +6,16 @@
 # myclickup rejects the file outright if a top-level key contains "token" or "key".
 
 # --- FILL THIS IN. Leave it empty rather than guessing. --------------------
-# Three behaviours, verified against myclickup 0.2.0:
-#   key absent entirely -> falls back to the token's FIRST workspace, warning
-#   present but empty   -> HTTP 400 "Invalid workspace id" on any call
-#   present but wrong   -> resolves SILENTLY against another workspace's board
-# Empty is the loudest of the three, which is why it ships empty. Never ship a
-# "sensible default" here — a wrong ID is the one failure nothing surfaces.
+# Two behaviours, verified against myclickup 0.3.0:
+#   absent, or present but empty -> falls back to the token's FIRST workspace,
+#                                   printing a warning on every call
+#   present but wrong            -> resolves SILENTLY against another
+#                                   workspace's board (or 401s, if the token
+#                                   cannot see that workspace at all)
+# (Under 0.2.0 an empty pin 400'd instead; 0.3.0 folded it into the warned
+# fallback. The conclusion is unchanged.) Unset is the loud state — a warning
+# on every call — which is why this ships empty. Never ship a "sensible
+# default": a wrong ID is the one failure nothing surfaces.
 workspace_id = ""    # REQUIRED once set. The API boundary, not a scope.
 # list_id    = ""    # optional: default target for `myclickup create`
 
@@ -41,7 +45,8 @@ scope = []
 # not a list — and why completion is judged by the status `type` (done/closed),
 # never by name.
 #
-# FILL THESE IN from your Space's actual statuses (`myclickup status`), then
+# FILL THESE IN from your list's actual statuses — `myclickup statuses --list
+# "<Space/Folder/List>"` prints each name with its type — then
 # uncomment. Ship them unset rather than guessed: an unset role fails loudly
 # where a wrong name matches nothing and looks like an empty queue. The examples
 # below are one workspace's spelling, not a default.

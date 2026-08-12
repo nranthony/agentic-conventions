@@ -14,6 +14,40 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.3.0 — unreleased
+
+The two ClickUp skills are now CLI-first: mechanism lives in `myclickup`, policy stays in
+the skill. (The version match with the CLI is coincidence — the plugin and the CLI are
+versioned independently.)
+
+### Changed
+
+- **`/myconv:clickup-pull` and `/myconv:clickup-report` require `myclickup` 0.3.0 or
+  newer**, and both preflight on `myclickup --version` before doing anything else. Older
+  CLIs lack the `subtasks` and `set-status` commands and the derived fields the skills now
+  read, and the failure would otherwise look like a task with no relations rather than an
+  out-of-date tool.
+- **The skills use the CLI's own commands instead of reconstructing them.** Subtasks come
+  from `subtasks <id>`; blocked-by/blocks come from the payload's derived `blocked_by` and
+  `blocks` arrays; `ClickUp-path` comes from its derived `path`; the status transition is
+  written with `set-status`, which sets that one field and validates the name against the
+  list's statuses before sending; `statuses --list` answers what a list defines. Reads name
+  `--live` or `--cached` explicitly rather than describing cache behaviour.
+- **The workaround prose is gone.** The whole-list scan filtered on `parent`, the
+  `task_id`/`depends_on` direction table, and the `hierarchy.json` / `folder: "hidden"`
+  path fix were 0.2.0-era workarounds; each is now one flag or one field. Policy is
+  untouched — one item per child, ask before a large fan-out, read each child's own payload
+  (its `subtasks` summary carries no derived relations), blockers gate the work, dry-run
+  every write, and only a status change or a short comment ever crosses.
+- **The empty-`workspace_id` behaviour is corrected in both `.myclickup.toml` files and in
+  the pull preflight.** Under 0.2.0 an empty pin failed with `HTTP 400`; under 0.3.0 it
+  falls back to the token's *first* workspace with a warning, exactly like an absent key —
+  so an unpinned repo now reads a real board that is merely the wrong one, instead of
+  erroring. Ship it empty and fill it in; never guess an ID, since a wrong-but-authorized
+  one still resolves silently.
+
+---
+
 ## 0.2.0 — unreleased
 
 The payload shape changed: the plugin no longer carries copies of its own shared skills.

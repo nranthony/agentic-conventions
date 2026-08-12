@@ -5,12 +5,16 @@
 #
 # How this repo uses it → docs/adr/0008-clickup-work-sync.md
 #
-# Three behaviours, verified against myclickup 0.2.0:
-#   key absent entirely -> falls back to the token's FIRST workspace, warning
-#   present but empty   -> HTTP 400 "Invalid workspace id" on any call
-#   present but wrong   -> resolves SILENTLY against another workspace's board
-# Only a correct pin is safe. Never paste a "close enough" ID — a wrong one is
-# the single failure nothing surfaces.
+# Two behaviours, verified against myclickup 0.3.0:
+#   absent, or present but empty -> falls back to the token's FIRST workspace,
+#                                   printing a warning on every call
+#   present but wrong            -> resolves SILENTLY against another
+#                                   workspace's board (or 401s, if the token
+#                                   cannot see that workspace at all)
+# (0.2.0 made an empty pin a hard HTTP 400; 0.3.0 folded it into the warned
+# fallback — see the erratum in docs/adr/0008-clickup-work-sync.md, which
+# records the 0.2.0 observation.) Only a correct pin is safe. Never paste a
+# "close enough" ID — a wrong one is the single failure nothing surfaces.
 
 workspace_id = "90141509251"    # "The Vault" — the agentic-tools workspace.
                                 # The API boundary, not a scope: see [work_sync].

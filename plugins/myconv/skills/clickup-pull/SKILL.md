@@ -24,44 +24,45 @@ plugin, and a relative path out of the payload resolves nowhere.
    install command to guess at. In the sandbox it is baked into the image, so its absence
    means the image needs updating; on any other machine, ask the human to clone the repo
    and install the wheel. Never fall back to raw HTTP against the ClickUp API.
-2. **`.myclickup.toml` at the repo root?** If absent, this repo has no tracker link. Say
+2. **`myclickup --version` ≥ 0.3.0?** If lower, stop and ask for an upgrade. Older CLIs
+   have no `subtasks` and no `set-status`, and their `task` output carries none of the
+   derived fields used below (`blocked_by`, `blocks`, `path`) — which reads as a task with
+   no relations rather than as an out-of-date tool.
+3. **`.myclickup.toml` at the repo root?** If absent, this repo has no tracker link. Say
    so and stop — do not create one uninvited; it is an opt-in piece.
-3. **`workspace_id` non-empty?** If empty, stop — the repo is declared-but-not-pinned, and
-   every workspace-scoped call would fail with `HTTP 400: Invalid workspace id`. **Do not
-   guess an ID**: an absent key falls back to the token's first workspace with a warning,
-   and a wrong one resolves silently against another workspace's board. Only a correct pin
-   is safe, so ask for it.
-4. Read `[statuses]` from that file. **Never hard-code a status name** — names vary per
+4. **`workspace_id` non-empty?** If empty, stop — the repo is declared-but-not-pinned, and
+   empty does **not** fail: as of 0.3.0 it falls back to the token's *first* workspace
+   with a warning, so the repo reads a real board that is simply the wrong one. **Do not
+   guess an ID either** — a wrong-but-authorized one resolves silently, with no warning at
+   all. Only a correct pin is safe, so ask for it.
+5. Read `[statuses]` from that file. **Never hard-code a status name** — names vary per
    Space, which is the same reason completion is judged by the status `type`. A role the
    table does not define is unset, not "obvious": say which key is missing and stop rather
-   than substituting a plausible name.
+   than substituting a plausible name. `myclickup statuses --list "<path or id>" --live`
+   prints what a list actually defines, each with its `type`.
    **Compare case-insensitively.** ClickUp returns status names lower-cased
    (`"ready for agent"`) regardless of how they were typed in the UI, so an exact match
    against a `[statuses]` value like `"Ready for Agent"` silently finds nothing.
-5. `myclickup status` — if the cache is stale or absent, `myclickup sync` first.
-6. If `[work_sync].wip_limit` is set, count existing items whose `ClickUp-status` matches
+6. `myclickup status` reports cache age and counts; `myclickup sync` refreshes it. Every
+   read takes an explicit `--live` (bypass the cache) or `--cached` (fail rather than go
+   live) — name one rather than relying on the default.
+7. If `[work_sync].wip_limit` is set, count existing items whose `ClickUp-status` matches
    the `agent_working` name. At or over the limit, **warn and ask** before adding another.
 
 ## Pull
 
-    myclickup task <id> --json
+    myclickup task <id> --json --live
 
-That emits the raw ClickUp object — `parent`, `dependencies`, `linked_tasks` and
-`custom_fields` are all present, not just the fields the human formatter prints.
+That emits the whole ClickUp object — `parent`, `linked_tasks`, `custom_fields` and the
+raw `dependencies`, not just what the human formatter prints — plus the CLI's derived
+`blocked_by`, `blocks` and `path`, which are what the front-matter below is built from.
 
-With `--subtasks`: **the parent payload does not list its children.** `GET /task/{id}`
-has no `subtasks` array (the only `subtasks` string in it is inside `sharing.public_fields`
-— don't be fooled). Children are discoverable only from *their* side, via `parent`:
-
-    myclickup sync
-    myclickup tasks --list "<path>" --all --json   # includes subtasks
-
-then select the entries whose `parent` equals the target ID, and create **one item per
-child**, each carrying `ClickUp-parent`. Ask first if there are more than a handful — a
-fan-out of twenty items is rarely what was wanted.
-
-Note that relations often sit on the **children**, not the parent: a parent can show empty
-`dependencies` while a child is genuinely blocked. Read each child's own payload.
+With `--subtasks`, list the children directly (`myclickup subtasks <id> --json --live`) and
+create **one item per child**, each carrying `ClickUp-parent`. Ask first if there are more
+than a handful — a fan-out of twenty items is rarely what was wanted. **Then read each
+child with `task`**: the entries `subtasks` returns are list-view summaries whose
+`blocked_by`, `blocks` and `path` are `null`, and relations often sit on the children — a
+parent can look unblocked while a child is genuinely blocked.
 
 ## Create the item
 
@@ -90,41 +91,37 @@ repo's own proposal template headings below it.
 
 Rules that make this worth having:
 
-- **`ClickUp-path` comes from the cache, never from the task payload.** Two reasons:
-  `GET /task/{id}` returns `space` as a bare `{id}` with no name, *and* its `folder` field
-  reads `{"name": "hidden", "hidden": true}` for any list that sits directly under a Space.
-  Reading that field verbatim writes a path like `Codebase / hidden / Agentic Conventions`.
-  Resolve from cached `hierarchy.json` instead, which omits the implicit folder entirely.
+- **`ClickUp-path` is the payload's derived `path`** — never assembled by hand from `space`
+  / `folder` / `list`, whose `folder` reads `{"name": "hidden"}` for any list sitting
+  directly under a Space. If `path` is `null` the path is genuinely unresolvable: omit the
+  field rather than inventing one.
 - **Slug from the task title, cleaned.** Strip any leading work-item reference the title
   carries (`"0006 - testing"` → `testing`) so the local number stays the only number in the
   path. If what remains is too thin to identify the item later, say so and propose a better
   slug rather than creating `work/0007-testing/` and moving on.
-- **`blocked-by` / `blocks` come from `dependencies`, split by direction — not by `type`.**
-  One edge is stored as `{"task_id": A, "depends_on": B, "type": 1, ...}` and appears
-  **identically on both A and B**, so the record alone tells you nothing about which side
-  you are on. `type` is the same on both sides and is not the direction. Compare against
-  the task you fetched:
-  - `task_id` == this task → this task is **blocked-by** `depends_on`
-  - `depends_on` == this task → this task **blocks** `task_id`
-
-  `related` comes from `linked_tasks`, which is a separate array.
+- **`blocked-by` / `blocks` are the payload's `blocked_by` and `blocks` arrays**, already
+  resolved for the task you asked about. Never re-derive direction from `dependencies`: one
+  edge appears identically on both tasks and its `type` is not the direction. `related`
+  comes from `linked_tasks`, a separate array.
 - **Never write a bare ID.** Every relation carries either `→ work/NNNN-slug/` when that
   task has also been pulled, or its title plus last-seen status when it has not. A bare ID
   cannot be reasoned about, which is the definition of decorative.
 - **Exclude `due`, `priority`, `tags`, assignee, description-as-metadata.** They change no
-  agent behaviour and go stale silently. They are one `myclickup task <id>` away.
+  agent behaviour and go stale silently. They are one `myclickup task <id> --live` away.
 
 ## Blocker gate — run it before calling the item ready
 
-Once the front-matter exists, check every `ClickUp-blocked-by` entry: read each blocker
-live (`myclickup task <id> --json`) and judge it by its status **`type`** field, not its
-name. `done` or `closed` means cleared; anything else (`open`, `custom`) is live.
+Once the front-matter exists, check every `ClickUp-blocked-by` entry: read each blocker with
+`myclickup task <id> --json --live` — `--live` explicitly, since a cached status is exactly
+the snapshot this gate exists to distrust — and judge it by its status **`type`** field, not
+its name. `done` or `closed` means cleared; anything else (`open`, `custom`) is live.
 
 If any blocker is live, **the item is blocked, not ready**: mark it so on its
 `ClickUp-blocked-by` line (`— LIVE, blocks this item, status: <name>`), say which task
-blocks it in your handoff, and do not present the item as available work — the next step
-is clearing the blocker, not `/clickup-report`. A pull that quietly presents a blocked item as ready is the failure this gate exists
-to prevent. If every blocker is cleared, say so — that is also information the human wants.
+blocks it in your handoff, and do not present the item as available work — the next step is
+clearing the blocker, not `/clickup-report`. A pull that quietly presents a blocked item as
+ready is the failure this gate exists to prevent. If every blocker is cleared, say so — that
+is also information the human wants.
 
 ## Re-pulling an existing item
 
