@@ -85,7 +85,7 @@ behind `audit-sandbox` on that axis. My Rule 4 encoded the weaker fix.
 - **`variants/` hazard pushed upstream.** Their sync script strips `variants/` at loose-skill
   depth, which no-ops one level deeper in plugin mode. Zero `variants/` exist today, so nothing
   leaks — but the root cause is ours: `just sync-plugin` copies `templates/` wholesale, so if
-  [work/0003 §3](../0003-skills-beyond-this-repo/proposal.md) ever ships, claude.ai-only bodies
+  `work/0003-skills-beyond-this-repo/proposal.md` §3 ever ships, claude.ai-only bodies
   ride into every consumer. Noted there, at the source, rather than left to N consumers to strip.
 
 ### Their open question — does ADR-0007's rationale need restating?

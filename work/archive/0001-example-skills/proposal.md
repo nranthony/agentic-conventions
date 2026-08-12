@@ -1,6 +1,6 @@
 # Proposal: Example skills for scaffold adopters
 
-- Status: Draft
+- Status: Superseded → folded into work/0012-skill-development/ (2026-08-12)
 - Author: nranthony + agent
 - Migrated from `docs/rfcs/example-skills.md` ([ADR-0006](../../docs/adr/0006-proposals-are-work-items.md))
 

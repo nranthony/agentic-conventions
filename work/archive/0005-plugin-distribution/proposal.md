@@ -2,7 +2,7 @@
 
 - Status: Accepted → [ADR-0007](../../docs/adr/0007-plugin-distribution.md)
 - Author: nranthony + agent
-- Supersedes the deferral in [work/0003 §5](../0003-skills-beyond-this-repo/proposal.md)
+- Supersedes the deferral in `work/0003-skills-beyond-this-repo/proposal.md` §5
 - Implemented 2026-08-10: `plugins/myconv/`, `.claude-plugin/marketplace.json`, `justfile`.
   Sandbox rollout is handed off in [sandbox-handoff.md](sandbox-handoff.md).
 

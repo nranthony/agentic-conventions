@@ -139,7 +139,7 @@
     <p>Spans <code>docs/</code>, <code>work/</code>, and <code>conventions/</code>: decisions,
        the proposals on their way to becoming one, and cross-repo registries.</p>
     <ul>
-      <li><code>docs/adr/</code> — append-only decisions (0001–0007) + <code>0000-template.md</code></li>
+      <li><code>docs/adr/</code> — append-only decisions (0001–0010) + <code>0000-template.md</code></li>
       <li><code>work/NNNN-slug/</code> — numbered proposals &amp; in-flight items (proposal → spec → plan → notes)</li>
       <li><code>work/archive/</code> — resolved items, distilled first; historical, never current intent</li>
       <li><code>docs/distributing-skills-downstream.md</code> — consumer guidance</li>
@@ -193,23 +193,42 @@ repo — content travels as the plugin, personal paths never do.</p>
   <div class="adr"><b>ADR-0007 <span class="tag">Accepted</span></b>
     Distribute as a Claude Code plugin (<code>myconv</code>): marketplace for networked machines,
     host-seeded <code>@skills-dir</code> for closed-egress profiles.</div>
+  <div class="adr"><b>ADR-0008 <span class="tag">Accepted</span></b>
+    ClickUp ↔ <code>work/</code> sync — two projections of one item; pull identity in, push
+    status and short comments back, never plans.</div>
+  <div class="adr"><b>ADR-0009 <span class="tag">Accepted</span></b>
+    <code>validation/</code> — an opt-in tier for measured-behaviour evidence; hand-edited
+    <code>expected.json</code> is enforced, regenerated <code>measured.*</code> is recorded.</div>
+  <div class="adr"><b>ADR-0010 <span class="tag">Accepted</span></b>
+    Gloss identifiers before citing them — human-facing writing states the decision, then
+    the ID in parentheses. Advice, not a check.</div>
 </div>
 
 <h2>In flight</h2>
 <div class="adrs">
-  <div class="adr"><b>0001 example-skills <span class="tag draft">Draft</span></b>
-    Ship example skills for adopters — what a genericised <code>SKILL.md</code> looks like.</div>
-  <div class="adr"><b>0003 skills-beyond-this-repo <span class="tag draft">Draft</span></b>
-    Distribution surfaces outside a checkout (containers, <code>~/.claude</code>).</div>
-  <div class="adr"><b>0004 gloss-before-cite <span class="tag draft">Draft</span></b>
-    Human-facing references gloss a decision before citing its ID.</div>
-  <div class="adr"><b>0005 plugin-distribution <span class="tag">Accepted</span></b>
-    → ADR-0007. Implemented here; sandbox rollout handed off in <code>sandbox-handoff.md</code>.</div>
+  <div class="adr"><b>0003 skills-beyond-this-repo <span class="tag draft">On hold</span></b>
+    Distribution surfaces outside a checkout. §5 → ADR-0007, §2 done in the sandbox repo,
+    §1 documented; held on the claude.ai export surface (§3) and the Skills API (§4).</div>
+  <div class="adr"><b>0011 skill-audit-fixes <span class="tag">Implemented</span></b>
+    One home per role, portable ClickUp skills, all five named in the shop window — awaiting
+    the sandbox re-vendor.</div>
+  <div class="adr"><b>0012 skill-development <span class="tag draft">Draft</span></b>
+    Sharpen the myconv skills against the wider ecosystem: descriptions, entry points, graft
+    vs. adopt. Absorbed work/0001's worked-example skills.</div>
+  <div class="adr"><b>0001 example-skills <span class="tag arch">Archived</span></b>
+    Superseded — folded into work/0012 once its landing slot was pruned.</div>
   <div class="adr"><b>0002 planning-toolkit <span class="tag arch">Archived</span></b>
     Accepted → ADR-0003 + ADR-0004; now a historical record under <code>work/archive/</code>.</div>
+  <div class="adr"><b>0004 gloss-before-cite <span class="tag arch">Archived</span></b>
+    Accepted → ADR-0010.</div>
+  <div class="adr"><b>0005 plugin-distribution <span class="tag arch">Archived</span></b>
+    Accepted → ADR-0007. Implemented here; sandbox rollout handed off in
+    <code>sandbox-handoff.md</code>.</div>
+  <div class="adr"><b>0010 validation-evidence <span class="tag arch">Archived</span></b>
+    Accepted → ADR-0009.</div>
 </div>
 <p class="note">Numbers are never reused, across active <b>and</b> archived items — the next
-free one is 0006.</p>
+free one is 0013.</p>
 
 <h2>Planning toolset (layered)</h2>
 <div class="flow">

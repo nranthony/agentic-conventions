@@ -1,6 +1,9 @@
 # Proposal: Distributing skills beyond this repo — surfaces outside the checkout
 
-- Status: Draft
+- Status: On hold (2026-08-12)
+- Delivered so far: §5 (plugin + marketplace) → ADR-0007; §2 (sandbox refresh) executed in the
+  sandbox repo; §1 (user-scope install) documented in `docs/distributing-skills-downstream.md`.
+  On hold pending a decision on the claude.ai/Desktop export surface (§3) and the Skills API (§4).
 - Author: nranthony + agent
 - Migrated from `docs/rfcs/skills-beyond-this-repo.md` ([ADR-0006](../../docs/adr/0006-proposals-are-work-items.md))
 

@@ -55,6 +55,22 @@ community content where it saves time.
 6. **Expand the library watchlist** (see survey): revisit travisvn's index and the
    bulk aggregators periodically; adopt individual skills case-by-case with the
    license rules below.
+7. **Worked-example skills, reconsidered post-prune** (folded in from
+   `work/0001-example-skills/proposal.md`, 2026-08-12). The idea: ship
+   auto-trigger-first examples for adopters — `write-an-adr` (recognise a
+   direction-setting decision and record it) and `bootstrap-nested-package` (write
+   the two-line `CLAUDE.md` stub beside a new nested `AGENTS.md`) — so an adopter
+   copies a working `description:` trigger instead of writing one from scratch,
+   which is the part people get wrong. What changed: their original landing slot,
+   `templates/.claude/skills/`, no longer exists (work/0011 WP7 pruned it — the
+   embedded skill copies were the phantom-skill bug). So if wanted, they ship
+   *inside the plugin* as real namespaced skills, or as reference prose showing a
+   worked `SKILL.md` rather than a copyable file. Decide which here — including
+   "neither", since two more model-invoked skills widen the trigger-collision
+   surface this item exists to narrow. The original's selection test is worth
+   keeping either way: a procedure earns a skill only if the agent should reach for
+   it unprompted, it recurs, and its trigger is sharp; a one-line always-on rule
+   belongs in `AGENTS.md`.
 
 ## Open questions
 
