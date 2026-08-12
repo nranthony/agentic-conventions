@@ -75,7 +75,8 @@ written; it is a dated observation against 0.2.0 and the ADR log is append-only.
 
 ## Completion note
 
-Landed 2026-08-12 in commit `<hash>`.
+Landed 2026-08-12 in commit `88acb87` (this note recorded in the follow-up commit, since a
+commit cannot name its own hash).
 
 | Skill | Before | After |
 |---|---|---|

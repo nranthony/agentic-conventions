@@ -46,7 +46,7 @@ it has not shipped, so the whole of 0011 is one unreleased entry.
   owner iterates the CLI once more and the sandbox image re-vendors it; then a small
   work item moves mechanism into the tool and leaves policy in the skill.
   **Released and executed 2026-08-12 as `work/0013-cli-first-clickup-skills/` (commit
-  `5c02a24`)** — the CLI is now 0.3.0 in the image and closes every gap the hold was
+  `88acb87`)** — the CLI is now 0.3.0 in the image and closes every gap the hold was
   waiting on.
 - **WP8.2's larger thread and WP8.3** (description sharpening, declaring
   `myconv:make-plan` the planning entry point, broader skill-ecosystem intersection; the
