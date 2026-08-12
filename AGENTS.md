@@ -31,8 +31,8 @@ only live `AGENTS.md` here.
   back, never plans) → [ADR-0008](docs/adr/0008-clickup-work-sync.md), config in
   [.myclickup.toml](.myclickup.toml), skills `/clickup-pull` + `/clickup-report`.
   Pinned to **"The Vault" (`90141509251`)**, the agentic-tooling workspace; scope is the
-  whole workspace. The two agent statuses don't exist there yet, so `/clickup-report`
-  can't set them until they're created in the ClickUp UI.
+  whole workspace. The two agent statuses (`Ready for Agent`, `Agent Working`) exist in
+  the Codebase/Agentic Conventions list as of 2026-08-12, so `/clickup-report` can set them.
 - Where measured-behaviour evidence lives (opt-in tier; `expected.json` is enforced,
   `measured.*` is recorded) → [ADR-0009](docs/adr/0009-validation-evidence-tier.md), template
   at [templates/validation/](templates/validation/). This repo ships no measurable behaviour,
