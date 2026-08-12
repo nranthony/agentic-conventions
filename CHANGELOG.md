@@ -14,6 +14,31 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.2.0 — unreleased
+
+The payload shape changed: the plugin no longer carries copies of its own shared skills.
+
+### Removed
+
+- **The embedded skill copies under `templates/.claude/skills/`** — `make-plan`,
+  `wrap-up`, `clickup-pull` and `clickup-report` were bundled a second time inside the
+  `apply-conventions` payload, as material to paste into a consumer repo. They registered
+  as phantom scoped skills wherever the plugin was seeded, and an unnamespaced pasted twin
+  shadows the maintained copy — the drift plugin distribution exists to prevent
+  ([ADR-0007](docs/adr/0007-plugin-distribution.md)). There is now one home per role: the
+  conventions repo owns the canonical skills, this plugin is the product, and the
+  container's agent home is a derived deployment copy.
+
+### Changed
+
+- **`/myconv:apply-conventions` no longer places shared skills in the target repo.** Skills
+  are delivered by the plugin — marketplace-installed or seeded — so the skill now says to
+  confirm the plugin is available and the tracker pin set, instead of copying files. A
+  repo's own `.claude/skills/` stays in the blueprint for the procedures *that repo* writes
+  about itself.
+
+---
+
 ## 0.1.0 — unreleased
 
 First packaged release ([ADR-0007](docs/adr/0007-plugin-distribution.md)). Not yet published

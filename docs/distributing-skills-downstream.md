@@ -121,9 +121,11 @@ skills from this repo ride that **existing** mechanism — one reason ADR-0004 c
 on skills is that no parallel `commands/` seeding channel needs building:
 
 1. **Vendor** the generic skill into the sandbox's template tree, e.g.
-   `sandbox_templates/claude/skills/wrap-up/SKILL.md` — committed, no personal path. Pull
-   it from this repo's [`templates/.claude/skills/`](../templates/.claude/skills/) (the
-   already-genericised "for other repos" surface), not the live `.claude/skills/`.
+   `sandbox_templates/skills/myconv/` — committed, no personal path. Pull it from this
+   repo's generated plugin payload, [`plugins/myconv/`](../plugins/myconv/): that is the
+   product tier, and vendoring the whole plugin keeps the skills namespaced as
+   `/myconv:*`. (There is no longer a `templates/.claude/skills/` mirror — see work/0011,
+   WP7: one home per role.)
 2. **Seed per profile** — the existing `ensure_state` skills loop copies it into
    `claude-home/skills/`; `reset-skills` already force-refreshes it. Nothing new to build.
 3. **Refresh from upstream** — a small `sync-from-conventions.sh` copies this repo's

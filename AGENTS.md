@@ -56,10 +56,16 @@ There is no ARCHITECTURE.md — the layout above is the whole architecture.
   plugin cannot read the rest of this repo, so a relative link out of
   `plugins/myconv/` (or the `reference/`, `templates/`, and skill files that get copied
   into it) resolves nowhere for every consumer. Cite the ADR by number and bare path
-  instead. This has been fixed twice; `rg '\]\(\.\./' plugins/` catches it.
-- After touching `reference/`, `templates/`, or the shared skills, run `just sync-plugin` and
-  `just validate`. `just check-plugin-sync` and `just check-skill-mirrors` catch the drift.
-  If the change alters what a consumer receives, add a CHANGELOG entry and bump `version` in
-  `plugins/myconv/.claude-plugin/plugin.json` — an unbumped version means consumers never
-  see the change.
+  instead. This has been fixed twice; `just check-plugin-links` catches it.
+- **One home per role for skills** (work/0011, WP7): the four shared skills are canonical at
+  [.claude/skills/](.claude/skills/) — edit them there only; `apply-conventions` is authored
+  in place at `plugins/myconv/skills/apply-conventions/SKILL.md`; the plugin payload is
+  generated; and the container copy at `~/.claude/skills/myconv/` belongs to the sandbox
+  repo — never edit it from here. Skills are never pasted into a consumer repo.
+- After touching `reference/`, `templates/`, or the shared skills, run `just sync-plugin`,
+  then `just check` (check-plugin-sync, check-plugin-links, check-versions, check-vendored,
+  validate). If the change alters what a consumer receives, add a CHANGELOG entry and bump
+  `version` in **both** `plugins/myconv/.claude-plugin/plugin.json` and
+  `.claude-plugin/marketplace.json` — an unbumped version means consumers never see the
+  change, and `just check-versions` enforces that the two agree.
 - Commit locally with clear messages; never push without approval.

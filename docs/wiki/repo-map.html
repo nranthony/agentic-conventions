@@ -129,7 +129,7 @@
        <code>AGENTS.md</code> in here is the artifact being edited, never guidance.</p>
     <ul>
       <li><code>AGENTS.md · ARCHITECTURE.md · CONTRIBUTING.md · CODEOWNERS</code></li>
-      <li><code>.claude/skills/</code> — mirrors of the live skills</li>
+      <li><code>.myclickup.toml · validation/</code> — the opt-in tracker &amp; evidence tiers</li>
       <li><code>.claude/settings.json · .gitignore · .github/pull_request_template.md</code></li>
       <li><code>docs/adr/0000-template.md · work/README.md</code> — the provenance tier</li>
     </ul>
@@ -170,10 +170,11 @@
   <div class="arr">→</div>
   <div class="step"><b>downstream repos</b><span><code>/plugin install</code>, or host-seeded into a profile</span></div>
 </div>
-<p class="note">Skills travel the same road: live in <code>.claude/skills/</code>,
-genericised into <code>templates/.claude/skills/</code>, then <b>vendored</b> into a
-consumer (or seeded into a container’s <code>~/.claude</code> per instance) — content
-travels, personal paths never do.</p>
+<p class="note">Skills travel a shorter road — one home per role (work/0011): canonical in
+<code>.claude/skills/</code>, synced by <code>just sync-plugin</code> into the product tier
+<code>plugins/myconv/</code>, then <b>vendored</b> by the sandbox repo and seeded into a
+container’s <code>~/.claude</code> per instance. They are never pasted into a consumer
+repo — content travels as the plugin, personal paths never do.</p>
 
 <h2>Decisions so far</h2>
 <div class="adrs">

@@ -19,10 +19,11 @@ plugins/     the same material packaged as a Claude Code plugin (generated paylo
 
 - `reference/agentic_native_repo_scaffold.md` — the generic agent-native repo blueprint.
 - `templates/` — `AGENTS.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, `CODEOWNERS`,
-  `.gitignore`, `.claude/settings.json`, `.claude/skills/` (shared skills like
-  `/wrap-up` and `/make-plan`), `.github/pull_request_template.md`,
-  `docs/adr/0000-template.md`, `work/README.md` (item lifecycle + proposal template).
-  Examples to tailor, not files to copy verbatim.
+  `.gitignore`, `.claude/settings.json`, `.myclickup.toml`,
+  `.github/pull_request_template.md`, `docs/adr/0000-template.md`, `work/README.md`
+  (item lifecycle + proposal template), `validation/`. Examples to tailor, not files to
+  copy verbatim. It carries **no skills**: the shared skills are delivered by the plugin,
+  never pasted into a consumer repo (see below).
 
 ## Getting it onto a machine
 
@@ -38,6 +39,11 @@ That gives every repo on the machine `/myconv:apply-conventions`, `/myconv:make-
 `/myconv:wrap-up`. For closed-egress containers, copy `plugins/myconv/` into the profile's
 persistent `~/.claude/skills/myconv/` instead — it loads as `myconv@skills-dir` with no
 network and no install step.
+
+Those two routes are the **only** way to get the shared skills. They are never copied into
+a consumer repo: an unnamespaced twin shadows the maintained copy and drifts, which is what
+ADR-0007 exists to prevent. A repo's own `.claude/skills/` is for the procedures that repo
+writes about itself.
 
 ## How an agent should apply these
 1. Read `reference/` and `templates/` as the *desired shape*.
