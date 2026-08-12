@@ -33,6 +33,10 @@ only live `AGENTS.md` here.
   Pinned to **"The Vault" (`90141509251`)**, the agentic-tooling workspace; scope is the
   whole workspace. The two agent statuses don't exist there yet, so `/clickup-report`
   can't set them until they're created in the ClickUp UI.
+- Where measured-behaviour evidence lives (opt-in tier; `expected.json` is enforced,
+  `measured.*` is recorded) → [ADR-0009](docs/adr/0009-validation-evidence-tier.md), template
+  at [templates/validation/](templates/validation/). This repo ships no measurable behaviour,
+  so it has no `validation/` tree of its own — the template is the whole artifact.
 - What changed **for consumers** → [CHANGELOG.md](CHANGELOG.md) (the plugin's user-visible
   surface only — skills, blueprint, templates. Internal churn stays in ADRs, `work/`, and
   the commit log.)

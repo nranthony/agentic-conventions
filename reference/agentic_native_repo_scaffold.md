@@ -42,11 +42,15 @@ Two ideas carry the whole thing:
 │   ├── design/                # durable design references
 │   └── runbooks/             # operational how-tos that aren't skills
 │
-└── work/                      # ACTIVE-WORK PROVENANCE (optional): proposals + the in-flight trail
-    ├── README.md              #   the item lifecycle + proposal template
-    ├── NNNN-slug/             #   proposal.md → spec.md → plan.md → notes.md
-    ├── archive/               #   closed items, distilled first (durable "why" → docs/adr/)
-    └── plans/                 #   gitignored: native plan-mode drafts (via plansDirectory)
+├── work/                      # ACTIVE-WORK PROVENANCE (optional): proposals + the in-flight trail
+│   ├── README.md              #   the item lifecycle + proposal template
+│   ├── NNNN-slug/             #   proposal.md → spec.md → plan.md → notes.md
+│   ├── archive/               #   closed items, distilled first (durable "why" → docs/adr/)
+│   └── plans/                 #   gitignored: native plan-mode drafts (via plansDirectory)
+│
+└── validation/                # MEASURED-BEHAVIOUR EVIDENCE (optional): committed, gate-read
+    ├── README.md              #   index: what evidence exists, which gate reads it, how to regenerate
+    └── <corpus>/              #   expected.json (hand-edited, enforced) + measured.json/.md (regenerated)
 ```
 
 Per-language / per-package directories (each with its own `AGENTS.md` + generated `CLAUDE.md`) hang off this as needed; they hold the build/test/env specifics and are deliberately out of scope here.
@@ -122,6 +126,33 @@ add the rest only when a concrete need appears. Adopt in this order:
   linked is the committed configuration that gives tracker tooling somewhere to point.
   Recorded as **ADR-0008** in the conventions repo.
 
+- **Opt-in — validation evidence (add when a repo makes measurable claims about its own
+  behaviour):** a `validation/` tree holding *evidence* — a dated record of how the system
+  performed against a labelled corpus, committed on purpose because a gate reads it and a
+  reader audits it. It is a category the other tiers cannot hold: `docs/` is prose, `tests/`
+  holds checks rather than their inputs, `docs/adr/` records decisions rather than
+  measurements, and `work/` archives on completion, which an artifact a build depends on can
+  never do. One directory per corpus, with **authority encoded in the filename**:
+
+  | File | Written by | Role |
+  |---|---|---|
+  | `expected.json` | a human, by hand | what the gate enforces; every threshold carries a required `why` |
+  | `measured.json` | the harness | the record of the last run, opening with a `provenance` block |
+  | `measured.md` | the same command | the human-readable table, so a claim can be checked without running anything |
+
+  Two rules follow: nothing regenerates `expected.json`, and nobody hand-edits `measured.*`.
+  The point is **legibility, not prevention** — because the gate reads a different file from
+  the one the harness writes, regenerating a record can no longer change what passes, so
+  loosening a threshold becomes a one-line diff to a named file with its justification beside
+  it. Nothing stops it; it stops being invisible. Adopting this forces one question worth
+  answering early: *which measured numbers does the gate fail on, and which are merely
+  recorded?* One file doing both jobs never poses it.
+
+  Scoped to ground-truth accuracy evidence. Golden-output snapshots belong in `tests/`, the
+  ground-truth labels themselves belong with the corpus, and performance benchmarks are
+  environment-dependent enough that a committed record is usually noise. Recorded as
+  **ADR-0009** in the conventions repo.
+
 Rule of thumb: start at the core and let real need pull each further piece in. An empty
 `work/` no one uses is worse than not having it.
 
@@ -143,6 +174,7 @@ This is the core of "how agents know where to look." Each question has exactly o
 | Who must approve changes here? | `CODEOWNERS` | Path → reviewer |
 | What's in flight right now? | `work/NNNN-slug/` | spec → plan → notes |
 | Where does this sit in the plan / who else cares? | the external tracker | linked from the work item's front-matter (opt-in) |
+| How well does it actually perform, measured against what? | `validation/<corpus>/` | hand-edited `expected.json` (enforced) + regenerated `measured.json`/`.md` (recorded) |
 | How does a change get merged? | `CONTRIBUTING.md` | Process |
 
 The lifecycle reads left to right, mostly inside one numbered folder: a **proposal** (`work/NNNN-slug/proposal.md`) proposes → an **ADR** records the decision → the same item's **plan.md/notes.md** track the implementation → the **CHANGELOG** and commit (referencing the ADR) record the outcome, and the item archives. That chain is the provenance: any line of code can be traced back to the decision and the reasoning that produced it.

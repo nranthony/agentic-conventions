@@ -30,7 +30,10 @@ then decide what this particular repo should get.
    `ARCHITECTURE.md` + `README.md` + `.claude/skills/` + gitignored `AGENTS.local.md`. Add
    `docs/adr/` and a light `.claude/settings.json` for most repos. Treat `CODEOWNERS`,
    `CONTRIBUTING.md`, PR template and CI as team-ceremony opt-ins, and `work/` as the heavier
-   provenance tier. An empty `work/` no one uses is worse than not having it.
+   provenance tier. An empty `work/` no one uses is worse than not having it. Add
+   `validation/` only where the repo already measures its own behaviour against a corpus and
+   has (or wants) a gate reading the result — it is evidence, so it needs something measured
+   to be evidence of.
 4. **Settle the tracker link — ask, don't assume.** A repo is *linked* when a committed
    pins file (`.myclickup.toml`) exists with its workspace ID filled in; see the
    blueprint's external-tracker bullet for the three states. Resolve it now rather than
@@ -65,6 +68,13 @@ then decide what this particular repo should get.
 - **Never place the ClickUp skills in a repo with no tracker link.** Unlinked, they are
   exactly the dead instructions the rule above forbids — and the pins file is opt-in, so
   don't create one just to justify placing them.
+- **Never place an empty `validation/` tree**, and never leave the `example-corpus/`
+  placeholder behind. Its thresholds are set to values nothing can pass, precisely so an
+  unreplaced template fails loudly — but a repo that measures nothing should not get the
+  directory at all. If the repo already has a baseline file the gate reads, adopting the tier
+  means splitting it: enforced thresholds into `expected.json`, the record into
+  `measured.json`. That split is a judgement about what the gate should fail on, so raise it
+  rather than deciding it silently.
 - **Work on a clean tree**, and never push without approval.
 - **No secrets, no personal paths, no machine-specific values** in anything you write.
 

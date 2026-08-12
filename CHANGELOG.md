@@ -22,7 +22,7 @@ to a remote, so no consumer has this version.
 ### Added
 
 - **`/myconv:apply-conventions`** — sets up or audits a repo against the blueprint. Carries
-  the full `reference/` write-up and all eleven `templates/` files as bundled payload, so it
+  the full `reference/` write-up and every `templates/` file as bundled payload, so it
   works in a repo with no checkout of this one present. Supports `--audit` to report the gap
   without writing.
 - **`/myconv:make-plan`** and **`/myconv:wrap-up`** — the shared planning and end-of-thread
@@ -54,6 +54,17 @@ to a remote, so no consumer has this version.
   deliberately **empty**. An empty pin fails loudly on use; a defaulted one resolves
   silently against another workspace's board. Carries `[work_sync].scope` for repos that
   own only a corner of a shared workspace, and a semantic-role → status-name map.
+- **A `validation/` tier in the blueprint, plus `templates/validation/`**
+  ([ADR-0009](docs/adr/0009-validation-evidence-tier.md)) — an opt-in home for *evidence*: a
+  committed, dated record of how a system performed against a labelled corpus, which a CI gate
+  reads. It is a category the other tiers cannot hold, most decisively `work/`, whose exit rule
+  archives completed items while an artifact a build depends on can never be archived.
+  Authority is encoded in the filename — hand-edited `expected.json` is what the gate enforces,
+  regenerated `measured.json`/`.md` is what the last run produced — so regenerating a record
+  can no longer change what passes, and loosening a threshold becomes a one-line diff with a
+  required `why` beside it. Every threshold carries that justification; every record carries a
+  `provenance` block naming the command, commit and corpus version that produced it. Ships as
+  convention, not machinery: no CI check, no `CODEOWNERS` requirement.
 - **`templates/.gitignore` ignores `.cache/`** — tool snapshot caches are regenerable and
   can carry customer-identifying names (a ClickUp cache holds space and list titles). The
   cache directory is created by ordinary read commands, not just an explicit sync, so an
