@@ -10,7 +10,7 @@
     Opt-in pieces (work/, runbooks, CHANGELOG) live in the commented block —
     move a line out of the comment only when the repo actually adopts the piece.
 
-  Optional: tooling (e.g. windows-ai-sandbox) may inject a managed notice block
+  Optional: tooling (e.g. <your-sandbox-tool>) may inject a managed notice block
   here describing shell restrictions. Leave a BEGIN/END marker pair if you use it;
   do not hand-edit managed blocks.
 

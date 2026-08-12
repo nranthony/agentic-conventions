@@ -55,6 +55,11 @@ The payload shape changed: the plugin no longer carries copies of its own shared
   and looks like an empty queue.
 - **`/myconv:clickup-report` is human-invoked only** (`disable-model-invocation`). It is the
   one skill that writes to a live tracker, so it no longer runs on the model's initiative.
+- **The marketplace description and the README install section name all five skills.** Both
+  still advertised only the planning pair, so a user reading the catalog at install time had
+  no idea `apply-conventions` or the two ClickUp skills came with it. `plugin.json` now also
+  carries a `repository` field: several payload files cite "the conventions repo", and
+  nothing installed alongside them said where it lives.
 - **`/myconv:apply-conventions` implements its advertised arguments.** A path argument now
   sets the target repo (default: the current one) and `--audit` is defined as stop-after-the
   gap-report; it also names `templates/.gitignore` as the source of the `AGENTS.local.md`
