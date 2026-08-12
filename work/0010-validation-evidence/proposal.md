@@ -108,6 +108,13 @@ min = 0.995   # floor agreed in ADR-00XX; record 207's flutter run is the bindin
 
 It stays small: tolerances and thresholds, never a mirror of the measurements.
 
+**TOML always — there is no JSON fallback.** One shape everywhere is the point: a reader
+entering an unfamiliar repo knows the file without being told. Python 3.11+ reads it from the
+standard library (`tomllib`), so the common case is free. A gate that cannot parse TOML — a
+`jq` one-liner, a raw Actions step, a Node or Go check — converts inside its own harness or is
+written in something that can; it does not get its own file format. That cost is real and
+lands on the repo with the unusual gate, which is the right place for it.
+
 ### 3. Every record carries its provenance
 
 A number is meaningless without what produced it. `measured.json` opens with:
@@ -127,10 +134,18 @@ A number is meaningless without what produced it. `measured.json` opens with:
 
 `measured.md` repeats it as a header, so the human artifact is self-dating.
 
-`corpus_digest` earns its place: without it, an apparent regression and a *data* change are
-indistinguishable after the fact. `command` earns its place because the end-state for an
+`corpus` and `command` are required. `command` earns that because the end-state for an
 un-regenerable record is folklore — nobody remembers how to refresh it, so nobody does, and it
 silently degrades from evidence into a claim.
+
+`corpus_digest` is strongly recommended and **may lag** where the corpus ships a stable
+published version identifier. Its job is narrower than it first appears: the version string
+already distinguishes a genuine data change from a regression, so the digest is guarding
+against local corruption and partial downloads. Real, but not urgent — a repo may adopt the
+tier with the version string alone and add the digest the first time a result cannot be
+explained. Where a corpus has no authoritative version identifier, the digest is the only
+thing standing between an apparent regression and an unnoticed data change, and it is
+required.
 
 **One command writes both `measured.*` files.** The `.md` is required, not optional: with no
 enforcement layer, the readable table is the only way anyone checks a claim without running
@@ -216,6 +231,15 @@ Ground-truth accuracy evidence only. Explicitly excluded, with where they go ins
 4. **`just sync-plugin` + `just validate`**, CHANGELOG entry, `plugin.json` version bump —
    this changes what a consumer receives.
 5. **AGENTS.md** index line.
+6. **The originating repo adopts at its one existing corpus**, without waiting for the plugin
+   round trip. The valuable and irreversible-in-cost part is the **enforced-versus-recorded
+   judgement** — which numbers the gate fails on, versus which are recorded for a reader. One
+   file has done both jobs so far, so the question has never been asked; asking it once, at
+   one corpus, is cheap, while asking it retroactively across three is three separate
+   after-the-fact judgements. The mechanical remainder is a rename, a `.md` companion off the
+   same command, a provenance block in the writer, and pointing the gate at `expected.toml`.
+   `corpus_digest` is deferred there per §3 — that corpus has a stable published version
+   string, so the digest would be guarding only against local corruption.
 
 This repo will never carry a `validation/` tier itself — it ships no measurable behaviour. The
 template is the only artifact here, the usual state for the opt-in tiers.
@@ -241,14 +265,14 @@ exists to prevent.
 
 ## Open questions
 
-- **Migration timing for the originating repo.** Its gate reads a repo-specific baseline path;
-  adopting the tier renames that file, splits it in two, and updates the gate. My
-  recommendation is **now, at one corpus** — cheapest it will ever be, before the second and
-  third land in the old shape, and it makes that repo the tier's first real user, which is
-  what would validate the shape before it ships to anyone else. Still yours to call.
-- **Whether `expected.toml` should be pinned to TOML for repos whose gate has no TOML reader.**
-  Python 3.11+ has `tomllib`; other stacks may not, and the fallback would be JSON with the
-  justifications pushed into a sibling doc — which is the outcome §2 is trying to avoid.
+None outstanding. Enforcement is deferred rather than open — it has a decision and two
+triggers, above.
+
+The one thing that stays genuinely unproven until the originating repo adopts: whether the
+enforced-versus-recorded line is obvious in practice, or whether most repos will find that
+nearly every measured number wants to be enforced — in which case `expected.toml` stops being
+small and §2's justification-per-threshold discipline gets expensive. That is what first
+adoption tests.
 
 ## Alternatives
 
@@ -266,6 +290,11 @@ exists to prevent.
 - **Repo-specific record names** (`beat_truth.json` and friends) — rejected in §2: they carry
   no signal about authority versus record, and the tier's whole value is that a stranger can
   tell the difference at a glance.
+- **JSON for `expected.*`, with justifications in a `why` field.** Genuinely viable: zero
+  dependencies anywhere, one parser for both files, and adjacency preserved by schema instead
+  of by comment syntax. Rejected because the file's whole job is being hand-edited, and nested
+  JSON objects read worse than commented TOML at exactly that moment — plus a `why` key is a
+  schema every gate must then tolerate.
 - **One file, gate reads the record directly** — simplest, no duplication. Rejected: every
   regeneration becomes a potential silent goalpost move, and making that visible is the tier's
   main job.
