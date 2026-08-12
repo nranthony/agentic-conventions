@@ -36,6 +36,29 @@ The payload shape changed: the plugin no longer carries copies of its own shared
   confirm the plugin is available and the tracker pin set, instead of copying files. A
   repo's own `.claude/skills/` stays in the blueprint for the procedures *that repo* writes
   about itself.
+- **The ClickUp skills' preflight now works off the sandbox.** It identifies `myclickup` as
+  a personal CLI from the owner's repo (not on PyPI) and, outside the sandbox, asks the
+  human to clone and install the wheel instead of declaring installation impossible. The
+  never-fall-back-to-raw-HTTP rule is unchanged.
+- **The blocker gate from [ADR-0008](docs/adr/0008-clickup-work-sync.md) is implemented.**
+  `/myconv:clickup-pull` re-reads each `ClickUp-blocked-by` task after creating the item and
+  marks the item blocked rather than presenting it as ready; `/myconv:clickup-report`
+  refuses to transition into the agent-working status while a blocker is live. Both judge
+  "finished" by ClickUp's status `type` (`done`/`closed`), never by name.
+- **`[statuses]` gains a `complete` key**, so `/myconv:clickup-report` can resolve the
+  terminal status through the table as its own rule requires — previously it named
+  `Complete` literally, which no `[statuses]` entry could resolve. Repos with an existing
+  `.myclickup.toml` should add the key.
+- **`templates/.myclickup.toml` no longer ships live status names.** The `[statuses]` values
+  are commented out as examples with an instruction to fill them from the Space's actual
+  statuses: an unset role fails loudly, where an inherited-but-wrong name matches nothing
+  and looks like an empty queue.
+- **`/myconv:clickup-report` is human-invoked only** (`disable-model-invocation`). It is the
+  one skill that writes to a live tracker, so it no longer runs on the model's initiative.
+- **`/myconv:apply-conventions` implements its advertised arguments.** A path argument now
+  sets the target repo (default: the current one) and `--audit` is defined as stop-after-the
+  gap-report; it also names `templates/.gitignore` as the source of the `AGENTS.local.md`
+  ignore rule, and says to drop `plansDirectory` when the repo skips `work/`.
 
 ---
 

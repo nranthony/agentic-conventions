@@ -2,6 +2,7 @@
 name: clickup-report
 description: Report a work/ item's progress back to its linked ClickUp task — a status transition and/or a short comment on a hurdle or change of direction. Dry-run first, always. Use when starting, blocking on, or finishing tracked work. Requires a repo-root .myclickup.toml with a pinned workspace; stops immediately without one.
 argument-hint: <work item path> [status | "comment text"]
+disable-model-invocation: true
 ---
 
 # Report a work item back to ClickUp
@@ -19,8 +20,9 @@ plugin, and a relative path out of the payload resolves nowhere.
 
 May cross:
 
-- a **status transition** — `Ready for Agent` → `Agent Working` → `In Review` / `Complete`,
-  or `Agent Working` → `In Progress` when handing back to a human
+- a **status transition**, named by its role in `[statuses]` rather than by the Space's
+  spelling — `agent_ready` → `agent_working` → `review` / `complete`, or `agent_working` →
+  `human_active` when handing back to a human
 - a **short comment** on a hurdle, a blocker hit, or a significant change of direction
 
 **Must not cross:** plan or notes content, spec text, diffs, file paths, ADR bodies,
@@ -31,19 +33,31 @@ it.
 
 ## Preflight — stop, don't improvise
 
-1. **`myclickup` on PATH?** If not, stop with: *"myclickup isn't installed here — it's
-   baked into the sandbox image, so this is a human step."* Never attempt to install it
-   (denied), and never fall back to raw HTTP against the ClickUp API.
+1. **`myclickup` on PATH?** If not, stop — this is a human step. `myclickup` is a personal
+   CLI distributed from the owner's `myclickup` repo; it is **not on PyPI**, so there is no
+   install command to guess at. In the sandbox it is baked into the image, so its absence
+   means the image needs updating; on any other machine, ask the human to clone the repo
+   and install the wheel. Never fall back to raw HTTP against the ClickUp API.
 2. **`.myclickup.toml` present, `workspace_id` non-empty?** If not, stop — same rule as
    `/clickup-pull`. Never guess an ID.
-3. Resolve the target status through `[statuses]`, never by hard-coded name. **Compare
-   case-insensitively** — ClickUp returns status names lower-cased (`"ready for agent"`)
-   whatever the UI shows, so an exact match against `"Ready for Agent"` finds nothing.
-   Send the `[statuses]` spelling on writes; read back case-insensitively.
+3. Resolve the target status through `[statuses]`, never by hard-coded name — including the
+   terminal one, which is `statuses.complete`. If the role you need is absent from the
+   table, say which key is missing and stop; do not substitute a name that looks right.
+   **Compare case-insensitively** — ClickUp returns status names lower-cased
+   (`"ready for agent"`) whatever the UI shows, so an exact match against
+   `"Ready for Agent"` finds nothing. Send the `[statuses]` spelling on writes; read back
+   case-insensitively. When you are *reading* whether something is finished — this task or
+   a blocker — judge by the status **`type`** field (`done`/`closed`), never by name.
 4. Read the item's `ClickUp:` front-matter. No pointer means nothing to report — say so
    rather than guessing which task was meant.
 5. **Re-read the task live** (`myclickup task <id> --json`) before deciding anything. The
    front-matter is a snapshot; a human may have moved the task since.
+6. **Blocker gate — only when transitioning *into* the `agent_working` status.** Re-read
+   every `ClickUp-blocked-by` task live too; the front-matter's recorded status is a
+   snapshot and does not count. Judge each by its status `type`: `done`/`closed` is
+   cleared, anything else is live. **A live blocker stops the transition** — do not write
+   the status. Report which task blocks it and, if a comment was also asked for, offer to
+   post that instead.
 
 ## Dry-run first — always
 
@@ -57,7 +71,13 @@ resolves to, and the output lands in a surface a human reads visually.
 
 ## On completion
 
-Before reporting `Complete`:
+Completion is the `statuses.complete` role — resolve the name through `[statuses]` like any
+other, and read completion state back by status `type` (`done`/`closed`), since the name a
+Space uses for its terminal status is not knowable in advance. If `[statuses]` has no
+`complete` key, stop and ask for it rather than sending a guess: a status that does not
+exist in the task's home location is rejected outright.
+
+Before reporting complete:
 
 - confirm the work item's own exit rule is satisfied — anything durable distilled into an
   ADR or `docs/`, then archived

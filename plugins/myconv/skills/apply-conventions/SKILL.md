@@ -6,6 +6,21 @@ argument-hint: "[--audit] [path]"
 
 # Apply the agent-native repo conventions
 
+## Mode
+
+Parse `$ARGUMENTS` before anything else — both arguments are optional and order does not
+matter:
+
+- **A path** (anything that is not a flag) is the **target repo**: run the whole procedure
+  against that directory, and read its files rather than the current one's. With no path,
+  the target is the repo you are already in. If the path does not exist or is not a repo,
+  say so and stop — do not fall back to the current repo silently.
+- **`--audit`** means **report only**: run steps 1–5, present the gap, and stop there.
+  Write nothing, in the target repo or anywhere else.
+
+Say which mode you are in — target repo and audit-or-apply — in your first message, so a
+mistyped path surfaces before any file is touched.
+
 This skill carries the blueprint with it. Two directories sit next to this file:
 
 - `reference/agentic_native_repo_scaffold.md` — the full write-up: target layout, the
@@ -43,13 +58,17 @@ and treat installing it as the fix, rather than pasting copies.
    and "Not everything at once — lean core vs. opt-in" sections.
 3. **Choose the tier, and say why.** Default to the lean core: `AGENTS.md` + thin `CLAUDE.md` +
    `ARCHITECTURE.md` + `README.md` + `.claude/skills/` (for the repo's *own* procedures —
-   see above; the shared ones arrive with the plugin) + gitignored `AGENTS.local.md`. Add
+   see above; the shared ones arrive with the plugin) + gitignored `AGENTS.local.md` (the
+   ignore rule ships in `templates/.gitignore`, alongside the `.cache/` rule — place that
+   file, or fold its lines into the repo's existing one). Add
    `docs/adr/` and a light `.claude/settings.json` for most repos. Treat `CODEOWNERS`,
    `CONTRIBUTING.md`, PR template and CI as team-ceremony opt-ins, and `work/` as the heavier
    provenance tier. An empty `work/` no one uses is worse than not having it. Add
    `validation/` only where the repo already measures its own behaviour against a corpus and
    has (or wants) a gate reading the result — it is evidence, so it needs something measured
-   to be evidence of.
+   to be evidence of. If the repo skips `work/`, drop `plansDirectory` from the settings
+   template (and the matching `work/plans/` line from `.gitignore`) — it points at a
+   directory that won't exist.
 4. **Settle the tracker link — ask, don't assume.** A repo is *linked* when a committed
    pins file (`.myclickup.toml`) exists with its workspace ID filled in; see the
    blueprint's external-tracker bullet for the three states. Resolve it now rather than

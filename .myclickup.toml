@@ -50,3 +50,7 @@ agent_ready   = "Ready for Agent"
 agent_working = "Agent Working"
 human_active  = "In Progress"
 review        = "In Review"
+complete      = "Complete"   # the Space's done-type status (cached type: closed).
+                             # Terminal state is judged by the status `type`
+                             # (done/closed) when READING; this name is only for
+                             # writing the transition.

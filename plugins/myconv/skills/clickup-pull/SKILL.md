@@ -19,9 +19,11 @@ plugin, and a relative path out of the payload resolves nowhere.
 
 ## Preflight — stop, don't improvise
 
-1. **`myclickup` on PATH?** If not, stop with: *"myclickup isn't installed here — it's
-   baked into the sandbox image, so this is a human step."* Never attempt to install it
-   (denied), and never fall back to raw HTTP against the ClickUp API.
+1. **`myclickup` on PATH?** If not, stop — this is a human step. `myclickup` is a personal
+   CLI distributed from the owner's `myclickup` repo; it is **not on PyPI**, so there is no
+   install command to guess at. In the sandbox it is baked into the image, so its absence
+   means the image needs updating; on any other machine, ask the human to clone the repo
+   and install the wheel. Never fall back to raw HTTP against the ClickUp API.
 2. **`.myclickup.toml` at the repo root?** If absent, this repo has no tracker link. Say
    so and stop — do not create one uninvited; it is an opt-in piece.
 3. **`workspace_id` non-empty?** If empty, stop — the repo is declared-but-not-pinned, and
@@ -30,7 +32,9 @@ plugin, and a relative path out of the payload resolves nowhere.
    and a wrong one resolves silently against another workspace's board. Only a correct pin
    is safe, so ask for it.
 4. Read `[statuses]` from that file. **Never hard-code a status name** — names vary per
-   Space, which is the same reason completion is judged by `status_type`.
+   Space, which is the same reason completion is judged by the status `type`. A role the
+   table does not define is unset, not "obvious": say which key is missing and stop rather
+   than substituting a plausible name.
    **Compare case-insensitively.** ClickUp returns status names lower-cased
    (`"ready for agent"`) regardless of how they were typed in the UI, so an exact match
    against a `[statuses]` value like `"Ready for Agent"` silently finds nothing.
@@ -110,6 +114,18 @@ Rules that make this worth having:
 - **Exclude `due`, `priority`, `tags`, assignee, description-as-metadata.** They change no
   agent behaviour and go stale silently. They are one `myclickup task <id>` away.
 
+## Blocker gate — run it before calling the item ready
+
+Once the front-matter exists, check every `ClickUp-blocked-by` entry: read each blocker
+live (`myclickup task <id> --json`) and judge it by its status **`type`** field, not its
+name. `done` or `closed` means cleared; anything else (`open`, `custom`) is live.
+
+If any blocker is live, **the item is blocked, not ready**: mark it so on its
+`ClickUp-blocked-by` line (`— LIVE, blocks this item, status: <name>`), say which task
+blocks it in your handoff, and do not present the item as available work — the next step
+is clearing the blocker, not `/clickup-report`. A pull that quietly presents a blocked item as ready is the failure this gate exists
+to prevent. If every blocker is cleared, say so — that is also information the human wants.
+
 ## Re-pulling an existing item
 
 Never clobber. Report a diff against the current front-matter and ask before applying it.
@@ -118,4 +134,6 @@ Never clobber. Report a diff against the current front-matter and ask before app
 ## Then
 
 Tell the human what was created and what the next step is — normally
-`/clickup-report <item>` to move the task to `Agent Working`. Do not run it for them.
+`/clickup-report <item>` to move the task to the `agent_working` status. Do not run it for
+them. If the blocker gate found a live blocker, name it as the next step instead:
+`/clickup-report` will refuse the transition anyway.

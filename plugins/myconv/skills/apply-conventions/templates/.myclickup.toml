@@ -35,11 +35,18 @@ scope = []
 # wip_limit = 3                     # max items concurrently `Agent Working`
 
 [statuses]
-# Semantic role -> the status name as spelled in YOUR workspace. Adjust the
-# right-hand side to match; the left-hand keys are what the skills look up.
-# Status names vary per Space, which is why this is a mapping and not a list —
-# and why completion is judged by status_type, never by name.
-agent_ready   = "Ready for Agent"
-agent_working = "Agent Working"
-human_active  = "In Progress"
-review        = "In Review"
+# Semantic role -> the status name as spelled in YOUR workspace. The left-hand
+# keys are what the skills look up; the right-hand side is per-Space and cannot
+# be defaulted. Status names vary per Space, which is why this is a mapping and
+# not a list — and why completion is judged by the status `type` (done/closed),
+# never by name.
+#
+# FILL THESE IN from your Space's actual statuses (`myclickup status`), then
+# uncomment. Ship them unset rather than guessed: an unset role fails loudly
+# where a wrong name matches nothing and looks like an empty queue. The examples
+# below are one workspace's spelling, not a default.
+# agent_ready   = "Ready for Agent"
+# agent_working = "Agent Working"
+# human_active  = "In Progress"
+# review        = "In Review"
+# complete      = "Complete"
