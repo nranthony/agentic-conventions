@@ -18,6 +18,15 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 The payload shape changed: the plugin no longer carries copies of its own shared skills.
 
+### Added
+
+- **A "gloss before you cite" golden rule in `templates/AGENTS.md`** — when writing for a
+  human, state what a decision was in plain language and put its identifier in parentheses
+  after it, rather than leading with a bare `ADR-0001`. Resolving an ID is a grep for an
+  agent and a context switch for the reader, so the cost belongs on the writer's side. It is
+  advice, not a check: a glossed line still contains the identifier, so nothing mechanical
+  can tell the two apart ([ADR-0010](docs/adr/0010-gloss-before-cite.md)).
+
 ### Removed
 
 - **The embedded skill copies under `templates/.claude/skills/`** — `make-plan`,

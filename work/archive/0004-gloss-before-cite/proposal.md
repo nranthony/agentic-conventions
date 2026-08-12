@@ -1,6 +1,6 @@
 # Proposal: Gloss before cite — human-facing references to decision/doc IDs
 
-- Status: Draft
+- Status: Accepted → ADR-0010
 - Author: nranthony + agent
 - Migrated from `docs/rfcs/gloss-before-cite.md` ([ADR-0006](../../docs/adr/0006-proposals-are-work-items.md))
 
