@@ -102,12 +102,13 @@ check-vendored:
       repo=$(tr -d '[:space:]' < .sandbox-repo.local)
     fi
     if [ -z "${repo}" ]; then
-      echo "check-vendored: SKIPPED — set SANDBOX_REPO or write the sandbox checkout path into .sandbox-repo.local"
+      printf '\033[1;35m[SKIP]\033[0m check-vendored: no sandbox checkout configured — drift NOT checked.\n'
+      printf '       set SANDBOX_REPO, or write the path into .sandbox-repo.local\n'
       exit 0
     fi
     vendored="${repo}/sandbox_templates/skills/myconv"
     if [ ! -d "${vendored}" ]; then
-      echo "check-vendored: SKIPPED — no vendored copy at ${vendored}"
+      printf '\033[1;35m[SKIP]\033[0m check-vendored: no vendored copy at %s — drift NOT checked.\n' "${vendored}"
       exit 0
     fi
     if ! diff -r {{PLUGIN}} "${vendored}"; then
@@ -122,5 +123,12 @@ validate:
     claude plugin validate ./{{PLUGIN}}
 
 # Everything that must hold before a commit.
+#
+# check-vendored is the only member that can stand down instead of answering:
+# it needs a sibling checkout that may not exist on this machine. It exits 0 in
+# that case so a fresh clone can still pass — which means the closing line must
+# NOT claim full coverage. It said "all checks passed" for days while the one
+# check that would have caught a three-release drift was printing SKIPPED and
+# exiting 0, unconfigured. A skip is not a pass; say so where it is read.
 check: check-plugin-sync check-plugin-links check-versions check-vendored validate
-    @echo "all checks passed"
+    @echo "checks complete — review any [SKIP] above; a skip is not a pass"
