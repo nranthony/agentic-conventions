@@ -47,7 +47,8 @@ it has not shipped, so the whole of 0011 is one unreleased entry.
   work item moves mechanism into the tool and leaves policy in the skill.
   **Released and executed 2026-08-12 as `work/0013-cli-first-clickup-skills/` (commit
   `88acb87`)** — the CLI is now 0.3.0 in the image and closes every gap the hold was
-  waiting on.
+  waiting on. Archived 2026-08-13 to `work/archive/0013-cli-first-clickup-skills/` once
+  0.3.0 was verified loaded in a container.
 - **WP8.2's larger thread and WP8.3** (description sharpening, declaring
   `myconv:make-plan` the planning entry point, broader skill-ecosystem intersection; the
   generic-names question) → tracked in `work/0012-skill-development/`, created alongside

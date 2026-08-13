@@ -62,6 +62,11 @@ There is no ARCHITECTURE.md — the layout above is the whole architecture.
   in place at `plugins/myconv/skills/apply-conventions/SKILL.md`; the plugin payload is
   generated; and the container copy at `~/.claude/skills/myconv/` belongs to the sandbox
   repo — never edit it from here. Skills are never pasted into a consumer repo.
+  The `.claude/skills/` ↔ payload duplication that leaves is **deliberate, reviewed
+  2026-08-13**: it is what makes the canonical copy load as a project skill here, so a skill
+  can be edited and exercised in one session, and `check-plugin-sync` hard-fails both ways if
+  the two drift. Retiring it — by symlink, or by installing our own plugin from our own
+  marketplace — is direction-setting and needs an ADR first.
 - After touching `reference/`, `templates/`, or the shared skills, run `just sync-plugin`,
   then `just check` (check-plugin-sync, check-plugin-links, check-versions, check-vendored,
   validate). If the change alters what a consumer receives, add a CHANGELOG entry and bump

@@ -59,6 +59,11 @@ builds. Lives in the **sandbox repo**, not here.
     bodies would ride into every consumer and every seeded container. Downstream consumers
     stripping `variants/` at their end are depth-sensitive and will miss the plugin-nested copy —
     the sandbox found exactly that bug in its own sync script. Fix it here, at the source.
+  - Two halves of that are already done, 2026-08-13, ahead of this item shipping: the sandbox's
+    sync now strips `variants/` recursively, and `just check-vendored` here passes
+    `diff -r -x variants` so the vendored copy is not expected to contain what the sync
+    deliberately drops. **`just sync-plugin` is still the unfixed half** — it would carry a
+    `variants/` directory into the payload. Whoever ships this section fixes that one.
 - First variant: **make-plan for claude.ai** — same planning contract (evidence,
   Confirmed/Inferred/Needs-decision, non-goals, validation, approval gate); §1–§2
   rewritten: orient from attached files / Project knowledge instead of the tree, output

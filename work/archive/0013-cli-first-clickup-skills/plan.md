@@ -1,6 +1,6 @@
 # Plan: CLI-first rewrite of the two ClickUp skills
 
-- Status: Draft
+- Status: Done — archived 2026-08-13
 - Author: agent (Fable 5) + nanthony
 - Reference: held as WP8.1 of `work/0011-skill-audit-fixes/` ("CLI-first boundary —
   decided: hold"); released and decided 2026-08-12
@@ -103,3 +103,26 @@ load-bearing for a mechanical reason, not only a policy one.
 
 Archive this item once the plugin's 0.3.0 entry ships; nothing durable is left in it that
 the CHANGELOG and the skills themselves do not already carry.
+
+## Re-vendor exchange — closed 2026-08-13
+
+0.3.0 reached the containers. `handoff-revendor.md` → `handoff-revendor-response.md` →
+`handoff-revendor-close.md` is the whole exchange; the two open questions in it are
+answered and nothing in this item is waiting on the other repo.
+
+What outlived the exchange, and where it now lives — nothing durable is left here:
+
+- **The vendored-copy check must ignore what the sync deliberately strips.**
+  `just check-vendored` now diffs with `-x variants`, reasoned in the recipe's own
+  comment. The matching hole in `just sync-plugin` (which would carry a `variants/`
+  into the payload, and so to marketplace consumers) is recorded against
+  `work/0003-skills-beyond-this-repo/`, the item that would create one.
+- **`.claude/skills/` is kept deliberately, not by inertia** — recorded in `AGENTS.md`
+  with the one-home-per-role rule, including that retiring it needs an ADR.
+- **A skip is not a pass.** `just check` says so in its closing line now. In-container
+  that is not hypothetical: `.sandbox-repo.local` holds a host path, so `check-vendored`
+  SKIPs on every run there and only ever answers host-side.
+- **Step 8 is closed**: `claude plugin list` in a recreated container shows one loaded
+  `myconv@skills-dir` 0.3.0, one `skills` directory, no bare twins, byte-identical to
+  `plugins/myconv`. It proves no phantom loads now; whether they were ever loaded before
+  went with the recreated containers and is unrecoverable.

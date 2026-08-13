@@ -94,6 +94,13 @@ check-versions:
 # a gitignored .sandbox-repo.local holding the path; unconfigured, this skips.
 # Never diff against ~/.claude/skills/myconv/ — that is a derived cache two steps
 # further down the chain and may legitimately be mid-convergence.
+#
+# 'variants' is excluded because the sandbox's sync deliberately strips every
+# variants/ directory on the way in: per-surface claude.ai skill bodies are not
+# Claude Code-compatible and must never reach a container. Without the exclusion,
+# the first variants/ we ship would make this check fail permanently — asserting a
+# state the pipeline is designed to forbid. There are none today; the exclusion is
+# what keeps that from becoming a trap later.
 check-vendored:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -111,7 +118,7 @@ check-vendored:
       printf '\033[1;35m[SKIP]\033[0m check-vendored: no vendored copy at %s — drift NOT checked.\n' "${vendored}"
       exit 0
     fi
-    if ! diff -r {{PLUGIN}} "${vendored}"; then
+    if ! diff -r -x variants {{PLUGIN}} "${vendored}"; then
       echo "vendored copy differs — the human re-vendors from the sandbox repo ('just sync-skills' there)" >&2
       exit 1
     fi
