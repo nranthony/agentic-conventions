@@ -139,3 +139,21 @@ validate:
 # exiting 0, unconfigured. A skip is not a pass; say so where it is read.
 check: check-plugin-sync check-plugin-links check-versions check-vendored validate
     @echo "checks complete — review any [SKIP] above; a skip is not a pass"
+
+# Publish the plugin payload into the channel (depot/ today). A thin pointer on
+# purpose: the channel owns publishing, and duplicating its logic here would
+# recreate the second implementation this whole design exists to delete.
+# Runs `just check` first, mirrors plugins/myconv into dist/, hashes the tree,
+# and records version + source_commit in manifest.toml.
+publish summary="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root=$(cd .. && pwd)
+    while [ "${root}" != "/" ] && [ ! -f "${root}/manifest.toml" ]; do
+      root=$(dirname "${root}")
+    done
+    if [ ! -f "${root}/manifest.toml" ]; then
+      echo "error: no manifest.toml above this repo — is it inside the channel?" >&2
+      exit 1
+    fi
+    cd "${root}" && just publish myconv "{{summary}}"

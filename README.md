@@ -42,6 +42,12 @@ plain message anywhere else. For closed-egress containers, copy `plugins/myconv/
 persistent `~/.claude/skills/myconv/` instead — it loads as `myconv@skills-dir` with no
 network and no install step.
 
+Inside the `depot` channel, `just publish` mirrors `plugins/myconv/` into the
+channel's `dist/` and records its version, tree hash and `source_commit` in
+`manifest.toml` — that is what the sandbox consumes, rather than reaching into
+this checkout. It is a thin pointer at the channel's own `just publish myconv`;
+the channel owns publishing.
+
 Those two routes are the **only** way to get the shared skills. They are never copied into
 a consumer repo: an unnamespaced twin shadows the maintained copy and drifts, which is what
 ADR-0007 exists to prevent. A repo's own `.claude/skills/` is for the procedures that repo
