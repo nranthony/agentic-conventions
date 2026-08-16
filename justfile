@@ -119,7 +119,10 @@ check-vendored:
       exit 0
     fi
     if ! diff -r -x variants {{PLUGIN}} "${vendored}"; then
-      echo "vendored copy differs — the human re-vendors from the sandbox repo ('just sync-skills' there)" >&2
+      echo "vendored copy differs — the human re-vendors from the sandbox repo ('just vendor-tools' there;" >&2
+      echo "its 'just tools-check' is the authoritative staleness check, reading VENDORED.lock against the channel)" >&2
+      echo "NOTE: this compares the WORKING TREE, not what the channel published. If this repo is ahead of its" >&2
+      echo "last publish, the correct action is 'just publish' here first — never re-vendor unpublished content." >&2
       exit 1
     fi
     echo "vendored copy matches {{PLUGIN}}"
