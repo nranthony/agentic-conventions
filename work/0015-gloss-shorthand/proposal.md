@@ -1,7 +1,8 @@
 # Proposal: Gloss shorthand, not just identifiers
 
-- Status: Draft — decision-ready. Reviewed with the owner 2026-08-16; the four questions
-  the first draft left open are resolved and folded in (see *Resolved in review*).
+- Status: Accepted 2026-08-16 → ADR-0011. Record written, both instruction surfaces
+  updated, plugin regenerated at 0.4.0. The four questions the first draft left open were
+  resolved in review before acceptance (see *Resolved in review*).
 - Author: nanthony (owner), carrying findings from the agent in `myclickup`; drafted by
   the agent in `agentic-conventions`
 - Opened: 2026-08-16

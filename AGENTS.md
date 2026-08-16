@@ -73,8 +73,10 @@ There is no ARCHITECTURE.md — the layout above is the whole architecture.
   `version` in **both** `plugins/myconv/.claude-plugin/plugin.json` and
   `.claude-plugin/marketplace.json` — an unbumped version means consumers never see the
   change, and `just check-versions` enforces that the two agree.
-- **Gloss before you cite.** When writing for a human, state the decision in plain language
-  first and put the identifier in parentheses after it — "the reference-not-automation
-  decision (ADR-0001)", never a bare "per ADR-0001". Repeated mentions of the same thing
-  within an exchange may drop the gloss (ADR-0010).
+- **Gloss before you cite.** When writing for a human, name the thing in plain language
+  first and put the code in parentheses after it — an identifier ("the
+  reference-not-automation decision (ADR-0001)", never a bare "per ADR-0001") or project
+  shorthand ("the task-move command (R3 in the plan) shipped", never "R3 shipped").
+  Ordinary technical vocabulary is already plain; when unsure, gloss. Repeated mentions of
+  the same thing within an exchange may drop the gloss (ADR-0011, extending ADR-0010).
 - Commit locally with clear messages; never push without approval.

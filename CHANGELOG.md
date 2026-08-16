@@ -14,6 +14,27 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.4.0 — unreleased
+
+The "gloss before you cite" golden rule now covers project shorthand, not just identifiers.
+
+### Changed
+
+- **The gloss-before-cite golden rule in `templates/AGENTS.md` widened to cover shorthand**
+  — plan-item letters, table codes, question numbers, codenames — and not only identifiers
+  with a canonical home. "R3 shipped" is clear to whoever coined it and opaque to everyone
+  else, including the next agent in a fresh session: unlike a decision number, `R3` is
+  often not greppable at all, since it resolves only against *which* plan or *whose* table.
+  Ordinary technical vocabulary is untouched — "wheel", "rebase" and "manifest" are already
+  the plain terms — and when the line is unclear, the rule is to gloss, because
+  over-glossing costs a few words while under-glossing costs the reader the whole point.
+  Still advice, and now less lintable than before: ad-hoc codes have no pattern to match
+  ([ADR-0011](docs/adr/0011-gloss-shorthand.md), extending
+  [ADR-0010](docs/adr/0010-gloss-before-cite.md)). The rule remains one line item in Golden
+  rules, carrying a worked example for each half.
+
+---
+
 ## 0.3.0 — unreleased
 
 The two ClickUp skills are now CLI-first: mechanism lives in `myclickup`, policy stays in
