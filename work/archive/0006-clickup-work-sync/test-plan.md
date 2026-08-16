@@ -1,5 +1,15 @@
 # Test plan — ClickUp ↔ work/ sync
 
+> **Superseded 2026-08-16 → `work/0016-clickup-sync-verification/plan.md`.** The body below
+> is left as written, not corrected: it is the record of what was true at CLI 0.2.0. Three
+> claims in it have since aged, all because the CLI grew the surfaces this plan asked for —
+> §0's premise that no read path exists for a list's status set (`myclickup statuses` now
+> does it, so setting a status is no longer the only confirmation), the upstream-gap note
+> beneath it (that command is exactly what shipped), and W10's implicit assumption that the
+> tool has no `move` verb (it does; the refusal is policy, not capability). The delete
+> claims in W11 and §4 still hold — 0.6.0 has no `delete` or `rm` command. The surviving
+> fixture matrix, corrected, is in the new item.
+
 What still needs proving, what to build in ClickUp to prove it, and what each fixture
 would catch. Ordered so the cheap prerequisites come first.
 

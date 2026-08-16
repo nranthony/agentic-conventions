@@ -2,7 +2,7 @@
 
 - Status: Draft
 - Author: agent (Fable 5) + nanthony
-- Opened: 2026-08-12, split out of work/0011 (the skill audit) — the audit's
+- Opened: 2026-08-12, split out of work/archive/0011 (the skill audit) — the audit's
   mechanical fixes stayed there; this item is the "larger thread": deliberate skill
   development informed by what the community ships.
 
@@ -12,7 +12,7 @@ Sharpen the five myconv skills so they coexist deliberately with community skill
 libraries (obra/superpowers first among them): differentiate by description rather
 than name, declare entry points in AGENTS.md, and graft the best community content
 into our skills instead of adopting theirs wholesale. One action was pulled forward
-into work/0011 and is NOT in scope here: `disable-model-invocation: true` on
+into work/archive/0011 and is NOT in scope here: `disable-model-invocation: true` on
 clickup-report (decided 2026-08-12).
 
 ## Motivation
@@ -62,7 +62,7 @@ community content where it saves time.
    the two-line `CLAUDE.md` stub beside a new nested `AGENTS.md`) — so an adopter
    copies a working `description:` trigger instead of writing one from scratch,
    which is the part people get wrong. What changed: their original landing slot,
-   `templates/.claude/skills/`, no longer exists (work/0011 WP7 pruned it — the
+   `templates/.claude/skills/`, no longer exists (work/archive/0011 WP7 pruned it — the
    embedded skill copies were the phantom-skill bug). So if wanted, they ship
    *inside the plugin* as real namespaced skills, or as reference prose showing a
    worked `SKILL.md` rather than a copyable file. Decide which here — including
@@ -78,7 +78,7 @@ community content where it saves time.
   superpowers in a scratch profile, run planning prompts, observe which skill fires.)
 - Should wrap-up absorb any of `finishing-a-development-branch`'s git-integration
   steps (merge/PR menu, worktree cleanup), or stay documentation-only?
-- Timing of the ClickUp-pair split vs. the CLI-first rewrite (work/0011 WP8.1) —
+- Timing of the ClickUp-pair split vs. the CLI-first rewrite (work/archive/0011 WP8.1) —
   one restructure or two?
 
 ## Alternatives
@@ -174,11 +174,11 @@ commands `/brainstorm`, `/write-plan`, `/execute-plan`; trigger-space overlap fr
 - Live observation that motivated the description work: this session simultaneously
   carried `make-plan` (repo-local, current), `myconv:make-plan` (seeded, stale
   vintage), and a directory-scoped phantom from the payload templates — three
-  variants, two contents. The structural fix (one home per role) is work/0011 WP7;
+  variants, two contents. The structural fix (one home per role) is work/archive/0011 WP7;
   the *routing* fix (descriptions, entry-point declarations) is this item.
 - The stale-seed episode also showed version stamping only works if the version
   actually bumps — "0.1.0 — unreleased" on every vintage defeats it. Bump
-  discipline adopted in work/0011 WP7.5.
+  discipline adopted in work/archive/0011 WP7.5.
 - wrap-up is the differentiated asset: nothing in the ecosystem reconciles
   AGENTS.md + ADRs + CHANGELOG + work-item archival. Invest there; don't chase
   parity with community planners.

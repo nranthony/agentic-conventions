@@ -121,6 +121,24 @@ why it shipped minimal.
   makes `work/` the single in-flight pipeline — a pre-existing tension this sits on top of.
   Not reconciled; if beads later lands the chain becomes ClickUp → bd → `work/` and
   ADR-0008 needs superseding.
+## Closed 2026-08-16 — archived, verification split out
+
+The item is archived. Its rationale was distilled into ADR-0008 on 2026-08-11 and the
+implementation landed long ago; what kept it open was live verification, and that is now
+its own item — `work/0016-clickup-sync-verification/`.
+
+What changed since these notes were written:
+
+- **Blocker 3 is cleared.** The two agent statuses (`Ready for Agent`, `Agent Working`)
+  exist in the Codebase / Agentic Conventions list as of 2026-08-12, so `/clickup-report`
+  is runnable and the "still unexercised" write path above is merely untested, not blocked.
+- **Blocker 3's stated impossibility is also gone.** `myclickup statuses` reads a list's
+  status set directly (0.3.0+, verified against 0.6.0), so a status no task sits in is no
+  longer invisible from here.
+- **The three local fixtures are deleted** — `work/0007-testing/`,
+  `work/0008-testing-task-1/`, `work/0009-testing-task-2/`. Every defect they exposed is
+  recorded above and fixed in the skills; they were proof of a run, not work items.
+
 ## Resolved after the wrap-up
 
 - **`apply-conventions` and the ClickUp skills.** Settled: it does **not** place them in a

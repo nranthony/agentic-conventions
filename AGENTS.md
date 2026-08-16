@@ -57,7 +57,7 @@ There is no ARCHITECTURE.md — the layout above is the whole architecture.
   `plugins/myconv/` (or the `reference/`, `templates/`, and skill files that get copied
   into it) resolves nowhere for every consumer. Cite the ADR by number and bare path
   instead. This has been fixed twice; `just check-plugin-links` catches it.
-- **One home per role for skills** (work/0011, WP7): the four shared skills are canonical at
+- **One home per role for skills** (work/archive/0011, WP7): the four shared skills are canonical at
   [.claude/skills/](.claude/skills/) — edit them there only; `apply-conventions` is authored
   in place at `plugins/myconv/skills/apply-conventions/SKILL.md`; the plugin payload is
   generated; and the container copy at `~/.claude/skills/myconv/` belongs to the sandbox

@@ -124,7 +124,7 @@ on skills is that no parallel `commands/` seeding channel needs building:
    `sandbox_templates/skills/myconv/` — committed, no personal path. Pull it from this
    repo's generated plugin payload, [`plugins/myconv/`](../plugins/myconv/): that is the
    product tier, and vendoring the whole plugin keeps the skills namespaced as
-   `/myconv:*`. (There is no longer a `templates/.claude/skills/` mirror — see work/0011,
+   `/myconv:*`. (There is no longer a `templates/.claude/skills/` mirror — see work/archive/0011,
    WP7: one home per role.)
 2. **Seed per profile** — the existing `ensure_state` skills loop copies it into
    `claude-home/skills/`; `reset-skills` already force-refreshes it. Nothing new to build.
