@@ -3,8 +3,10 @@
 - Status: Draft
 - Author: agent (Opus 5) + nanthony
 - Opened: 2026-08-18, from consumer feedback raised in the `myclickup` repo
-  (two pulls, 2026-08-17). `0017` was the next free number across active and
-  archived items when claimed.
+  (two pulls, 2026-08-17). Opened as `0017`, renumbered to `0018` the same day:
+  a concurrent session claimed `0017` for the skill-feedback-channel item minutes
+  later, and yielding the number was cheaper than renumbering an item still in
+  flight. Numbers are never reused, so `0017` stays theirs.
 
 ## Summary
 

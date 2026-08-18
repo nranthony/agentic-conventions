@@ -197,14 +197,14 @@ trip.
 ### The scope is wider than "no other skill is implicated"
 
 The same failure appears in `/clickup-pull`, reported independently by a consumer two
-days later and now open as **work/0017**. That skill requires a pinned status-role
+days later and now open as **work/0018**. That skill requires a pinned status-role
 table, hard-codes a filename the lifecycle does not require, and asserts a front-matter
 layout — while, one sentence away, telling the agent to use "the repo's own proposal
 template headings." Four instances of exactly the property #2 names: **it cannot tell a
 tier that is absent from one that is present under another name, or under another
 rule.**
 
-That makes this a two-skill argument, and 0017 recommends the rationale distil into
+That makes this a two-skill argument, and 0018 recommends the rationale distil into
 **one** record covering both. Writing it twice is how two divergent rules appear in two
 skills that are supposed to share a posture. Concretely, the principle to record is
 #2's, generalised past discovery:
@@ -212,7 +212,7 @@ skills that are supposed to share a posture. Concretely, the principle to record
 > A skill states what it does when a repo has a thing, and what it says when it does
 > not. It does not state what a repo must contain.
 
-Under that, 0017's Group A is application, not a second decision.
+Under that, 0018's Group A is application, not a second decision.
 
 A third instance, for whether the principle is worth a record at all: this repo's own
 `check-vendored` printed `[SKIP]` for days while `just check` closed with "all checks
@@ -261,7 +261,7 @@ budget**, or the trigger line's own "skip it rather than manufacture busywork" s
 being contradicted by the skill's bulk.
 
 Landing is consumer-visible: `just sync-plugin`, `just check`, CHANGELOG, a version bump
-in both plugin manifests, republish, re-vendor host-side. **Batch with work/0017** — same
+in both plugin manifests, republish, re-vendor host-side. **Batch with work/0018** — same
 record, same release, one cycle instead of two.
 
 ### Sequencing note

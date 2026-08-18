@@ -1,6 +1,6 @@
 # Handoff → `myclickup`: a selector for `attachments --download`
 
-- From: `agentic-conventions`, work/0017 (2026-08-18)
+- From: `agentic-conventions`, work/0018 (2026-08-18)
 - Status: **not yet delivered** — tracked original only. See "Delivery" at the end.
 - Asks for: one flag, plus two fields in an existing report. No behaviour change to
   what is already decided.
@@ -18,7 +18,7 @@ is a caller bug, not an empty result.
 
 ## Why the CLI and not the caller
 
-The consumer is the `/clickup-pull` skill (work/0017, group B). It wants to pull small
+The consumer is the `/clickup-pull` skill (work/0018, group B). It wants to pull small
 text-ish attachments into a work item and leave large binaries on the board. It can
 already *make* that decision — `attachments <id> --json` returns the raw objects, so
 `mimetype`, `size`, `extension` and `version` are all in hand.
@@ -59,7 +59,7 @@ new request, no new behaviour.
 
 ## What is blocked on this, and what is not
 
-Not blocked: the reporting half of work/0017 (recording what was left behind, provenance
+Not blocked: the reporting half of work/0018 (recording what was left behind, provenance
 lines, surfacing `skipped`). That lands without any CLI change.
 
 Blocked: the download gate itself — and on a second thing outside both repos. The Vault's
