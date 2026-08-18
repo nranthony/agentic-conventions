@@ -21,8 +21,10 @@ Each is optional except whichever one starts the item:
    [docs/adr/](../docs/adr/); the proposal's status line links it
    (`Accepted → ADR-NNNN`). Reference knowledge distills into `docs/` or a skill.
 3. When the work merges or the question resolves, the folder moves to `work/archive/`
-   (committed). Pure-implementation items with nothing durable left in them may be
-   deleted instead. **Nothing durable may live only in `work/`.**
+   (committed). **Items are archived, never deleted**
+   ([ADR-0012](../docs/adr/0012-work-items-archive-never-delete.md)) — including
+   pure-implementation ones that look like they hold nothing durable. **Nothing durable
+   may live only in `work/`.**
 
 Archived items are historical records: never treat an archived `proposal.md` or
 `plan.md` as current intent — the distilled ADR is canonical.

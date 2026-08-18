@@ -14,6 +14,34 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.5.0 — unreleased
+
+Work items are archived on exit, never deleted. The blueprint's exit rule loses its
+delete branch, and no skill will propose removing one.
+
+### Changed
+
+- **The `work/NNNN-slug/` exit rule is now single-branched** across the bundled blueprint
+  (`reference/agentic_native_repo_scaffold.md`), the templates (`templates/work/README.md`,
+  `templates/AGENTS.md`), and the planning and wrap-up skills: distil anything durable out,
+  then move the folder to `work/archive/`. The former escape hatch — delete the folder if
+  nothing durable remains — is withdrawn. "Nothing durable remains" is a prediction about
+  future readers rather than something the closing agent can check, and the two outcomes
+  are not comparable: archiving costs a directory entry, while a wrong delete destroys the
+  record silently and often with no commit behind it to recover from. It also punched
+  unreadable holes in a sequence that promises numbers are never reused. Rationale in
+  decision record ADR-0012 (`docs/adr/0012-work-items-archive-never-delete.md` in the
+  conventions repo), which amends the exit-rule clause of ADR-0006 and leaves the rest of
+  that decision standing.
+- **`/myconv:wrap-up` will no longer offer deletion as a way to close out a work item.**
+  Its end-of-thread `work/` section previously read "move to `work/archive/` — or delete it
+  if nothing durable remains"; it now archives, and says so explicitly.
+- Every other deletion rule in the conventions is untouched: the `inbox/` doorbell is still
+  read-then-deleted once distilled, `work/plans/` is still gitignored scratch, and the
+  ClickUp write path still has no delete verb at all.
+
+---
+
 ## 0.4.0 — unreleased
 
 The "gloss before you cite" golden rule now covers project shorthand, not just identifiers.

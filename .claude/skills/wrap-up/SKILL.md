@@ -80,8 +80,9 @@ that its rationale belongs in an ADR and its status should flip to
 
 - If this thread's work merged or is done: distill anything durable first (decision
   rationale → ADR; reference knowledge → docs/ or a skill), then move the folder to
-  `work/archive/` — or delete it if nothing durable remains. A stale `spec.md` left
-  active poisons future agent searches.
+  `work/archive/`. Never propose deleting a work item, even one that looks like it
+  holds nothing durable. A stale `spec.md` left active poisons future agent searches;
+  an archived one is explicitly historical.
 - If still in flight, make sure `plan.md`/`notes.md` reflect where you *actually* left
   off, not the original plan.
 

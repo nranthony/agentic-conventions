@@ -84,9 +84,11 @@ add the rest only when a concrete need appears. Adopt in this order:
   bundle deeper than a ticket. `work/`
   carries an exit rule: **when the work merges or the question resolves, distill
   anything durable out (decision rationale → an ADR; reference knowledge → docs/ or a
-  skill), then move the folder under `work/archive/`** — or delete it if nothing
-  durable remains. A stale `spec.md` left active quietly poisons future agent searches
-  and context; an archived one is explicitly historical.
+  skill), then move the folder under `work/archive/`**. Items are archived, never
+  deleted — "nothing durable remains" is a guess about future readers, and it is not
+  worth an irreversible action to save a directory entry. A stale `spec.md` left active
+  quietly poisons future agent searches and context; an archived one is explicitly
+  historical.
   Pair it with `"plansDirectory": "./work/plans"` in `.claude/settings.json` (and
   gitignore `work/plans/`) so Claude Code's native plan-mode drafts land beside the
   durable plans instead of evaporating in `~/.claude/plans/`; a draft becomes durable by
@@ -316,8 +318,8 @@ When you begin work, in this order:
   direction, write a short ADR (or a work-item proposal.md first if it needs discussion).
 - After implementing: run the project's checks, reference the ADR/proposal in your
   commit message, and update CHANGELOG. If you used a work/ folder, distill anything
-  durable (ADR/docs), then archive or delete it so stale specs don't pollute future
-  context.
+  durable (ADR/docs), then move it under `work/archive/` so stale specs don't pollute
+  future context. Archive it — items are never deleted.
 - If you learned something durable (a gotcha, a convention), write it back —
   a new ADR, a skill, or a line here — so the next session doesn't re-derive it.
 
@@ -372,8 +374,8 @@ what/why) · plan.md (implementation plan) · notes.md (running notes).
 
 Exit rule: when the work merges or the question resolves, distill anything
 durable out (decision rationale → an ADR; reference knowledge → docs/ or a
-skill), then move the folder to work/archive/ — or delete it if nothing
-durable remains. Archived items are historical records, never current intent.
+skill), then move the folder to work/archive/. Items are archived, never
+deleted. Archived items are historical records, never current intent.
 
 ## Proposal template
 

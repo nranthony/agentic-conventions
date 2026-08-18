@@ -5,6 +5,9 @@
 - Deciders: nranthony + agent
 - Supersedes: [ADR-0005](0005-adopt-rfcs.md) (the `docs/rfcs/` tier; the principle
   that proposals precede ADRs and persist after resolution survives)
+- Amended by: [ADR-0012](0012-work-items-archive-never-delete.md) — the exit rule below
+  no longer has a delete branch. The "pure-implementation items may still be deleted"
+  clause is withdrawn; everything else here stands.
 
 ## Context
 
