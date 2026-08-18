@@ -243,26 +243,40 @@ convention of an `AGENTS.md` that agents append learnings to indefinitely. Our r
 stronger on purpose — nothing durable lives only in a work item; it distils to an ADR —
 and adopting the notebook pattern would be a downgrade wearing the clothes of a standard.
 
+## Exit rule
+
+This item closes when the channel is built and a consumer can file a report — or when the
+question is resolved the other way and the item is rejected.
+
+**The ADR is written at implementation time, not now** (decided 2026-08-18). This is
+direction-setting by the repo's own test — a new skill, a new payload artifact, and a rule
+binding consumer behaviour — so it does need one; but writing it against a Draft proposal
+would pin decisions the build will change, and ADRs here are append-only. So: whoever
+implements §1–§3 writes the ADR as part of that work, **before the skill ships**, not
+after. Its load-bearing content is the risk-class split and the gate-outside-the-substrate
+rule (§4), since those bind consumers rather than describing our own plumbing. Open
+question 5 gates it: nothing from the prior-art section may be cited until those sources
+are checked.
+
+The proposal's status line then becomes `Accepted → ADR-NNNN` and the folder archives.
+
 ## Open questions
 
-1. **Does this need an ADR before it is built?** It is direction-setting by the repo's own
-   test — a new skill, a new payload artifact, and a rule binding consumer behaviour. The
-   likely answer is yes, and it should be written before §1–§3, not after.
-2. **Overlap with the on-hold distribution item.** `work/0003-skills-beyond-this-repo`
+1. **Overlap with the on-hold distribution item.** `work/0003-skills-beyond-this-repo`
    already owns "surfaces outside the checkout". A feedback path has to work on every
    surface that item enumerates, and §3 there (the claude.ai variant) is the one where the
    copy-to-inbox transport is impossible. Fold this in as a section of 0003, or keep it
    separate and cross-reference?
-3. **Where does a consumer's tracked original live** when the consumer is not on these
+2. **Where does a consumer's tracked original live** when the consumer is not on these
    conventions and has no `work/` tree? A `feedback/` folder is the fallback in §1, but it
    is asserted, not decided.
-4. **Does the `VERSION` sidecar belong to this item or to the channel?** Stamping is
+3. **Does the `VERSION` sidecar belong to this item or to the channel?** Stamping is
    independently useful — it is also the missing half of "which version am I running" for
    every consumer — and might ship on its own regardless of what happens to the rest.
-5. **Grouping mechanics.** The symptom slug (§2) implies a fixed list that has to be
+4. **Grouping mechanics.** The symptom slug (§2) implies a fixed list that has to be
    maintained and that reporters can actually match against. Who owns that list, and what
    happens when nothing fits?
-6. **The prior-art sources are unverified.** They were assessed from a survey, from inside
+5. **The prior-art sources are unverified.** They were assessed from a survey, from inside
    a sandbox with no network. Before any of it is cited in an ADR, someone with egress
    confirms the specifics — the overfitting finding and the proposal-record-with-signer
    pattern are the two doing real argumentative work here, so they are the two that matter.
