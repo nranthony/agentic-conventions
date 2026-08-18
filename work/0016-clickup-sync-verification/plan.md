@@ -105,7 +105,11 @@ No fixture needed; ask for each and confirm the refusal.
 - **Scheduled polling** — not implemented, and blocked on a policy decision: writes prompt
   every time by design, so an unattended routine cannot set a status without one.
 - **Attachment downloads** from The Vault — no proxy allowlist entry for the attachments
-  host, and no download flag in the CLI.
+  host, `t90141509251.p.clickup-attachments.com`. Corrected 2026-08-17: the CLI *does*
+  have the flag (`attachments <id> --download --dir <path>`, host-restricted and
+  never-overwriting — myclickup `docs/adr/0010-attachment-downloads.md`, shipped
+  2026-08-12). The allowlist entry is the only thing still missing, and it is a human
+  step in the sandbox repo.
 
 ## Exit
 
