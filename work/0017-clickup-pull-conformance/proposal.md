@@ -114,7 +114,9 @@ binary the cap exists to avoid. Two things gate it, both outside this repo:
 
 - a selector in the CLI (`--only <attachment-id>`, repeatable) so the caller can act
   on a decision it has already made — keeping *which files* in the skill and *the
-  fetch* in the CLI, per the split the CLI-first rewrite settled (work/archive/0013);
+  fetch* in the CLI, per the split the CLI-first rewrite settled (work/archive/0013).
+  Written up as `handoff-myclickup-attachment-selection.md` beside this file;
+  **not yet delivered** — see its Delivery section for why that is a deliberate step;
 - an egress allowlist entry for the attachments host,
   `t90141509251.p.clickup-attachments.com`, which The Vault does not have. Landing the
   gate without it ships a feature that fails at the proxy on first use, in the one
@@ -129,6 +131,9 @@ Items 6–8 are the reporting half of the same feature and are unblocked by both
   into 0014 so one record covers both skills — writing it twice is how two divergent
   rules appear. Group B needs no new decision; it is the existing "a skip is not a
   pass" rule applied in a second place.
+  *Recorded 2026-08-18* in 0014's review section, which states the generalised
+  principle and treats this item's Group A as its application. Still open in the sense
+  that the owner has not ruled on it — but the argument no longer needs restating.
 - **How far does "read the repo" go?** Parsing `work/README.md` is deterministic;
   inferring the lifecycle from existing item filenames is heuristic. Does the skill
   stop when a repo has neither, or pick a default and say which?

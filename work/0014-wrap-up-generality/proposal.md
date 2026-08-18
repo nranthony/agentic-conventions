@@ -171,3 +171,101 @@ Findings are from `wrap-up --dry-run` on `windows-ai-sandbox` @ `3dbc759`,
 correction, and Part B of the tools channel (myclickup work/0016). The run's own
 output — 2 ADRs drafted, 4 doc corrections, 1 archive, 1 parked-plan note — is the
 evidence that the skill works; this proposal is only about what it could not see.
+
+---
+
+## Review (2026-08-18, agentic-conventions side)
+
+Reviewed here at the owner's request. The draft above is **unedited** — this section
+is appended, so the sandbox-side author's text stays theirs.
+
+### Verdict
+
+**Accept all eight.** The diagnosis is right and the evidence is a real run, not a
+reading. #2, #3 and #5 are correctly identified as the load-bearing ones. Three
+wording changes and one scope correction below; nothing here rejects a proposal.
+
+### Scope correction — the file named is the generated copy
+
+The Scope line names `plugins/myconv/skills/wrap-up/SKILL.md`. That is the **payload**,
+which `just sync-plugin` overwrites from the canonical source. Edits there are erased
+on the next sync and `just check-plugin-sync` hard-fails both ways. The file to edit is
+`.claude/skills/wrap-up/SKILL.md`. Not a flaw in the argument — the author works
+host-side, where only the vendored copy is visible — but it would have cost a round
+trip.
+
+### The scope is wider than "no other skill is implicated"
+
+The same failure appears in `/clickup-pull`, reported independently by a consumer two
+days later and now open as **work/0017**. That skill requires a pinned status-role
+table, hard-codes a filename the lifecycle does not require, and asserts a front-matter
+layout — while, one sentence away, telling the agent to use "the repo's own proposal
+template headings." Four instances of exactly the property #2 names: **it cannot tell a
+tier that is absent from one that is present under another name, or under another
+rule.**
+
+That makes this a two-skill argument, and 0017 recommends the rationale distil into
+**one** record covering both. Writing it twice is how two divergent rules appear in two
+skills that are supposed to share a posture. Concretely, the principle to record is
+#2's, generalised past discovery:
+
+> A skill states what it does when a repo has a thing, and what it says when it does
+> not. It does not state what a repo must contain.
+
+Under that, 0017's Group A is application, not a second decision.
+
+A third instance, for whether the principle is worth a record at all: this repo's own
+`check-vendored` printed `[SKIP]` for days while `just check` closed with "all checks
+passed" — the same collapse of "not configured" into "fine", in a check rather than a
+skill. That one is already fixed and already recorded in the `justfile` as *a skip is
+not a pass; say so where it is read*, which is #3 arrived at independently.
+
+### Three wording changes
+
+1. **#1 — keep a floor under "path-agnostic".** "Locate them from the root `AGENTS.md`
+   index" assumes an index exists and is accurate. On a repo with neither, the section
+   silently skips again — the bug being fixed. Add: if no index resolves them, say so
+   and name the paths checked. An honest "could not locate" is the third state; a quiet
+   skip is not.
+2. **#4 — say the gate is enumerated, not run.** The Alternatives section already draws
+   this line, but the proposed section text does not carry it, and a future reader edits
+   the section, not the alternative. Put "enumerate and check each clause; do not run
+   them" inside the quoted block.
+3. **#5 — bound the sweep.** "Grep the repo for the old form" on a large repo with a
+   stale version string returns the vendor tree and every lockfile. Scope it to
+   documentation and instruction surfaces, and cap what it reports rather than listing
+   every hit.
+
+### The four open questions
+
+1. **#4 in wrap-up or apply-conventions?** Both, in that order. Wrap-up reads gates
+   written in prose today; `apply-conventions` can later encourage a findable shape.
+   Doing only the second helps no existing repo, which is the population the skill
+   exists for.
+2. **#5 its own skill?** No — a second model-invoked skill widens the trigger-collision
+   surface that `work/0012` exists to narrow, and its trigger ("a fact was corrected")
+   is not sharp enough to fire reliably. It stays a section. The `work/0012` selection
+   test agrees: a procedure earns a skill only if the agent should reach for it
+   unprompted, it recurs, and its trigger is sharp.
+3. **#3's tier map — up front or at the end?** Both, and they are different artifacts:
+   up front it sets expectations, at the end it is evidence attached to the summary that
+   would otherwise read as full coverage.
+4. **Say outright it is not a substitute for the repo's gates?** Yes. One line, and the
+   provenance run is the argument — a clean wrap-up there would still have shipped three
+   stale documents.
+
+### Cost, for sequencing
+
+The skill is 127 lines. Eight additions plus two new sections want a **≤150-line
+budget**, or the trigger line's own "skip it rather than manufacture busywork" starts
+being contradicted by the skill's bulk.
+
+Landing is consumer-visible: `just sync-plugin`, `just check`, CHANGELOG, a version bump
+in both plugin manifests, republish, re-vendor host-side. **Batch with work/0017** — same
+record, same release, one cycle instead of two.
+
+### Sequencing note
+
+#7 (parked work) should follow the work-item **status vocabulary** still pending in
+`inbox/`: "parked" collides with the `Deferred — <reason>` form proposed there. Nothing
+else in this item is blocked.
