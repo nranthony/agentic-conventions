@@ -3,6 +3,13 @@
 - Status: Draft
 - Author: nranthony + agent (Opus 5)
 - Opened: 2026-08-18
+- Related: **[work/0018](../0018-clickup-pull-conformance/proposal.md)** — read it
+  alongside this. It is a worked instance of the traffic this channel is for: eight
+  defects in `/clickup-pull`, reported by a consuming agent in the `myclickup` repo and
+  carried back by hand through a conversation. Every guardrail proposed here can be
+  tested against it — does the envelope schema hold what that report actually carried,
+  and would its risk class have been assigned correctly? (Added 2026-08-18 by the 0018
+  author. Both items opened as `0017` within minutes; 0018 yielded the number.)
 
 ## Summary
 
