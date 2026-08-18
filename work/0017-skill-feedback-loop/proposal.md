@@ -13,6 +13,11 @@ schema with a single home (a sixth skill), and a set of guardrails whose whole p
 that a report is actionable **on arrival, with no reply**. The design goal is not
 "collect feedback"; it is "never round-trip".
 
+Two constraints shape everything else. A report must carry enough to be acted on without
+a reply, or the channel costs more than the silence it replaces. And because our
+guardrails live inside the skills a report can propose edits to, every report declares a
+risk class — so a proposed change to a rule can never arrive looking like a typo fix.
+
 ## Motivation
 
 Five skills ship to consumers we cannot see: this repo, the other member repos in the
@@ -94,6 +99,21 @@ belongs under — not a description of a problem. A proposed diff is an order of
 cheaper to triage, and it forces the reporter to have read the skill rather than guessed
 at it.
 
+**What the change is allowed to weigh — the risk class.** A proposed edit to a step in a
+skill and a proposed edit to a rule that constrains agents are the same size on disk and
+must not be the same thing to triage. The reporter classes the edit, and the class decides
+the lane:
+
+- **Mechanical** — a wrong path, a stale command, a step that cannot be followed as
+  written. Applied directly, like any other correction.
+- **Direction-setting** — anything touching a guardrail, an ADR, or the blueprint. Routes
+  to the lane this repo already has for it: an ADR first, never a merge from a report
+  alone, however small the diff.
+
+The reporter's class is a claim, not a decision — a triager may reclassify upward, never
+downward. This exists because the alternative is that the lane gets picked by whoever
+reads the report and how large the diff looked, which is not a rule.
+
 Then the cheap ones: install mode (plugin / user-scope / vendored container copy);
 invocation and arguments as run; the step it broke at, quoted verbatim by heading;
 once-versus-every-run; the workaround already applied locally; and **which artifact is
@@ -129,6 +149,13 @@ the safety net.
 
 ### 4. The guardrails that decide whether it works at all
 
+- **The gate must sit outside what a report can change.** Our guardrails live *inside* the
+  skills — what may cross to the board and what may not, never push without approval, the
+  leak rule below, the read-only rule above. A channel that lets a consuming agent propose
+  edits to the skill text therefore lets it propose edits to its own constraints, and a
+  gate inside the material it is gating does not hold. This is what the risk class in §2
+  is for, and it is the reason the class is mandatory rather than advisory: the
+  enforcement lane (an ADR, a human) has to be reachable without reading the diff first.
 - **Ban the silent local edit.** The default agent behaviour is to fix the vendored copy
   and move on — after which the copy has diverged, nothing is filed, and the sync checks
   accumulate noise. Consumer copies are read-only; a deviation must be recorded in the
@@ -162,6 +189,60 @@ the flaw across twenty misfiled reports.
 - A second tracker. A report that survives triage becomes a `work/` item, which is where
   the board sync already reaches ([ADR-0008](../../docs/adr/0008-clickup-work-sync.md)).
 
+## Prior art — what this converges with, and what it deliberately does not take
+
+Assessed 2026-08-18 against a survey of vendor-documented practice (OpenAI's
+self-evolving-agents cookbook, Karpathy's `autoresearch`, Anthropic's memory/subagent/hook
+primitives, the OpenTelemetry GenAI semantic conventions, and trace-to-eval promotion in
+the observability tools). **The survey's citations are unverified from inside the sandbox**
+— no network — so what follows judges the ideas, not their attribution. Anything from here
+that ends up in an ADR needs the sources checked first.
+
+**Where it converges, independently.** The dominant shape is *emit → score → propose a
+change → gate the change*, and the gating step everyone lands on is a proposal record with
+a human signer: the agent submits a minimal diff, nothing ships until a human confirms,
+and agents accumulate patterns without rewriting their own instructions. That is §2 and
+the reference-not-automation decision
+([ADR-0001](../../docs/adr/0001-reference-not-automation.md)), arrived at separately. Their
+field list — artifact path, diff, evidence, scores, risk class — is also where §2's risk
+class came from; we had the first three and were missing the last. Worth recording that
+the human-in-the-loop stance is not caution: it is where people running these loops at
+volume also ended up. Likewise the absence of any standard protocol or endpoint for this,
+and the observation that file conventions won over database schemas because git already is
+the versioning and rollback layer — that is the argument for §1 and against both rejected
+alternatives.
+
+**Where the analogy breaks, and why the telemetry tier does not apply.** Those pipelines
+score **output quality**: a grader marks a result low and something revises the
+instructions. Our failure mode is invisible to that. An agent reads "run the repo's checks
+(`just check`)", finds no `justfile`, works around it, and produces perfectly good
+output — every grader passes, every trace shows success, and the fact we want (*the
+instruction assumed a repo shape that was not there*) is destroyed at the moment it
+exists. No amount of tracing recovers it, because nothing anomalous was traced. This
+channel is therefore not a low-budget substitute for an observability stack; it targets a
+signal that stack structurally cannot see. The agent's own judgement at the point of
+deviation is the emitter, and there is no substitute for it.
+
+**What is worth striving towards.** The telemetry tier (OpenTelemetry GenAI attributes, a
+trace store, an ingest endpoint) is the right destination if this ever serves more than one
+user, and wrong to build now: it needs network the sandbox denies, a service to run, and a
+report volume we are nowhere near. The cheap thing available today is to leave the seam —
+the symptom slug in §2 is the same instinct as a stable operation-name attribute, so naming
+the envelope's fields with an eye on where they would map makes a later adoption a rename
+rather than a redesign. Similarly, promoting production traces into a curated evaluation
+set has a no-infrastructure analogue we already have: the replay test in §5 is a held-out
+set of real incidents.
+
+**What we deliberately reject, on their evidence.** Self-rewriting instructions and
+metaprompt loops are out under ADR-0001, and the survey supplies the argument for us: the
+static-metaprompt version **overfit to its graders**. A skill that rewrites itself to
+satisfy whatever signal it is scored on is the failure mode, not the goal. The durable
+lesson underneath — do not tune against the same signal you evaluate on — is what §5 is
+already doing, and anything more is premature at our volume. Also rejected: the emerging
+convention of an `AGENTS.md` that agents append learnings to indefinitely. Our rule is
+stronger on purpose — nothing durable lives only in a work item; it distils to an ADR —
+and adopting the notebook pattern would be a downgrade wearing the clothes of a standard.
+
 ## Open questions
 
 1. **Does this need an ADR before it is built?** It is direction-setting by the repo's own
@@ -181,6 +262,10 @@ the flaw across twenty misfiled reports.
 5. **Grouping mechanics.** The symptom slug (§2) implies a fixed list that has to be
    maintained and that reporters can actually match against. Who owns that list, and what
    happens when nothing fits?
+6. **The prior-art sources are unverified.** They were assessed from a survey, from inside
+   a sandbox with no network. Before any of it is cited in an ADR, someone with egress
+   confirms the specifics — the overfitting finding and the proposal-record-with-signer
+   pattern are the two doing real argumentative work here, so they are the two that matter.
 
 ## Alternatives
 
