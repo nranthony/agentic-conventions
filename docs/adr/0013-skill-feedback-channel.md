@@ -5,7 +5,7 @@
   review conversation — itself a pass of the propose → collate → discuss → sign
   loop this record describes)
 - Deciders: nranthony + agent (Fable 5)
-- Distilled from: `work/0017-skill-feedback-loop/proposal.md` (Draft, 2026-08-18), and
+- Distilled from: `work/archive/0017-skill-feedback-loop/proposal.md` (opened 2026-08-18), and
   the two worked instances recorded there and in `work/0018-clickup-pull-conformance/`.
 
 ## Context

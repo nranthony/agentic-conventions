@@ -7,7 +7,8 @@
   a concurrent session claimed `0017` for the skill-feedback-channel item minutes
   later, and yielding the number was cheaper than renumbering an item still in
   flight. Numbers are never reused, so `0017` stays theirs.
-- Related: **[work/0017](../0017-skill-feedback-loop/proposal.md)** — read it alongside
+- Related: **[work/0017](../archive/0017-skill-feedback-loop/proposal.md)** (Accepted →
+  ADR-0013 and archived 2026-08-20; the channel now exists) — read it alongside
   this. It proposes an inbound channel so a consuming agent can report a broken skill
   without opening a conversation; this item is what that traffic looks like when the
   channel does not exist yet. The feedback below crossed two repos by hand, through a
