@@ -8,7 +8,7 @@
     {
       "name": "myconv",
       "source": "./plugins/myconv",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "description": "The agent-native repo blueprint, carried as payload, plus five skills: /myconv:apply-conventions to set up or audit a repo against it, /myconv:make-plan and /myconv:wrap-up for planning and end-of-thread provenance, and /myconv:clickup-pull and /myconv:clickup-report to sync work/ items with a ClickUp tracker (inert without one)."
     }
   ]

@@ -14,6 +14,25 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.6.0 — unreleased
+
+Every shipped skill now says which text it is.
+
+### Added
+
+- **A generated `VERSION` sidecar in every payload skill directory** — one line,
+  plugin version plus a short hash of that skill's `SKILL.md`, written by
+  `just sync-plugin` and freshness-checked by `just check` (a stamp can never claim
+  text it isn't). Every copy — installed from the marketplace, seeded into a
+  container's agent home, or vendored — self-identifies with no runtime path
+  discovery. This is the provenance half of the skill-feedback channel
+  (work/0017 §2 in the conventions repo): a report that says which text ran skips
+  the "was this fixed upstream weeks ago?" round trip. Independently, it answers
+  "which version am I running?" for any consumer, which until now took comparing
+  file contents against the channel by hand.
+
+---
+
 ## 0.5.0 — unreleased
 
 Work items are archived on exit, never deleted. The blueprint's exit rule loses its
