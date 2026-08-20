@@ -1,9 +1,12 @@
 # Proposal: an inbound feedback channel for the shared skills
 
-- Status: In review — [ADR-0013](../../docs/adr/0013-skill-feedback-channel.md)
-  drafted 2026-08-20 (Proposed, awaiting human sign-off); the `VERSION` sidecar (§2,
-  open question 3) shipped in myconv 0.6.0 the same day. The skill itself (§3) waits
-  on the ADR.
+- Status: Accepted → ADR-0013 (`docs/adr/0013-skill-feedback-channel.md`; approved in
+  review conversation 2026-08-20, amended there with the explicit triage lane:
+  reporter proposes → a triage agent collates and assesses → the human approves before
+  anything direction-setting is signed). Built the same day: the `VERSION` sidecar,
+  the `report-skill-feedback` skill, the pointers in the other five skills, the
+  wrap-up sweep — myconv 0.6.0. Replay test run: see
+  [replay-envelopes.md](replay-envelopes.md).
 - Author: nranthony + agent (Opus 5)
 - Opened: 2026-08-18
 - Related: **[work/0018](../0018-clickup-pull-conformance/proposal.md)** — read it
@@ -319,9 +322,13 @@ The proposal's status line then becomes `Accepted → ADR-NNNN` and the folder a
    surface that item enumerates, and §3 there (the claude.ai variant) is the one where the
    copy-to-inbox transport is impossible. Fold this in as a section of 0003, or keep it
    separate and cross-reference?
+   *(Resolved 2026-08-20: separate, cross-referenced — a live item never couples to a
+   parked one. The skill already names the shell-less case a human-ferried step, which is
+   all 0003's surfaces need from this side.)*
 2. **Where does a consumer's tracked original live** when the consumer is not on these
    conventions and has no `work/` tree? A `feedback/` folder is the fallback in §1, but it
    is asserted, not decided.
+   *(Resolved 2026-08-20: the fallback stands, decided in the skill's transport section.)*
 3. **Does the `VERSION` sidecar belong to this item or to the channel?** Stamping is
    independently useful — it is also the missing half of "which version am I running" for
    every consumer — and might ship on its own regardless of what happens to the rest.
@@ -330,6 +337,8 @@ The proposal's status line then becomes `Accepted → ADR-NNNN` and the folder a
 4. **Grouping mechanics.** The symptom slug (§2) implies a fixed list that has to be
    maintained and that reporters can actually match against. Who owns that list, and what
    happens when nothing fits?
+   *(Resolved 2026-08-20: the list lives in the skill that owns the envelope — one home —
+   with a `none-fit:<word>` escape; recurring none-fits are the signal the list grows by.)*
 5. **The prior-art sources are unverified.** They were assessed from a survey, from inside
    a sandbox with no network. Before any of it is cited in an ADR, someone with egress
    confirms the specifics — the overfitting finding and the proposal-record-with-signer

@@ -1,7 +1,9 @@
 # ADR-0013: A one-way feedback channel for the shared skills
 
-- Status: Proposed
-- Date: 2026-08-20
+- Status: Accepted
+- Date: 2026-08-20 (drafted, discussed, and amended with the triage lane in one
+  review conversation — itself a pass of the propose → collate → discuss → sign
+  loop this record describes)
 - Deciders: nranthony + agent (Fable 5)
 - Distilled from: `work/0017-skill-feedback-loop/proposal.md` (Draft, 2026-08-18), and
   the two worked instances recorded there and in `work/0018-clickup-pull-conformance/`.
@@ -60,15 +62,25 @@ regardless. Concretely:
    (The by-artifact draft in the proposal routed every blueprint edit ADR-first; its
    own first live report — a content clarification to the blueprint — proved that
    line wrong.)
-4. **A proposed diff is a claim, not a patch.** Triage may reword, and the first live
+4. **Triage is a distinct role, run by an agent, and the human signs.** The reporting
+   agent never lands its own change. A separate triage pass — an agent session in
+   this repo, working the `inbox/` in batch — collates reports, groups repeats
+   (the symptom slug is for this), verifies each claim against the current text and
+   the repo's history, and assesses viability. Mechanical fixes it applies directly,
+   as ordinary corrections with the report named in the commit. Direction-setting
+   proposals it does **not** decide: it presents them to the human — the proposal,
+   the evidence, and its own assessment — for discussion and approval, and only after
+   that approval is anything signed into an ADR. Reporter, triager, and signer are
+   three roles: the first two may be agents, the last is not.
+5. **A proposed diff is a claim, not a patch.** Triage may reword, and the first live
    report needed exactly that: its rule as proposed would have banned legitimate
    notice content; the shipped rule kept its failing example failing.
-5. **Consumer copies are read-only.** A deviation is recorded in the consumer's repo
+6. **Consumer copies are read-only.** A deviation is recorded in the consumer's repo
    and filed upstream — never silently patched into the vendored copy, which turns
    drift invisible.
-6. **The loop closes in `CHANGELOG.md`**: when a report becomes a change, the entry
+7. **The loop closes in `CHANGELOG.md`**: when a report becomes a change, the entry
    names the report it came from. Feedback with no observable outcome stops arriving.
-7. **A leak rule**: minimum excerpt, no client names, no identifying paths — a report
+8. **A leak rule**: minimum excerpt, no client names, no identifying paths — a report
    copies context out of a possibly-private repo into this one.
 
 ## Consequences
@@ -84,11 +96,10 @@ regardless. Concretely:
   no matter what any skill text says.
 - `inbox/` remains gitignored, so an unpromoted report vanishes with the checkout.
   Acceptable: the tracked original lives in the sender's repo.
-- The prior-art survey behind the proposal remains uncited here — its sources could
-  not be verified from inside the sandbox (attempted 2026-08-20; the web broker's
-  quota and allowlist both said no). This ADR stands on the two worked instances. If
-  the sources later check out, they corroborate; nothing in this decision depends on
-  them.
+- The proposal's prior-art survey is deliberately uncited. The propose → collate →
+  human-approves → sign shape is adopted on its own merits and on the two worked
+  instances, not on anyone else's write-up (decided 2026-08-20); if the survey's
+  sources ever get checked, they corroborate, and nothing here depends on them.
 
 ## Alternatives considered
 

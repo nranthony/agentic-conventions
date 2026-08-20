@@ -20,8 +20,8 @@ only live `AGENTS.md` here.
 - Shared procedures → [.claude/skills/](.claude/skills/) (skills like `/wrap-up` and `/make-plan`; invocable by human or model — ADR-0004)
 - How consumers pull shared skills downstream → [docs/distributing-skills-downstream.md](docs/distributing-skills-downstream.md)
 - The distributable plugin → [plugins/myconv/](plugins/myconv/) + [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)
-  (`/myconv:apply-conventions`, `:make-plan`, `:wrap-up`, `:clickup-pull`, `:clickup-report`
-  — ADR-0007). Its `reference/` and
+  (`/myconv:apply-conventions`, `:make-plan`, `:wrap-up`, `:clickup-pull`, `:clickup-report`,
+  `:report-skill-feedback` — ADR-0007). Its `reference/` and
   `templates/` copies are **generated**: edit the root originals, then `just sync-plugin`.
 - Proposals & in-flight items → [work/](work/) (NNNN-slug/: proposal → spec → plan → notes;
   distill durable rationale to an ADR, then archive — lifecycle + template in [work/README.md](work/README.md); ADR-0006)
@@ -41,7 +41,7 @@ only live `AGENTS.md` here.
   surface only — skills, blueprint, templates. Internal churn stays in ADRs, `work/`, and
   the commit log.)
 - Visual one-page map of this repo → [docs/wiki/repo-map.html](docs/wiki/repo-map.html)
-- Ephemeral paste-in material → `inbox/` (gitignored; read only when pointed at it, distill into a real doc/ADR, then delete)
+- Ephemeral paste-in material → `inbox/` (gitignored; read only when pointed at it, distill into a real doc/ADR, then delete). It is also the doorbell for **inbound skill-feedback reports** (`<repo>-<skill>-<date>-<slug>.md`, envelope owned by `/myconv:report-skill-feedback` — ADR-0013): triage in batch, apply mechanical fixes naming the report, present direction-setting ones to the human, then promote to `work/` or delete the doorbell copy.
 
 There is no ARCHITECTURE.md — the layout above is the whole architecture.
 
@@ -57,7 +57,7 @@ There is no ARCHITECTURE.md — the layout above is the whole architecture.
   `plugins/myconv/` (or the `reference/`, `templates/`, and skill files that get copied
   into it) resolves nowhere for every consumer. Cite the ADR by number and bare path
   instead. This has been fixed twice; `just check-plugin-links` catches it.
-- **One home per role for skills** (work/archive/0011, WP7): the four shared skills are canonical at
+- **One home per role for skills** (work/archive/0011, WP7): the five shared skills are canonical at
   [.claude/skills/](.claude/skills/) — edit them there only; `apply-conventions` is authored
   in place at `plugins/myconv/skills/apply-conventions/SKILL.md`; the plugin payload is
   generated; and the container copy at `~/.claude/skills/myconv/` belongs to the sandbox

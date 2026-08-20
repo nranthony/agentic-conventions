@@ -12,6 +12,9 @@ Produce a reviewable implementation plan for: $ARGUMENTS
 externally visible. The only files you may create are the plan artifacts and draft ADRs
 named below.
 
+**If these instructions are wrong, stale, or a bad fit for this repo:** file it with
+`/myconv:report-skill-feedback` at the moment you deviate, before working around it.
+
 ## Ground rules
 
 - Repo evidence over assumption. Never claim a file, API, or convention exists without

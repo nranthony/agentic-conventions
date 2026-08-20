@@ -6,6 +6,9 @@ argument-hint: "[--audit] [path]"
 
 # Apply the agent-native repo conventions
 
+**If these instructions are wrong, stale, or a bad fit for this repo:** file it with
+`/myconv:report-skill-feedback` at the moment you deviate, before working around it.
+
 ## Mode
 
 Parse `$ARGUMENTS` before anything else — both arguments are optional and order does not

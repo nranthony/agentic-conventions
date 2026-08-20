@@ -4,7 +4,7 @@
 # conventions to another repo stays an agent-with-judgment job (ADR-0001); this file
 # just keeps the plugin's copy of the blueprint identical to the canonical one.
 #
-# One home per role (work/archive/0011, WP7): the four shared skills are canonical at
+# One home per role (work/archive/0011, WP7): the five shared skills are canonical at
 # .claude/skills/<name>/, the plugin payload under plugins/myconv/ is generated from
 # them, and the deployment copy in a container's ~/.claude/skills/myconv/ is owned by
 # the sandbox repo — never edited from here.

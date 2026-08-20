@@ -16,9 +16,27 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ## 0.6.0 — unreleased
 
-Every shipped skill now says which text it is.
+The feedback channel ships: a sixth skill owns the report envelope, every other skill
+points at it, and every shipped skill now says which text it is.
 
 ### Added
+
+- **`/myconv:report-skill-feedback`** — file a report when a shared skill's
+  instructions were wrong, stale, or a bad fit for the repo they ran in, or when the
+  skill you needed didn't exist. One-way by design: a report must be actionable on
+  arrival with no reply, and none is guaranteed. The skill owns the envelope (which
+  text ran via the `VERSION` sidecar, which artifact is actually wrong, the step
+  quoted by heading, a proposed edit rather than a description, a verdict with
+  repo-shape evidence, a risk class drawn by effect) and the transport (tracked
+  original in the reporter's repo; a doorbell copy in the conventions repo's
+  `inbox/`). Decision record ADR-0013
+  (`docs/adr/0013-skill-feedback-channel.md` in the conventions repo): reporter
+  proposes, a triage agent collates and assesses, a human approves before anything
+  direction-setting is signed. Grew from two reports hand-carried across repos in two
+  days (work/0017, work/0018).
+- **Every other skill carries a two-line pointer to it** at the top — file at the
+  moment you deviate, before working around — and `/myconv:wrap-up`'s skills section
+  gains the safety-net sweep: "did any skill mislead this thread?"
 
 - **A generated `VERSION` sidecar in every payload skill directory** — one line,
   plugin version plus a short hash of that skill's `SKILL.md`, written by
