@@ -2,8 +2,11 @@
 
 - From: `agentic-conventions`, work/0017 (2026-08-20), carrying a consumer report from
   the `numerai` repo (2026-08-19)
-- Status: **human-ferried, not yet delivered** — the deployment tier lives on the host
-  and no container can reach it; this tracked original is the record.
+- Status: **delivered and landed** (observed 2026-08-20). The regenerated notice no
+  longer names `scripts/with-egress.sh`; the install bullet now reads "installing it
+  is a host-side step you have no route to, so there is no command to find and no
+  flag to pass" — the ask, with no mechanism. Whether the generator adopted content
+  rule 4 as a standing rule is not observable from here; the defect itself is closed.
 - Asks for: one edit to the generated sandbox-notice block, plus (optionally) adopting
   a content rule its generator can hold going forward. No behaviour change to the
   sandbox itself.

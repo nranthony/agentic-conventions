@@ -1,6 +1,9 @@
 # Proposal: an inbound feedback channel for the shared skills
 
-- Status: Draft
+- Status: In review — [ADR-0013](../../docs/adr/0013-skill-feedback-channel.md)
+  drafted 2026-08-20 (Proposed, awaiting human sign-off); the `VERSION` sidecar (§2,
+  open question 3) shipped in myconv 0.6.0 the same day. The skill itself (§3) waits
+  on the ADR.
 - Author: nranthony + agent (Opus 5)
 - Opened: 2026-08-18
 - Related: **[work/0018](../0018-clickup-pull-conformance/proposal.md)** — read it
@@ -322,6 +325,8 @@ The proposal's status line then becomes `Accepted → ADR-NNNN` and the folder a
 3. **Does the `VERSION` sidecar belong to this item or to the channel?** Stamping is
    independently useful — it is also the missing half of "which version am I running" for
    every consumer — and might ship on its own regardless of what happens to the rest.
+   *(Resolved 2026-08-20: it belongs to the payload generator and shipped on its own —
+   `just sync-plugin` stamps, `just check` freshness-checks, myconv 0.6.0.)*
 4. **Grouping mechanics.** The symptom slug (§2) implies a fixed list that has to be
    maintained and that reporters can actually match against. Who owns that list, and what
    happens when nothing fits?
@@ -329,6 +334,10 @@ The proposal's status line then becomes `Accepted → ADR-NNNN` and the folder a
    a sandbox with no network. Before any of it is cited in an ADR, someone with egress
    confirms the specifics — the overfitting finding and the proposal-record-with-signer
    pattern are the two doing real argumentative work here, so they are the two that matter.
+   *(Attempted 2026-08-20 via the `webfetch` broker: Tavily quota exhausted (HTTP 432),
+   jina backend not on the egress allowlist — both human steps. Resolved by routing
+   around it instead: ADR-0013 cites no prior art and stands on this item's two worked
+   instances. The sources become corroboration if ever checked; nothing depends on them.)*
 
 ## Alternatives
 
