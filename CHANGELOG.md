@@ -17,9 +17,29 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 ## 0.5.0 — unreleased
 
 Work items are archived on exit, never deleted. The blueprint's exit rule loses its
-delete branch, and no skill will propose removing one.
+delete branch, and no skill will propose removing one. Also: environment notices must
+name the ask rather than a host-side mechanism, and the managed sandbox-notice block is
+now verified read-only instead of skipped.
 
 ### Changed
+
+- **The blueprint's environment-notice section gains a fourth content rule: name the
+  ask, not the host-side mechanism.** A human step is discharged outside the sandbox,
+  so the notice says who to ask, never how the human does it on the host — a host-side
+  script or a path in the sandbox tool's own checkout resolves against the wrong tree
+  in every repo the notice ships in. The test is frame of reference: everything a
+  notice names must resolve where the reading agent stands, which keeps absolute
+  in-sandbox paths and service hostnames legal. From a consuming agent's report in the
+  `numerai` repo (2026-08-19), which traced a dead `scripts/with-egress.sh` reference
+  in a live notice to the gap: rule 2 ("reframe every denial as a human step") was
+  satisfiable by naming a host-only escape hatch.
+- **"Never edit inside the sandbox-notice markers" no longer implies "never look
+  inside them."** The blueprint's ownership rules, its brownfield gap-map phase, and
+  `/myconv:apply-conventions` step 1 now say the same thing: resolve every path and
+  named script `AGENTS.md` cites, *including* inside the managed markers — read-only.
+  A dead reference there is still a dead instruction; it is reported upstream to the
+  sandbox tool, never edited in place. Same report: the audit found the dead path only
+  by checking what the ownership rule had implicitly excused.
 
 - **The `work/NNNN-slug/` exit rule is now single-branched** across the bundled blueprint
   (`reference/agentic_native_repo_scaffold.md`), the templates (`templates/work/README.md`,
