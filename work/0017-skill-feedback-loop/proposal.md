@@ -10,6 +10,12 @@
   tested against it — does the envelope schema hold what that report actually carried,
   and would its risk class have been assigned correctly? (Added 2026-08-18 by the 0018
   author. Both items opened as `0017` within minutes; 0018 yielded the number.)
+- **A second worked instance** (added 2026-08-20): the `numerai` notice-paths report —
+  see the section of that name below. It arrived while this channel is still a Draft,
+  crossed by hand exactly as 0018's traffic did, and its triage surfaced a defect in
+  §2's risk-class definition. Its human-ferried remainder is
+  [handoff-sandbox-notice-paths.md](handoff-sandbox-notice-paths.md), tracked in this
+  folder.
 
 ## Summary
 
@@ -185,6 +191,42 @@ escaped and were fixed twice, and the vendored wheel whose version string did no
 its contents (myclickup work/0011 §4). If the envelope would not have made them
 actionable, the schema is wrong. An hour of work, and the cheapest way to avoid finding
 the flaw across twenty misfiled reports.
+
+## A second worked instance — the `numerai` notice-paths report (added 2026-08-20)
+
+A consuming agent in the `numerai` repo (same `nranthony` profile) reported 2026-08-19,
+against the blueprint's environment-notice section: the three content rules never
+constrain *where the human step happens*, so a notice satisfies rule 2 by naming a
+host-side mechanism — and a live notice did exactly that, citing `scripts/with-egress.sh`,
+a host-only script in the sandbox tool's own repo that resolves to nothing in any
+consumer. It proposed a fourth content rule and a read-only verification pass through the
+managed markers. Triaged and applied 2026-08-20 (blueprint, `apply-conventions` step 1,
+CHANGELOG under 0.5.0); the dead reference itself sits inside a block no container may
+edit, so that half is the tracked handoff named in the header.
+
+Run as the §5 replay test, on live traffic:
+
+- **The envelope holds it.** The report named the wrong artifact correctly (the
+  blueprint, not the skill that surfaced it), quoted the step it broke at by heading,
+  and proposed diffs rather than descriptions — the three expensive fields, all present
+  unprompted. It lacked the version stamp, the generic/conditional/local verdict, and a
+  risk class; triage supplied all three without a round trip, but only because the
+  triager could read the blueprint's history. The schema would have made that free.
+- **§2's risk class is too coarse, and this report proves it.** As drafted,
+  "direction-setting — anything touching a guardrail, an ADR, or the blueprint" routes
+  *every* blueprint edit to the ADR-first lane, including this one: a content
+  clarification that follows from decisions already made, changing no decision.
+  Direction-setting should mean *changing what the blueprint or a guardrail decides*,
+  not *editing the file it lives in*. Whoever implements §2 redraws the line by effect,
+  not by artifact — the reclassify-upward-only rule already covers the abuse case.
+- **One rewording survived triage rather than the report's text.** The proposed rule
+  ("every path a notice names must resolve inside the repo the notice ships in") was
+  too strong — it would ban the most useful content in our own notice: absolute
+  in-sandbox paths (`/usr/lib/wsl/lib/nvidia-smi`), service hostnames
+  (`postgres:5432`). The rule that shipped tests frame of reference — resolve where
+  the reading agent stands — which keeps the report's failing example failing and the
+  legitimate content legal. Worth remembering for the skill text: a proposed diff is
+  the cheapest thing to triage *and* still a claim, not a patch to apply blind.
 
 ## Non-goals
 
