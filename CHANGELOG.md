@@ -39,6 +39,13 @@ write it — in both directions.
   than its content. Nothing enforces this — the `ask` permission tier and the mandatory
   dry-run already put a human on the exact text; the skill now says what to look for.
   ADR-0014.
+- **`/myconv:wrap-up` reviews held work, not just active and finished.** §6 had two
+  cases — done and in flight — so an item that is *neither* was skipped by default: its
+  status line says the pause is deliberate, which reads as nothing to do. A held plan
+  referencing something the thread just deleted is not paused any more, and its own label
+  is what hides that. Worded around the state rather than a status name, so it stays
+  correct whatever vocabulary a repo uses. From `work/0014` #7, opened host-side from a
+  real `wrap-up` run.
 
 ## 0.6.0 — unreleased
 

@@ -269,3 +269,22 @@ record, same release, one cycle instead of two.
 #7 (parked work) should follow the work-item **status vocabulary** still pending in
 `inbox/`: "parked" collides with the `Deferred — <reason>` form proposed there. Nothing
 else in this item is blocked.
+
+## Landed (2026-08-25) — #7 only
+
+**#7 is in**, worded around the *state* rather than the label: "if it is neither active
+nor finished — paused, waiting on something, held for a decision". This sidesteps the
+sequencing note's blocker entirely. That note held #7 behind the work-item status
+vocabulary still sitting in `inbox/`, because "parked" collides with the
+`Deferred — <reason>` form proposed there. Describing the state means whichever
+vocabulary lands later, the sentence stays correct — so the collision never has to be
+resolved for this item to ship. **#7 is no longer blocked on anything.**
+
+The section keeps the author's diagnosis intact: the status line reads as "deliberate,
+nothing to do here", which is exactly why a review skips it, and a held plan whose
+premise this thread deleted is stale in a way its own label hides.
+
+Still outstanding here: **#1–#6 and #8**, plus the three wording changes and the scope
+correction from the review above. The ≤150-line budget should be re-checked against the
+live count, not the 127 recorded at review time — the file was already 136 before this
+change.

@@ -88,6 +88,12 @@ that its rationale belongs in an ADR and its status should flip to
   an archived one is explicitly historical.
 - If still in flight, make sure `plan.md`/`notes.md` reflect where you *actually* left
   off, not the original plan.
+- **If it is neither active nor finished** — paused, waiting on something, held for a
+  decision — check its premises still hold. Its status line says the pause is deliberate,
+  which reads as "nothing to do here", so this is the one case a review skips by default.
+  A held plan that references something *this thread deleted* is not paused any more; it
+  is stale, and its own status is what hides that. Say so rather than leaving the label
+  to speak for it.
 
 ## 7. .claude/skills/ *(only if present)*
 
