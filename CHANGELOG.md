@@ -14,6 +14,32 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.7.0 — unreleased
+
+A repo's own rules about what may be committed now beat a shared skill's instruction to
+write it — in both directions.
+
+### Changed
+
+- **`/myconv:clickup-pull` defers to a repo's content rules.** Where a repo's `AGENTS.md`,
+  an ADR, or a stated policy limits what may enter tracked files, that rule now wins over
+  the skill's own instructions: the slug derives from the kind of work rather than the task
+  title, `## From ClickUp` becomes a restatement **labelled as de-identified**, and the same
+  test applies to every front-matter field carrying a title or a path (`ClickUp-parent`,
+  `ClickUp-blocked-by`, `ClickUp-blocks`, `ClickUp-related`, `ClickUp-path`). The
+  `ClickUp:` id and URL are always kept — a pointer identifies nothing on its own, and
+  without it the restatement cannot be checked. Dropping a relation to a bare ID is
+  explicitly not the way out. A deliberately de-identified section is **not** drift on
+  re-pull. Repos with no such rule are unaffected. **From the `legal` repo's report of
+  2026-08-25** (`clickup-pull`, `assumed-repo-shape`) — ADR-0014.
+- **`/myconv:clickup-report` applies the same rule to what leaves the repo.** A tracker is
+  third-party and shared, and a comment cannot be unpublished, so the restriction binds
+  harder there than on a committed file: a status transition is always safe (it carries a
+  role name and no content), and an exception comment names the *shape* of a hurdle rather
+  than its content. Nothing enforces this — the `ask` permission tier and the mandatory
+  dry-run already put a human on the exact text; the skill now says what to look for.
+  ADR-0014.
+
 ## 0.6.0 — unreleased
 
 The feedback channel ships: a sixth skill owns the report envelope, every other skill

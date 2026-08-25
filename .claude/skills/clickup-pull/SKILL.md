@@ -54,6 +54,9 @@ plugin, and a relative path out of the payload resolves nowhere.
 
 ## Pull
 
+If this repo restricts what may enter tracked files, read that rule before you pull — it
+changes what the item you are about to write may contain (see `## Create the item`).
+
     myclickup task <id> --json --live
 
 That emits the whole ClickUp object — `parent`, `linked_tasks`, `custom_fields` and the
@@ -91,6 +94,30 @@ Absent fields are **omitted, never written empty**:
 
 Then a `## From ClickUp` section quoting the task description **verbatim**, and the
 repo's own proposal template headings below it.
+
+**Unless this repo restricts what may be committed.** A work item is a tracked file. If the
+repo's `AGENTS.md`, an ADR, or a stated policy limits what may enter tracked files — party or
+client names, matter or case numbers, sums, dates — that rule **wins over every instruction
+in this section**, the same way a repo's own patterns beat a template in
+`/myconv:apply-conventions`. Where it applies:
+
+- derive the slug from the *kind* of work rather than the task title;
+- replace the verbatim `## From ClickUp` quote with a restatement **labelled as
+  de-identified**, saying in it that the verbatim text and the parties live in the tracker
+  task;
+- apply the same test to every field carrying a title or a path — `ClickUp-parent`,
+  `ClickUp-blocked-by`, `ClickUp-blocks`, `ClickUp-related`, `ClickUp-path`. A title that
+  cannot be written is replaced by a de-identified descriptor plus the last-seen status;
+  **dropping to a bare ID is not the way out** — the never-write-a-bare-ID rule below still
+  holds;
+- keep `ClickUp:` id and URL exactly as they are. A pointer identifies nothing on its own,
+  and without it the restatement cannot be checked against its source.
+
+Say in your handoff that the item was de-identified and why — a silent de-identification
+reads as a lossy pull. If you cannot tell whether a rule applies, ask before writing the
+file. This is **ADR-0014** in the conventions repo
+(`docs/adr/0014-repo-content-policy-overrides-skill-writes.md`); as with ADR-0008 above,
+deliberately not a link.
 
 Rules that make this worth having:
 
@@ -130,6 +157,10 @@ is also information the human wants.
 
 Never clobber. Report a diff against the current front-matter and ask before applying it.
 `notes.md`, `plan.md` and `spec.md` are owned by the repo and are never touched by a pull.
+
+A section that was deliberately de-identified is **not** drift. Report that the source text
+changed and let the human decide; never restore verbatim wording an earlier pull left out on
+purpose.
 
 ## Then
 
