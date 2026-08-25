@@ -170,3 +170,20 @@ record (`work/0014`) if that fold is accepted, or its own record if not. Then:
 `just sync-plugin`, `just check`, a CHANGELOG entry, a version bump in both plugin
 manifests, republish through the channel, and re-vendor host-side. Consumer-visible,
 so it batches with 0014 into one release rather than spending a cycle alone.
+
+## Delivery update (2026-08-25)
+
+`handoff-myclickup-attachment-selection.md` is **delivered**. Its Delivery section
+withheld it for one stated reason — "`myclickup` has no `inbox/`, and no `.gitignore`
+entry that would keep one untracked" — and named the precondition: "either add `inbox/`
++ a gitignore line there first, or paste this into a `myclickup` work item directly."
+
+That precondition was met on 2026-08-25 (myclickup `35b90be`), which gave that repo a
+gitignored `inbox/` for exactly this class of traffic. The handoff now sits at
+`myclickup/inbox/agentic-conventions-0018-attachment-selection.md`; the tracked original
+stays here and remains the record.
+
+This unblocks the CLI `--only <attachment-id>` selector on the myclickup side. **The
+second gate on the download work is untouched**: the egress allowlist entry for
+`t90141509251.p.clickup-attachments.com`, which The Vault does not have — still a human
+step in the sandbox repo. Items 6–8 remain unblocked by either.
