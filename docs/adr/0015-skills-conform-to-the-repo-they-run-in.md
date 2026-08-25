@@ -1,6 +1,6 @@
 # ADR-0015: A skill states what it does, not what a repo must contain
 
-- Status: **Proposed** (flip to Accepted on sign-off)
+- Status: **Accepted**
 - Date: 2026-08-25
 - Deciders: nranthony + agent
 - Generalises: ADR-0014, which is this rule's first application (the content axis)
@@ -52,7 +52,8 @@ general form now, rather than after a third application, is the whole point.
 **A skill states what it does when a repo has a thing, and what it says when it does not.
 It never states what a repo must contain.**
 
-Four rules follow, and they are the testable form:
+Five rules follow. The first four are the testable form of the principle; the fifth is the
+one mechanical control that keeps it affordable:
 
 1. **Absence is a state, not an error.** A repo that lacks an optional piece is not
    misconfigured. The skill proceeds where it can, on a stated basis, and says what it
@@ -74,6 +75,26 @@ Four rules follow, and they are the testable form:
    authority, and it wins over the skill's default. Where it publishes nothing, the skill
    picks a default and **names it as a default**.
 
+5. **Every shared skill has a ceiling of 200 lines**, counted as total lines in its
+   `SKILL.md`. This replaces the ≤150 budget `work/0014` set for `wrap-up` alone, which
+   was both too tight and scoped to one file. Measured 2026-08-25, total / non-blank:
+
+   | skill | total | non-blank |
+   |---|---|---|
+   | clickup-pull | 170 | 139 |
+   | wrap-up | 142 | 107 |
+   | clickup-report | 130 | 104 |
+   | report-skill-feedback | 104 | 83 |
+   | make-plan | 77 | 60 |
+
+   Between 18% and 25% of every file is blank — structural whitespace that makes the text
+   readable and costs a reader nothing. A budget counting those lines was penalising
+   legibility, which is the opposite of the intent. 200 total is roughly the old 150 of
+   actual content. The ceiling is a **prompt to distil, not a hard gate**: a skill at the
+   line stops and asks what can move to an ADR or a reference doc, rather than refusing
+   the change. It is checked against a live count, never a remembered one — `work/0014`'s
+   budget was set against 127 when the file was already longer.
+
 **Scope: every shared skill, not only the two that prompted this.** `apply-conventions`
 already holds the posture for templates ("the repo wins"); `wrap-up` holds it for §0 and
 loses it at §7; `clickup-pull` states it for headings and drops it everywhere else. The
@@ -92,10 +113,11 @@ deviation is filed upstream.
 - **ADR-0014 stays Accepted and unedited.** It is this rule on the content axis and now
   reads as the first application rather than as a competing statement. No supersession:
   0014 extends ADR-0008, this generalises 0014, and all three stand.
-- **Skills get longer, and that is a real cost.** Stating the absent case, the located-under-
-  another-name case and the default-taken case is more text than asserting a shape. Both
-  work items already carry line budgets for exactly this reason, and the budgets should be
-  set against live counts rather than remembered ones.
+- **Skills get longer, and that is a real cost.** Stating the absent case, the
+  located-under-another-name case and the default-taken case is more text than asserting a
+  shape. Decision 5 sets the ceiling that keeps it honest: 200 total lines per skill,
+  checked live. `clickup-pull` at 170 is the one with least headroom, and `work/0018` wants
+  eight more items in it — that item should expect to distil, not just append.
 - **"Could not locate" output is new surface** a consumer will see. It should read as
   information, not as a warning to be silenced.
 - Ships consumer-visible, batched — see the release note in `work/0018`'s Exit.
@@ -119,5 +141,5 @@ deviation is filed upstream.
   not shared.
 - **Enforce it with a linter over the skill texts.** Rejected for now: the property is
   semantic ("does this sentence assert a shape?"), and a check that cannot read intent would
-  either pass everything or block ordinary prose. The two line budgets are the only
-  mechanical control, and they are enough while there are five skills.
+  either pass everything or block ordinary prose. Decision 5's line ceiling is the only
+  mechanical control, and it is enough while there are five skills.
