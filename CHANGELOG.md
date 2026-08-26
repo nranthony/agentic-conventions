@@ -17,7 +17,9 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 ## 0.7.0 — unreleased
 
 A repo's own rules about what may be committed now beat a shared skill's instruction to
-write it — in both directions.
+write it — in both directions. And, generalising that: a shared skill states what it does
+when a repo has a thing and what it says when it does not, never what a repo must contain
+(ADR-0015). Where it cannot find something, it says which paths it checked.
 
 ### Changed
 
@@ -32,6 +34,26 @@ write it — in both directions.
   explicitly not the way out. A deliberately de-identified section is **not** drift on
   re-pull. Repos with no such rule are unaffected. **From the `legal` repo's report of
   2026-08-25** (`clickup-pull`, `assumed-repo-shape`) — ADR-0014.
+- **`/myconv:clickup-pull` reads the repo instead of asserting a shape.** It required a pinned
+  `[statuses]` table, hard-coded `proposal.md`, and showed a bare front-matter block — while,
+  one sentence away, deferring to "the repo's own proposal template headings". Now a missing
+  status-role table is a **state, not an error**: a caller-supplied status name is validated
+  against the live list, recorded in the item and the handoff as **supplied-not-pinned**, and
+  this stays **read-path only** — `/clickup-report` still requires a pin or an explicit
+  confirmation of the exact name. The filename follows the repo's own `work/README.md` and
+  existing items, defaulting to `spec.md` for a pulled task **and saying that it did**;
+  front-matter is pinned **under the `#` title**; and a search that finds nothing names the
+  paths it checked rather than passing quietly. From `work/0018` Group A, opened from
+  `myclickup`'s consumer feedback — ADR-0015.
+- **`/myconv:clickup-pull` no longer skips in silence.** Comments are always read
+  (`myclickup comments <id> --json --live`), with the count and last-commented date recorded
+  **even when there are none**, so "checked, nothing there" stops reading like "never looked".
+  Attachments get a `## Attachments` body section — title, mimetype, size, version, the ClickUp
+  date, the pulled-date, and the reason anything was left behind, but **never the signed URL**,
+  which would put an expiring credential in a tracked file. A download's `skipped` array is
+  reported rather than swallowed: a skip is not a pass. From `work/0018` Group B; the
+  auto-download gate itself stays deferred, still waiting on a CLI selector and an egress
+  allow-list entry.
 - **`/myconv:clickup-report` applies the same rule to what leaves the repo.** A tracker is
   third-party and shared, and a comment cannot be unpublished, so the restriction binds
   harder there than on a committed file: a status transition is always safe (it carries a
@@ -56,6 +78,24 @@ write it — in both directions.
   is what hides that. Worded around the state rather than a status name, so it stays
   correct whatever vocabulary a repo uses. From `work/0014` #7, opened host-side from a
   real `wrap-up` run.
+- **`/myconv:wrap-up` says what it could not check.** Discovery was name-based, so a tier
+  present under a name the skill did not know read as absent — and one of its own eleven
+  sections silently did not run on the repo that reported it. §0 now has three states, not two:
+  not kept, kept under another name (read the index, report the mapping you inferred), and
+  **could not locate — naming the paths checked**. It prints a tier map before §1 and repeats
+  it with the summary, because a report listing only what passed reads as full coverage. Two
+  new sections: the repo's **own change gate**, whose clauses are *enumerated and checked, not
+  run*, and a **corrected-fact sweep** for a fact this thread fixed in one file and left
+  standing in three — bounded to documentation and instruction surfaces, with a capped report
+  rather than every hit. The architecture section now covers the enumerations a map carries
+  (file lists, counts, command inventories), write-back destinations are ranked (ADR >
+  architecture doc > `AGENTS.md` > skill) with the anti-pattern named — a durable fact whose
+  only home is a commit message is lost — and the skills section is path-agnostic, degrading to
+  the index entry where a guide carries no frontmatter. It also says outright that it is **not
+  a substitute for the repo's own gates**. From `work/0014` #1–#6 and #8 — ADR-0015.
+- **The `work/` template pins where front-matter goes.** `templates/work/README.md` now states
+  that the `- Key: value` block sits under the `#` title, never above it — it is the part read
+  by machine later, and a fenced example alone left that to taste. From `work/0018` item 3.
 
 ## 0.6.0 — unreleased
 

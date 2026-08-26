@@ -36,7 +36,8 @@ Archived items are historical records: never treat an archived `proposal.md` or
 
 An item may point at a ClickUp task — the two are separate projections of one piece of
 work, not duplicates ([ADR-0008](../docs/adr/0008-clickup-work-sync.md)). The pointer
-lives in the item's front-matter and is created by `/clickup-pull`:
+lives in the item's front-matter and is created by `/clickup-pull` — these lines join the
+`- Key: value` block **under the `#` title**, they are not the start of the file:
 
 ```markdown
 - Synced: 2026-08-11 — pushed: Agent Working
@@ -52,6 +53,9 @@ live), and a blocker that is not `done`/`closed` **stops the work**. Reporting b
 never cross.
 
 ## Proposal template
+
+The `- Key: value` front-matter block sits **under the `#` title**, never above it — it is
+the part read by machine later, so the placement is pinned rather than left to taste.
 
 ```markdown
 # Proposal: <title>

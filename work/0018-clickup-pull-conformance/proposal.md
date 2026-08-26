@@ -187,3 +187,51 @@ This unblocks the CLI `--only <attachment-id>` selector on the myclickup side. *
 second gate on the download work is untouched**: the egress allowlist entry for
 `t90141509251.p.clickup-attachments.com`, which The Vault does not have — still a human
 step in the sandbox repo. Items 6–8 remain unblocked by either.
+
+## Landed (2026-08-26) — all eight items
+
+Both groups are in `.claude/skills/clickup-pull/SKILL.md` (canonical, not the payload), and
+item 3 also landed in `templates/work/README.md`. `just sync-plugin` + `just check` pass;
+`check-vendored` skips, as it always does from inside a container, and a skip is not a pass.
+
+**Group A.** (1) A missing `[statuses]` table is stated as a *state, not an error* — a repo
+tracking work in `work/` has no reason to pin one. A caller-supplied name is validated against
+`myclickup statuses --list … --live`, recorded on the item's `ClickUp-status` line **and** in
+the handoff as *supplied by the caller, not pinned*, and a name matching nothing still stops,
+printing what the list does define. The **read-path-only** clause is explicit and adjacent, so
+the convenience cannot be read across to `/clickup-report`. (2) The filename is the repo's
+call: read its `work/README.md` and how its existing items are named, **default to `spec.md`
+for a pulled task and say so**, and where a repo publishes neither a lifecycle nor enough items
+to read a pattern from, name the default taken and why — which answers the second open question
+("pick a default and say which"). (3) Front-matter is pinned under the `#` title in the skill's
+example and in both `work/README.md` files. (4) The sweep is stated once at the top, as the
+posture the whole file inherits, rather than repeated per section — ADR-0015 by number and bare
+path, since a link out of the payload resolves nowhere.
+
+**Group B.** (5) `myclickup comments <id> --json --live` is in the Pull block and always run,
+with count and last-commented date recorded **even when there are none**. (6, 7) A
+`## Attachments` **body** section carries `title`, `mimetype`, `size`, `version`, the ClickUp
+`date`, the pulled-date and the reason for anything left behind — and **never the signed URL**;
+`version` + `date` are the drift signal. (8) A download's `skipped` array is reported rather
+than swallowed.
+
+**Left out, deliberately.** The download gate is untouched and still deferred — the CLI
+`--only` selector is delivered to `myclickup`'s `inbox/` but not built, and the egress
+allow-list entry for `t90141509251.p.clickup-attachments.com` remains a human step in the
+sandbox repo. The third open question — whether the supplied-status path should offer to write
+the pin once it has confirmed the name — is **not** implemented: offering to write a repo's
+config is the kind of "propose adding opt-in machinery" the shared skills decline, and it wants
+its own decision. It stays open.
+
+**Composition with ADR-0014.** The repo-content-policy carve-out under `## Create the item`,
+its pointer under `## Pull` and its not-drift clause under `## Re-pulling` are **unedited**.
+Item 2 added one clause beside the last of those — `spec.md` is never touched by a re-pull,
+"including when an earlier pull is what created it" — because item 2 makes a pull able to
+create one.
+
+**Budget.** ADR-0015 decision 5 caps a skill at 200 total lines. This file went 170 → **198**,
+so the eight items cost 28 net lines against 45 of new material: the ADR-0008 note and the new
+ADR-0015 posture were merged into one block, preflight steps 1, 2 and 4 lost rationale that is
+recorded elsewhere, and the blocker gate, the subtask note and the closing section were
+tightened. Nothing was dropped to make room, but the file now has two lines of headroom — the
+next change to it has to distil.
