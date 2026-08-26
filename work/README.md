@@ -60,7 +60,7 @@ the part read by machine later, so the placement is pinned rather than left to t
 ```markdown
 # Proposal: <title>
 
-- Status: Draft | In review | Accepted → ADR-NNNN | Rejected
+- Status: Draft | In review | Accepted → ADR-NNNN | Rejected | Deferred — <reason>
 - Author: <name / agent>
 
 ## Summary

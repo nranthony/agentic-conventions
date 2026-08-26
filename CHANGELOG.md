@@ -14,6 +14,21 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.8.0 — unreleased
+
+### Changed
+
+- **Work items gain a defined paused state: `Deferred — <reason>`.** The status enum had
+  four members and no way to say "held, and here is why" — so folders on disk grew eight
+  spellings for roughly seven states. The reason clause is mandatory: `/myconv:wrap-up`
+  §7 exists because a paused item's bare label reads as "deliberate, nothing to do here"
+  and hides whether its premise still holds. Local status names deliberately do **not**
+  follow the tracker's own labels (ClickUp's "On Ice"): the two axes measure different
+  things — who holds the item, versus how mature the artifact is — and a status name is
+  not portable, which is why `[statuses]` exists as a role map. `Deferred` is local-only
+  and never crosses to a board. From `work/0020`, promoting a transfer from `myclickup`.
+  The rest of that vocabulary proposal is still open.
+
 ## 0.7.0 — 2026-08-26
 
 A repo's own rules about what may be committed now beat a shared skill's instruction to
