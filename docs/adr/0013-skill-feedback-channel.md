@@ -46,6 +46,13 @@ regardless. Concretely:
    promoting it to a `work/NNNN-slug/` item or an ADR, then deleting the doorbell
    file. Consumers that cannot reach this repo (the deployment tier, shell-less
    surfaces) write the file locally and name the copy as a human-ferried step.
+   > *Erratum (2026-08-25, ADR-0016).* Two things here are no longer the rule.
+   > **Destination:** "this repo's" assumed a single owner; a report goes to the repo
+   > the skill *ships from*, which for a tool's own vendored skill is that tool's repo.
+   > **Retention:** the destination is a **tracked `feedback/`**, not the gitignored
+   > `inbox/`, and a triaged report moves to `feedback/archive/` rather than being
+   > deleted. The human-ferried fallback and the sender-holds-the-original rule are
+   > unchanged. See ADR-0016 for why both were wrong within a day of shipping.
 2. **The envelope is owned by one skill** (`report-skill-feedback`); the other skills
    carry a two-line pointer to it at the point of deviation, plus one sweep question
    in `/wrap-up`. Required fields: which text ran (the generated `VERSION` sidecar —
@@ -96,6 +103,11 @@ regardless. Concretely:
   no matter what any skill text says.
 - `inbox/` remains gitignored, so an unpromoted report vanishes with the checkout.
   Acceptable: the tracked original lives in the sender's repo.
+  > *Erratum (2026-08-25, ADR-0016).* Not acceptable, as it turned out: the envelope
+  > promises that "three reports of one friction are a signal", and that threshold is
+  > unfalsifiable if reports are deleted on promotion and vanish with a checkout.
+  > Feedback is now tracked and archived on the receiving side. The sender's original
+  > is still the record; the receiver simply keeps one too.
 - The proposal's prior-art survey is deliberately uncited. The propose → collate →
   human-approves → sign shape is adopted on its own merits and on the two worked
   instances, not on anyone else's write-up (decided 2026-08-20); if the survey's

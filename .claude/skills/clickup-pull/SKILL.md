@@ -1,6 +1,6 @@
 ---
 name: clickup-pull
-description: Pull a ClickUp task (or its subtasks) into a work/NNNN-slug/ item, hydrating front-matter with identity, path and the dependency graph. Read-only against ClickUp — creates local files only. Use when activating a tracked task for agent work. Requires a repo-root .myclickup.toml with a pinned workspace; stops immediately without one.
+description: Pull a ClickUp task (or its subtasks) into a work/NNNN-slug/ item, hydrating front-matter with identity, path and the dependency graph, reading the comment thread, and recording what was left behind. Read-only against ClickUp — creates local files only. Follows the repo's own lifecycle and content rules rather than asserting a shape. Use when activating a tracked task for agent work. Requires a repo-root .myclickup.toml with a pinned workspace; stops immediately without one.
 argument-hint: <task-id or ClickUp URL> [--subtasks]
 ---
 
