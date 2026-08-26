@@ -14,7 +14,7 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
-## 0.7.0 — unreleased
+## 0.7.0 — 2026-08-26
 
 A repo's own rules about what may be committed now beat a shared skill's instruction to
 write it — in both directions. And, generalising that: a shared skill states what it does

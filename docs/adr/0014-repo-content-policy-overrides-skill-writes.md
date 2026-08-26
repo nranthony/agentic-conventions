@@ -4,6 +4,11 @@
 - Date: 2026-08-25
 - Deciders: nranthony + agent
 - Extends: ADR-0008 (clickup-work-sync) — which stays Accepted and unmodified
+- Generalised by: **ADR-0015**, which states the rule this record applies to one axis —
+  *a skill states what it does when a repo has a thing, and what it says when it does
+  not; it never states what a repo must contain.* Read that one for the general form;
+  this one is its first application, on repo **content** policy. Neither supersedes the
+  other.
 - Distilled from: the `legal` repo's `clickup-pull` report, received through the
   feedback channel 2026-08-25 (ADR-0013), and its triage.
 
