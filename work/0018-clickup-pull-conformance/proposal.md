@@ -235,3 +235,20 @@ ADR-0015 posture were merged into one block, preflight steps 1, 2 and 4 lost rat
 recorded elsewhere, and the blocker gate, the subtask note and the closing section were
 tightened. Nothing was dropped to make room, but the file now has two lines of headroom — the
 next change to it has to distil.
+
+## Owner decisions (2026-08-26)
+
+**Open question 3 — "should the skill offer to write the `[statuses]` pin?" — closed as
+*no, deferred indefinitely*.** The owner tracks statuses in the ClickUp app rather than
+pinning them per repo, so the convenience has no demand behind it. This is recorded rather
+than left open so it is not re-proposed: the implementation reasoning (writing a repo's
+config is the "propose adding opt-in machinery" the shared skills decline) still stands
+independently, and the read-path behaviour shipped in 0.7.0 already removes the friction
+that prompted the question.
+
+**The download gate has one blocker left, not two.** The egress allow-list entry for
+`t90141509251.p.clickup-attachments.com` **is in place** as of 2026-08-26 — the human step
+in the sandbox repo is done. What remains is the CLI `--only <attachment-id>` selector,
+whose handoff was delivered to `myclickup/inbox/` on 2026-08-25 and is unactioned there.
+Once that lands, the gate is implementable: items 6–8 (the reporting half) already shipped
+in 0.7.0.
