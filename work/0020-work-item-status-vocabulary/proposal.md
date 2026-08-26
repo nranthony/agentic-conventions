@@ -125,8 +125,10 @@ it.**
   `templates/`. The vocabulary therefore propagates *through the templates*, not through
   skill prose — so a vocabulary change is a template edit plus `just sync-plugin`, which is
   exactly what today's `Deferred` change did.
-- **No `apply-conventions` text change is needed** when the rest lands either. Stated as a
-  no-op so nobody goes looking for one.
+- **Propagating the enum itself needs no `apply-conventions` text change** — that is the
+  templates' job, and it is automatic. But the skill *does* gain a change when the full
+  vocabulary lands: see the audit decision below, which supersedes the flat "no change
+  needed" this bullet originally claimed.
 
 Two things that *do* belong in this item's remaining scope:
 
@@ -134,8 +136,23 @@ Two things that *do* belong in this item's remaining scope:
    drifted spellings. The transfer's mapping table is stale — several items it maps were
    archived after it was written — so it needs refreshing before it is applied, in one pass
    per repo.
-2. **Open: should `apply-conventions --audit` check status lines against the enum?** It
-   audits a repo against the blueprint, and a status nobody defined is exactly the kind of
-   drift an audit could catch. Against it: the enum is only enforceable once the full
-   vocabulary lands, and auditing a repo's *content* rather than its *shape* is a wider
-   change than this item has argued for. Left open deliberately.
+2. **Decided (2026-08-26): `apply-conventions --audit` checks status lines — but only
+   once the full enum lands.** A status nobody defined is exactly the drift an audit
+   exists to catch, and the templates alone cannot catch it: they stamp a *new* repo,
+   while the drift lives in repos already stamped.
+
+   **The gate is the enum, and the order matters.** An audit cannot report drift from a
+   vocabulary that is not yet defined, so this is strictly downstream of the full enum —
+   not implementable today, and not to be attempted from the `Deferred` slice alone.
+
+   **This is a deliberate widening of what `--audit` does**, from a repo's *shape* to a
+   repo's *content*, and it is the first such widening. That belongs in the ADR this item
+   distils to, not in a commit message — a reader later needs to know the line moved and
+   that it was moved on purpose.
+
+   **Implementation must follow ADR-0015**: the audit says what it does when a repo has a
+   thing and what it says when it does not. A repo whose items carry the old spellings, a
+   repo with no status lines at all, and a repo whose lifecycle doc defines its own enum
+   are three different states — and the third one wins over the blueprint's default, since
+   the repo's own declaration is the authority. Report the mapping inferred; never rewrite
+   a status line as an audit side-effect.
