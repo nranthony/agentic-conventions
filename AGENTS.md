@@ -41,7 +41,8 @@ only live `AGENTS.md` here.
   surface only — skills, blueprint, templates. Internal churn stays in ADRs, `work/`, and
   the commit log.)
 - Visual one-page map of this repo → [docs/wiki/repo-map.html](docs/wiki/repo-map.html)
-- Ephemeral paste-in material → `inbox/` (gitignored; read only when pointed at it, distill into a real doc/ADR, then delete). It is also the doorbell for **inbound skill-feedback reports** (`<repo>-<skill>-<date>-<slug>.md`, envelope owned by `/myconv:report-skill-feedback` — ADR-0013): triage in batch, apply mechanical fixes naming the report, present direction-setting ones to the human, then promote to `work/` or delete the doorbell copy.
+- Ephemeral paste-in material and **handoff doorbells** → `inbox/` (gitignored; read only when pointed at it, distill into a real doc/ADR, then delete). A handoff is not feedback — it is addressed traffic between two repos that already know about each other, and `/handoff` routes here.
+- **Inbound skill-feedback reports** → `feedback/` — **tracked**, for skills this repo *owns* (the five `myconv` ones; a tool's own vendored skill belongs to that tool's repo — ADR-0016). Named `<repo>-<skill>-<date>-<slug>.md`, envelope owned by `/myconv:report-skill-feedback` (ADR-0013). Triage in batch: apply mechanical fixes naming the report, present direction-setting ones to the human, then move the report to `feedback/archive/` with its disposition in `feedback/README.md`. **Archived, never deleted** — a rejected report is the one recurrence-counting most needs, and the CHANGELOG only ever records the ones that became changes. `feedback/sent/` holds copies filed to other repos.
 
 There is no ARCHITECTURE.md — the layout above is the whole architecture.
 

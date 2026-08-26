@@ -39,6 +39,16 @@ write it — in both directions.
   than its content. Nothing enforces this — the `ask` permission tier and the mandatory
   dry-run already put a human on the exact text; the skill now says what to look for.
   ADR-0014.
+- **`/myconv:report-skill-feedback` routes to the repo that *owns* the skill.** Step 2
+  sent every report to the conventions repo, which is wrong for any skill it does not own
+  — a tool that ships its own vendored skill owns that one, and a report filed where the
+  text cannot be edited is a report nobody can action. The owner is the repo the skill
+  ships *from*; a channel's `manifest.toml` names it. The destination is now a **tracked
+  `feedback/`** rather than a gitignored doorbell, so reports are archived after triage
+  instead of deleted — which is what makes the envelope's own "three reports of one
+  friction are a signal" checkable for the first time. `Install mode` gains a decision
+  rule, after two independent reporters mis-picked it the same way on day one. ADR-0016,
+  amending ADR-0013. **From `depot`'s report of 2026-08-25** (`wrong-path`).
 - **`/myconv:wrap-up` reviews held work, not just active and finished.** §6 had two
   cases — done and in flight — so an item that is *neither* was skipped by default: its
   status line says the pause is deliberate, which reads as nothing to do. A held plan
