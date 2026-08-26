@@ -76,3 +76,66 @@ than decide it locally.
 
 **Not in 0.7.0.** Today's change is queued for the next release; the 0.7.0 being
 re-vendored does not contain it.
+
+## Pre-argued: `Approved` vs `Accepted` (recorded 2026-08-26)
+
+Open question 3 arrives with reasoning attached so it is not re-derived.
+
+**Current state — both use the same word:**
+
+| | today |
+|---|---|
+| ADR | `Proposed \| Accepted \| Superseded by ADR-XXXX` |
+| work item | `Draft \| In review \| Accepted → ADR-NNNN \| Rejected \| Deferred — <reason>` |
+
+**Recommendation: take `Approved` for work items, reserve `Accepted` for ADRs** — but on
+a stronger argument than the transfer's.
+
+The transfer justifies it as *search cleanliness* ("reserve Accepted so a search finds only
+decision records") and calls it real but small. The better reason is that the current
+work-item enum **conflates two states into one word**: `Accepted → ADR-NNNN` means both
+*"we decided to do this"* and *"this item is finished and its rationale has moved"*. The
+proposed enum separates them — `Approved <date>` (decided, not started) → `In execution
+<date>` (doing) → `Complete <date>[ → ADR-NNNN]` (done, distilled).
+
+Note what that implies: **`Approved` is not a rename of `Accepted`.** In the full enum the
+terminal state is `Complete`, and `Approved` is a *mid*-state. Swapping the word alone
+would half-do it and leave the conflation intact — which is why this waits for the whole
+enum rather than being pulled out as a one-word fix.
+
+There is also a semantic argument the transfer does not make. An ADR's `Accepted` means
+*this decision is in force*. A work item's terminal state means *this work is done*. One
+word for both invites reading a work item as a decision record — precisely the separation
+ADR-0006 ("proposals are work items") drew, where `work/` holds the proposal and the ADR
+holds the decision.
+
+**`Deferred — <reason>` needs no further work.** It is already a member of the proposed
+full enum — one of the three states carrying a mandatory reason clause, alongside `Blocked`
+and `Rejected`. Today's adoption took one member early; it is forward-compatible and needs
+no migration if the rest lands.
+
+## Propagation — already plumbed, no second work item needed
+
+Asked and answered so it is not opened as a separate item: **the templates that
+`/myconv:apply-conventions` propagates are already the delivery path, and this item owns
+it.**
+
+- `apply-conventions` carries **no status values in its own text**. It names
+  `docs/adr/0000-template.md` and `work/README.md` as files it stamps, and ships them from
+  `templates/`. The vocabulary therefore propagates *through the templates*, not through
+  skill prose — so a vocabulary change is a template edit plus `just sync-plugin`, which is
+  exactly what today's `Deferred` change did.
+- **No `apply-conventions` text change is needed** when the rest lands either. Stated as a
+  no-op so nobody goes looking for one.
+
+Two things that *do* belong in this item's remaining scope:
+
+1. **The migration pass.** Existing folders in both this repo and `myclickup` carry the
+   drifted spellings. The transfer's mapping table is stale — several items it maps were
+   archived after it was written — so it needs refreshing before it is applied, in one pass
+   per repo.
+2. **Open: should `apply-conventions --audit` check status lines against the enum?** It
+   audits a repo against the blueprint, and a status nobody defined is exactly the kind of
+   drift an audit could catch. Against it: the enum is only enforceable once the full
+   vocabulary lands, and auditing a repo's *content* rather than its *shape* is a wider
+   change than this item has argued for. Left open deliberately.
