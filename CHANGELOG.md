@@ -14,7 +14,7 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
-## 0.8.0 — unreleased
+## 0.8.0 — 2026-09-09
 
 ### Changed
 
