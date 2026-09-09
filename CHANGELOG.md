@@ -59,6 +59,15 @@ Versions follow the `version` field in `plugin.json`. Newest first.
   record at all does it go in `plan.md`, labelled as having no durable home, with the
   question of where such records live handed back. **From the `ikigai` repo's report of
   2026-09-08** (`make-plan`, `assumed-repo-shape`).
+- **Every skill's feedback pointer now says what to do when the command isn't there.** The
+  two-line pointer assumed `/myconv:report-skill-feedback` was installed alongside — but a
+  skill can arrive seeded, vendored, or copied on its own, and an agent that cannot reach
+  the command cannot read the envelope either, so the deviation goes unrecorded exactly
+  where the channel is thinnest. All five carrying skills now name the same fallback:
+  write the report into your own repo (the open work item, or `feedback/sent/`) and name
+  delivery as a human-ferried step — which is what the feedback-channel record (ADR-0013)
+  already says for a consumer with no path to the owning repo. The same sentence in all
+  five, deliberately: one posture stated five ways is the drift ADR-0015 exists to stop.
 
 ## 0.7.0 — 2026-08-26
 
