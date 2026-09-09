@@ -29,6 +29,37 @@ Versions follow the `version` field in `plugin.json`. Newest first.
   and never crosses to a board. From `work/0020`, promoting a transfer from `myclickup`.
   The rest of that vocabulary proposal is still open.
 
+- **`/myconv:make-plan` stops inventing validation commands, and conforms to the repo it
+  runs in.** The plan's validation section was the one place the skill's own
+  evidence-over-assumption rule did not reach, so a plausible-looking `pytest -q` could
+  reach a reviewer as if it had been verified. Commands must now be copied from repo
+  scripts, CI config, developer docs, or existing test conventions; where none is
+  verified, command selection becomes a **Needs-decision** rather than a guess. Alongside
+  it, the skill takes the posture the other four already hold — a skill states what it
+  does when a repo has a thing, never what a repo must contain (ADR-0015): Explore
+  subagents are used **where available**, an empty search distinguishes *absent* from
+  *could not locate* and names the paths it checked, the repo's own `work/README.md`
+  numbering and plan template win over the defaults here, and the content-precedence rule
+  (ADR-0014) reaches planning too — a repo's limits on what may enter tracked files beat
+  any instruction here to write it, because `plan.md` is a committed file like any other.
+  Also: work-item numbers are taken across active **and** archived items, since a scan
+  that misses `work/archive/` returns one already used; the plan records the branch and
+  short SHA it was investigated at; an unanswered question now produces a plan with
+  bounded alternatives and an explicit decision request rather than no plan at all; and
+  the **Confirmed / Inferred / Needs-decision** labels apply to claims that move scope,
+  design, risk or sequencing, not to connective prose. From a collated review of the skill
+  by three outside models, triaged here 2026-09-09.
+- **`/myconv:make-plan` drafts a decision record the repo actually keeps.** Step 4 sent
+  every consequential decision to `docs/adr/` unconditionally, one section after step 2
+  had said not to invent a top-level directory — so in a repo with a decision log in some
+  other shape, the step fired with no valid target and the two sections contradicted each
+  other. The ladder is now the same in both: an ADR directory if there is one; otherwise
+  the repo's own log, drafted **in that log's format** as a proposed row or a file beside
+  the plan, naming where it lands on acceptance; and only where there is no decision
+  record at all does it go in `plan.md`, labelled as having no durable home, with the
+  question of where such records live handed back. **From the `ikigai` repo's report of
+  2026-09-08** (`make-plan`, `assumed-repo-shape`).
+
 ## 0.7.0 — 2026-08-26
 
 A repo's own rules about what may be committed now beat a shared skill's instruction to
