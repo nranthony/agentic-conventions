@@ -23,10 +23,18 @@ root** rather than transcribing anything from here.
 Tree shape unchanged: six skills, each with its generated `VERSION` sidecar.
 Your `variants/`-stripping exclusion is untouched.
 
-**All six sidecars changed**, including the four skills whose text did not — the
-sidecar encodes the plugin version *and* the text hash, so a version bump alone
-makes every one of them stale. That is deliberate: it is what lets any copy say
-which text actually ran.
+**All six sidecars changed.** The sidecar encodes the plugin version *and* the
+text hash, so a version bump alone makes every one of them stale — which is what
+lets any copy say which text actually ran.
+
+> **Correction, 2026-09-10.** This paragraph originally said "including the four
+> skills whose text did not [change]". That was wrong, and it was written from
+> memory rather than derived: **five of the six changed text**, and only
+> `report-skill-feedback` did not (`skill:926dde20c149` on both sides). The
+> deployment tier's reply echoed the wrong number back as confirmation, which is
+> exactly the transcription failure this channel exists to delete — in a document
+> whose §1 says "assert against this, don't trust this file". The sidecar values
+> in §1 and §6 were derived and are correct; only this count was not.
 
 ## 2. No-ops, stated because only this side can see them
 
