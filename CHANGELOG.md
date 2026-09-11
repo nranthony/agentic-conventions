@@ -14,6 +14,46 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.9.0 — 2026-09-11
+
+### Added
+
+- **Machine-local state: the environment names the venv, and `.local` means never
+  committed.** This is a new blueprint section and the one stated exception to the
+  blueprint's "no runtime specifics" scope, because it concerns the checkout rather than
+  the language.
+  - *The problem:* when a host and a sandbox container see the same working tree, a
+    project venv built by one can't be used by the other, and uv deletes and recreates a
+    project env whose interpreter it can't use. With both sides defaulting to `.venv`,
+    each side's `uv run` destroyed the other's.
+  - *The rule:* a sandbox exports `UV_PROJECT_ENVIRONMENT=.venv-sandbox`, and a host
+    leaves it unset. Repos never hard-code a venv path, they ignore `.venv*/`, and they
+    pin a tracked `.python-version`.
+  - *Permission rules* are treated oppositely by kind. Allow rules use the `uv run` form
+    only. Ask and deny rules fence every spelling of a script with side effects, using a
+    set of four wildcard rules; the common miss is `python3`.
+  - *`.local` files:* `templates/.gitignore` replaces its three named `.local` entries
+    with the general pair `*.local` / `*.local.*`. It re-includes `*.local.example*`, so
+    a committed example is never hidden.
+  - *Evidence:* the rule was proven in one shell before any sandbox depended on it. A
+    `uv sync` from a subdirectory built the venv at the project root, 309 tests passed on
+    it, and the host-side venv was byte-identical afterwards.
+
+  ADR-0017, from a handoff by the sandbox tool's repo.
+
+### Changed
+
+- **`/myconv:apply-conventions` audits machine-local state in every repo, whatever its
+  tier.** It checks for a `.gitignore` missing either `.local` shape, listing first any
+  tracked files the pair would newly hide. Where there is a Python project environment,
+  it also checks for:
+  - `.venv-sandbox/` not ignored
+  - no `.python-version`
+  - a hard-coded venv path in a tracked file
+  - a venv chosen by OS
+  - a venv path in an allow rule
+  - any spelling of an ask- or deny-fenced script that no rule matches
+
 ## 0.8.0 — 2026-09-09
 
 ### Changed

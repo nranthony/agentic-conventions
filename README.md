@@ -74,6 +74,11 @@ Not every repo needs the whole blueprint. Default baseline:
 - **Core:** `AGENTS.md` + thin `CLAUDE.md` + `ARCHITECTURE.md` + `README.md` +
   `.claude/skills/` + gitignored `AGENTS.local.md`.
 - **Keep-ish:** `docs/adr/` (durable "why") and a light `.claude/settings.json`.
+- **Every repo, not a tier: machine-local state stays out of the tree.** That means the
+  `.local` pair and `.venv*/` in `.gitignore`. For a Python project, the environment
+  names the venv (`.venv` on a host, `.venv-sandbox` in a sandbox container), and a
+  tracked `.python-version` pins the interpreter
+  ([ADR-0017](docs/adr/0017-the-environment-names-the-venv.md)).
 - **Opt-in per repo, when the repo actually needs it:** `CODEOWNERS`,
   `CONTRIBUTING.md`, PR template, CI (`.github/workflows/`) — the team-ceremony tier;
   and `docs/design/`, `work/` (numbered items carrying proposals *and* in-flight

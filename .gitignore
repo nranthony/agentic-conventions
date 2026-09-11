@@ -1,6 +1,10 @@
-AGENTS.local.md
-**/AGENTS.local.md
-.claude/settings.local.json
+# Machine-local, never committed (ADR-0017): covers AGENTS.local.md at any depth,
+# .claude/settings.local.json and .sandbox-repo.local; examples stay committable
+*.local
+*.local.*
+!*.local.example*
+# Project virtualenvs, whatever the environment named them (ADR-0017)
+.venv*/
 # Ephemeral paste-in material for agents to distill, then delete
 inbox/
 # Tool snapshot caches — regenerable, and may carry customer-identifying names
