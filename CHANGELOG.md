@@ -14,6 +14,33 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.11.0 — 2026-09-15
+
+### Added
+
+- **`/myconv:triage-skill-feedback` — the receiving half of the feedback channel.** Run in
+  a repo that owns a shipped skill, it takes the reports waiting in `feedback/` (or one
+  pasted in) from claim to release in one run. It verifies every claim against the current
+  text and the tool's own source, applies mechanical fixes, and puts each direction-setting
+  proposal to the human as a question in that session — the answer is the signature, and
+  the decision record is written only after it. It then archives each report with a ledger
+  row, writes the CHANGELOG line that is the reporter's only reply, releases through the
+  repo's own gate and its channel, and ends with one block of host-side steps quoted from
+  recorded procedure. User-invoked only: it commits and publishes.
+  - *It follows the owning repo, not a fixed shape:* where a direction-setting proposal
+    waits, which files a version bump touches, and what the gate is all come from that
+    repo's own rules.
+  - *The signature can't be relayed:* a subagent may verify, but the question is asked by
+    the session talking to the human, and a run with no human parks the proposal instead of
+    deciding it.
+
+  ADR-0020, extending ADR-0013 §4.
+
+### Changed
+
+- **`/myconv:report-skill-feedback` names the skill that will triage your report**, in
+  "What happens to your report".
+
 ## 0.10.0 — 2026-09-15
 
 ### Removed

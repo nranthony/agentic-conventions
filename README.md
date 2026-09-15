@@ -35,9 +35,11 @@ so the blueprint and skills travel without a checkout:
 /plugin install myconv@agentic-conventions
 ```
 
-That gives every repo on the machine all six skills: `/myconv:apply-conventions`,
+That gives every repo on the machine all seven skills: `/myconv:apply-conventions`,
 `/myconv:make-plan`, `/myconv:wrap-up`, `/myconv:report-skill-feedback` (file a report
-when a skill's instructions were wrong or a bad fit — ADR-0013), and — for repos with a
+when a skill's instructions were wrong or a bad fit — ADR-0013),
+`/myconv:triage-skill-feedback` (work those reports through to a release, in the repo that
+owns the skill — ADR-0020), and — for repos with a
 ClickUp tracker pinned in `.myclickup.toml` — `/myconv:clickup-pull` and
 `/myconv:clickup-report`, which stop with a plain message anywhere else. For closed-egress containers, copy `plugins/myconv/` into the profile's
 persistent `~/.claude/skills/myconv/` instead — it loads as `myconv@skills-dir` with no

@@ -9,7 +9,7 @@ feedback/archive/    triaged — disposition below
 feedback/sent/       copies this repo filed to other repos
 ```
 
-**Ownership decides destination.** This repo owns the five `myconv` skills. A tool that
+**Ownership decides destination.** This repo owns the `myconv` skills. A tool that
 ships its own vendored skill owns that one — `manifest.toml` in the channel names the
 `source_repo` for every artifact. A report filed where the text cannot be edited is a
 report nobody can action.
@@ -17,6 +17,10 @@ report nobody can action.
 **Archived, never deleted** (ADR-0012's rule, second surface). A *rejected* report is the
 one recurrence-counting most needs, and the CHANGELOG structurally only records reports
 that became changes.
+
+**Triage runs as `/myconv:triage-skill-feedback`** (ADR-0020). It verifies each claim,
+applies what is mechanical, asks the owner in the session for every direction-setting
+decision, then archives the report, writes its row below, and releases.
 
 ## The ledger
 
