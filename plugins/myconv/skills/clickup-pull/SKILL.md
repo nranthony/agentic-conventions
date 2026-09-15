@@ -80,7 +80,8 @@ bound you used, and say so too when nothing was pinned and you fell back to the 
 a name that is right for one list can be undefined in the next, and both read as `0
 tasks`. On an empty `--status` result `tasks` says which of the two it was; `query` does
 not, so check it yourself with `myclickup statuses --list "<path>" --live`. Present what
-matched and take one task ID at a time — everything below runs per task.
+matched and take one task ID at a time — everything below runs per task, and the triage gate
+decides whether a task gets a file at all.
 
 If this repo restricts what may enter tracked files, read that rule before you pull — it
 changes what the item you are about to write may contain (see `## Create the item`).
@@ -104,6 +105,33 @@ handful. **Then read each child with `task`** — `subtasks` entries are list-vi
 whose `blocked_by`, `blocks` and `path` are `null`, and relations often sit on the children,
 so a parent can look unblocked while a child is genuinely blocked.
 
+## Triage gate — before any file is written
+
+A task at the agent-ready status is a claim about the board, not about the repo. Check it
+against the repo before creating anything (**ADR-0019**,
+`docs/adr/0019-a-pull-may-end-with-no-file.md`). **A stop at any step writes no file**: report
+what you found and let the human choose — pull anyway, comment on the task to clarify, or
+close it on the board. With `--subtasks`, run it per child.
+
+1. **Already pulled?** Search `work/` and `work/archive/` (or the repo's equivalents), any
+   backlog index the repo keeps, and git history for the task ID and URL. A match goes to
+   `## Re-pulling an existing item`, never to a new number. Name the paths you searched even
+   when nothing matched.
+2. **Already done?** Search source, docs and history for the task's subject, using its title
+   and any "Done when" or acceptance terms. If the deliverable appears to exist, stop and
+   report the evidence — file and symbol, a doc's status line, a commit — including any gap
+   between what exists and what the task names.
+3. **Clear enough to act on?** Read the description *and* the comments pulled above. Proceed
+   only when together they name a deliverable or a checkable done condition. Stop on hedged
+   or open-ended asks ("I think this is in place", "double check", "discuss", "look into"), on
+   a description that only points somewhere you cannot read (a share link, an unreachable
+   doc), or on an empty description with no scope in the thread. Suggest the clarifying
+   comment rather than writing one: this skill never writes to ClickUp.
+
+Record the gate's result in your handoff either way ("checked: not pulled, no existing
+implementation found, done condition stated"), so a pass reads differently from a gate that
+never ran.
+
 ## Create the item
 
 `work/NNNN-slug/<file>`, where `NNNN` is the next free number across active **and** archived
@@ -112,8 +140,10 @@ items (numbers are never reused) and the slug derives from the task title, not i
 **Which filename is the repo's call.** Read its `work/README.md` — or whatever it calls its
 lifecycle doc — and how its existing items are named; follow that. Where the lifecycle offers
 both (this blueprint's opens an item as `proposal.md`, or for pre-decided work straight as
-`spec.md`/`plan.md`), **default to `spec.md` for a pulled task and say so** — a task already on
-a board is pre-decided almost by definition. With neither, name the default you took and why.
+`spec.md`/`plan.md`), **default to `spec.md` for a pulled task that passed the triage gate, and
+say so.** Where the human chose to pull anyway after a clarity stop, open it as the lifecycle's
+pre-decision file (`proposal.md` in this blueprint) instead, since the board status did not
+make it decided. With neither, name the default you took and why.
 
 Front-matter sits **under the `#` title**, never as the file's first line — it is the part
 meant to be machine-readable later, so placement is pinned rather than left to taste. Required
@@ -216,3 +246,8 @@ the task to the `agent_working` status; do not run it for them. Say what you cou
 as well as what you did: a role taken from the caller rather than a pin, a lifecycle you could
 not locate, comments or attachments that were absent. If a blocker is live, name clearing it as
 the next step instead — `/clickup-report` will refuse the transition anyway.
+
+When the gate stopped, say which check stopped it and what the human can choose. When it
+stopped on an already-pulled task whose board status never moved, name `/clickup-report <item>`
+as the fix for the board: the next discovery run finds that task again until its status
+changes.

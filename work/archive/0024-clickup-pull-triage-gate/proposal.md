@@ -1,8 +1,12 @@
 # Proposal: a triage gate in `/myconv:clickup-pull` — a pull may legitimately end with no file
 
-- Status: In review — **for the owner to accept or reject; not applied**
+- Status: Accepted → [ADR-0019](../../../docs/adr/0019-a-pull-may-end-with-no-file.md) — signed
+  by the owner in-session, 2026-09-15, as proposed, on `pipeline`'s second report
+  (`feedback/archive/pipeline-clickup-pull-2026-09-15-triage-gate-still-missing.md`, against
+  0.10.0). Applied in myconv 0.12.0, with the report's two additions: the discovery sentence
+  names the gate, and `## Then` names `/clickup-report <item>` for a stale board status.
 - Author: agent (triage of `pipeline`'s report of 2026-09-15), presented under
-  [ADR-0013](../../docs/adr/0013-skill-feedback-channel.md) §4
+  [ADR-0013](../../../docs/adr/0013-skill-feedback-channel.md) §4
 
 ## Summary
 

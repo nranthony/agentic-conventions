@@ -44,8 +44,8 @@ them on 2026-09-15.
 2. **One consume recipe on the Mac's sandbox tool**, turning the four-command loop into one:
    `handoff-macolima-consume-recipe.md`, human-ferried. A proposal to that repo, not a
    request — its own rules decide.
-3. **`work/0024`** (a triage gate for `clickup-pull`) is still owed a signature; the skill
-   presents it on its first run.
+3. ~~**`work/0024`** (a triage gate for `clickup-pull`) is still owed a signature~~ —
+   **signed 2026-09-15** on the skill's first run: Accepted → ADR-0019, myconv 0.12.0.
 
 Exit rule: archive when 0.11.0 is consumed on both machines and open items 1 and 2 have
 landed or been declined.

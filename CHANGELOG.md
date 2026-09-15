@@ -14,6 +14,30 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.12.0 — 2026-09-15
+
+### Changed
+
+- **`/myconv:clickup-pull` checks a task against the repo before writing anything, and a
+  pull may now end with no file.** A new triage gate sits between reading the task and
+  creating its item, and runs per task — including each task live queue discovery finds.
+  Three checks, any of which stops the write and reports instead: **already pulled?** (the
+  task ID and URL across active and archived items, any backlog index and git history — a
+  match goes to the re-pull path, never a new number), **already done?** (the task's subject
+  across source, docs and history, stopping with the evidence), and **clear enough to act
+  on?** (description and comments together must name a deliverable or a checkable done
+  condition; hedged asks like "double check" or "discuss" stop). The human then chooses:
+  pull anyway, clarify on the task, or close it. The gate's result goes in the handoff
+  either way.
+  - *`spec.md` is the default only after the gate passes.* A task pulled anyway after a
+    clarity stop opens as the lifecycle's pre-decision file (`proposal.md` here), because
+    the board's status was the only evidence it was decided.
+  - *A stale board is named, not fixed:* an already-pulled task whose status never moved
+    points at `/clickup-report <item>`, since discovery keeps finding it until then.
+
+  ADR-0019. From `pipeline`'s reports `pipeline-clickup-pull-2026-09-15-no-triage-gate.md`
+  and `pipeline-clickup-pull-2026-09-15-triage-gate-still-missing.md`.
+
 ## 0.11.0 — 2026-09-15
 
 ### Added
