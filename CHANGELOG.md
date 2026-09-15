@@ -14,6 +14,44 @@ Versions follow the `version` field in `plugin.json`. Newest first.
 
 ---
 
+## 0.10.0 — 2026-09-15
+
+### Removed
+
+- **The blueprint no longer asks a repo to carry a sandbox notice.** Sandboxed execution
+  was an opt-in tier whose whole content was a machine-managed `BEGIN/END sandbox-notice`
+  block at the very top of the root `AGENTS.md`. Both sandboxes now write their notice
+  into each agent's **global home** — `~/.claude/CLAUDE.md` for Claude Code,
+  `~/.gemini/config/rules/sandbox-notice.md` for agy — on every `up`/`converge`, and
+  never into a repo. A repo's `AGENTS.md` is the repo's own text, top to bottom.
+  - *Why the per-repo route died:* a repo's agent may not edit inside the markers, so a
+    block that went stale was unfixable from inside the repo it sat in — eight repos on
+    one machine carried one, none refreshed, all contradicting the repo around them. And
+    two sandboxes writing different markers into one slot **stacked** a second block
+    instead of replacing the first. Both measured, not predicted.
+  - *The tier is gone, not moved:* a repo edited in a sandbox and a repo that never sees
+    one now carry the same thing, nothing. `templates/AGENTS.md` seeded no block and now
+    says none belongs.
+
+  ADR-0018, adopting the sandbox tool's own ADR-0015.
+
+### Changed
+
+- **The blueprint's "Environment notice" section teaches recognition instead of
+  placement.** The block shape stays, as something to **recognise** in a repo written
+  before the change, with the sandbox-neutral marker wording
+  `<!-- BEGIN sandbox-notice (managed by the sandbox — do not edit here) -->`; the two
+  legacy spellings (`managed by macolima …`, `managed by windows-ai-sandbox …`) are
+  recognised by the sandboxes' sync scripts for migration only. The four content rules
+  that make a notice effective stay too, now addressed to whoever generates one.
+
+- **A block found in a repo is a finding, not a fixture.** It is stale by definition;
+  report it for removal by whoever owns the sandbox, and stop there. The read-only rule
+  is unchanged and is now the whole rule — read inside the markers to resolve what the
+  block cites, never edit inside them (including to "fix" a stale one), and never add a
+  block to a repo in any form. `/myconv:apply-conventions` applies this at both places it
+  used to verify a block: step 1 of the skill and phase 2 of the brownfield procedure.
+
 ## 0.9.0 — 2026-09-11
 
 ### Added
