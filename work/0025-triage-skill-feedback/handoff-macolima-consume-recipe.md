@@ -10,15 +10,10 @@ blind-copying from the sibling sandbox repo.
 
 ## 1. What consuming a release cost on the Mac
 
-myconv 0.9.0 → 0.10.0, run by the owner on the host, 2026-09-15:
-
-```
-just tools-check                   # DRIFT, exit 1 — one row moved: myconv.tree
-just vendor-tools                  # mirrored all three artifacts, rewrote VENDORED.lock
-just tools-check                   # "VENDORED.lock matches the channel manifest (5 artifact rows)"
-for p in <the four profiles>; do just converge $p; done
-# then restart claude (and agy) inside each running container
-```
+myconv 0.9.0 → 0.10.0, run by the owner on the host, 2026-09-15: `tools-check` (drift on
+`myconv.tree`), `vendor-tools`, `tools-check` (green), then `converge` once per profile and a
+restart. The steps are recorded once, in the channel's `AGENTS.md` under "Consuming a
+release" — readable on the Mac at the channel's recorded path.
 
 Verified from inside the `nranthony` container afterwards: all six seeded `VERSION`
 sidecars read `myconv 0.10.0` with the channel's hashes, written by `converge`. No build and

@@ -41,6 +41,9 @@ ADR-0017 by superseding it, never by editing it.
 - paperbridge's sandbox venv can't be built offline: its wheels aren't in the uv cache
   (the first miss is `certifi==2026.2.25`). Either an egress window warms the cache, or
   paperbridge stays a host-side gate. That's the owner's call.
+  **Answered for now, 2026-09-15:** the cache is warm, and paperbridge's gate runs fully
+  offline in the macolima container (146 passed, 7 skipped —
+  `reply-to-macolima-work-0008-t5.md`). A cold cache reopens it.
 
 ## Alternatives
 

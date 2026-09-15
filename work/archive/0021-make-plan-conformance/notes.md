@@ -16,3 +16,8 @@ is in the feedback register. Nothing here is load-bearing except the handoff.
 
 Exit rule: archive once the deployment tier confirms the re-vendor
 (handoff §6).
+
+**Archived 2026-09-15.** The deployment tier confirmed the re-vendor in its reply of
+2026-09-09, answered here in `reply-to-sandbox-myconv-0.8.0.md`. The one lesson that
+outlives this item — skills converge, wheels bake — now lives where consumers read it:
+the channel's `AGENTS.md`, "Consuming a release".

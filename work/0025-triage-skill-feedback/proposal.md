@@ -14,22 +14,8 @@ the steps only the host can do.
 ## Motivation
 
 The owner asked for triage to run inside the sandbox with as few host steps as possible.
-The evidence is the first full triage run, the same day (ADR-0020, Context): a procedure
-rebuilt from four documents, a signature that could not travel through a subagent, untracked
-reports blocking the channel publish, and a release and consume tail worked out by hand.
-
-What that run left on the host, in order:
-
-| Step | Why it is on the host |
-|---|---|
-| Push the channel and every member with new commits | remote git is denied in the sandbox |
-| On the Mac: `tools-check`, `vendor-tools`, `tools-check`, `converge` per profile | the sandbox tool's repo is not reachable from a container |
-| Restart the agents in every running container | new skill text loads at start |
-| Carry the handbacks to the Mac's sandbox tool | it has no inbox; no container reaches it |
-| Everything on the Win11/WSL2 machine | a different machine; nothing here reaches it |
-
-The first and third rows cannot be removed from inside the sandbox, and neither can the
-signature. The rest can be reduced to one block, composed without guessing.
+The evidence, and what it rules in and out, is ADR-0020's Context. The host steps that
+remain are written once, in the channel's `AGENTS.md` under "Consuming a release".
 
 ## Proposal
 
@@ -51,10 +37,10 @@ them on 2026-09-15.
 
 ## Open items
 
-1. **A catch-up skill for the Win11/WSL2 sandbox**, to pick up what is released and changed
-   on the Mac. Designed next. Known constraint: its container sees only its channel clone,
-   and the channel's `inbox/` is gitignored, so a handoff delivered there on the Mac never
-   reaches that machine.
+1. ~~A catch-up skill for the Win11/WSL2 sandbox~~ — **done 2026-09-15**, as the channel's
+   internal `/catch-up` (`depot/.claude/skills/catch-up/`). No ADR and no work item of its
+   own: it decides nothing for any member, and reads existing records rather than
+   restating them.
 2. **One consume recipe on the Mac's sandbox tool**, turning the four-command loop into one:
    `handoff-macolima-consume-recipe.md`, human-ferried. A proposal to that repo, not a
    request — its own rules decide.

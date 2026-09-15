@@ -110,6 +110,9 @@ command reads exactly like a plan with a right one.
 2. `just vendor-tools` (your side), taking `myconv` at 0.8.0.
 3. Record the take in `VENDORED.lock`; run your `tools-check`.
 4. Rebuild → recreate the profiles that seed these skills.
+   > **Corrected 2026-09-15**, per the deployment tier's reply of 2026-09-09 (answered in
+   > `reply-to-sandbox-myconv-0.8.0.md` §1): wrong for this payload. Skills converge,
+   > wheels bake — a skill-only release needs `converge`, and no rebuild.
 5. Spot-check inside a container: a seeded `make-plan/VERSION` reads
    `myconv 0.8.0 skill:49b12d8c3167`.
 
