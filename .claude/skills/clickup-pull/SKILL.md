@@ -64,6 +64,24 @@ item, or `feedback/sent/` — and name delivery as a human-ferried step.
 
 ## Pull
 
+**No task ID given?** Find the queue live. `query` and `tasks` are both cache-first as of
+`myclickup` 0.7.0, so a discovery read without `--live` answers from the last `sync`
+snapshot — and status is exactly the field that goes stale, so a recent sync looks most
+authoritative where it is most likely wrong. Bound the read by what the repo pins:
+`[work_sync].queue` where it names the list the agent-ready status is watched in, else
+`[work_sync].scope`, else the whole pinned workspace. The queue is **scope × status**,
+never a List of its own (**ADR-0008**, `docs/adr/0008-clickup-work-sync.md`). Say which
+bound you used, and say so too when nothing was pinned and you fell back to the workspace.
+
+    myclickup tasks --list "<queue path>" --status "<agent_ready>" --brief --live
+    myclickup query --status "<agent_ready>" --brief --live      # nothing pinned
+
+**An empty result is not an empty queue** until the status name is confirmed as defined:
+a name that is right for one list can be undefined in the next, and both read as `0
+tasks`. On an empty `--status` result `tasks` says which of the two it was; `query` does
+not, so check it yourself with `myclickup statuses --list "<path>" --live`. Present what
+matched and take one task ID at a time — everything below runs per task.
+
 If this repo restricts what may enter tracked files, read that rule before you pull — it
 changes what the item you are about to write may contain (see `## Create the item`).
 

@@ -52,6 +52,18 @@ Versions follow the `version` field in `plugin.json`. Newest first.
   block to a repo in any form. `/myconv:apply-conventions` applies this at both places it
   used to verify a block: step 1 of the skill and phase 2 of the brownfield procedure.
 
+- **`/myconv:clickup-pull` finds the queue live when no task ID was given.** `## Pull`
+  now opens with the step that *chooses* the task, which the skill had never described:
+  `query` and `tasks` are cache-first in `myclickup` 0.7.0, so a discovery read without
+  `--live` answers from the last `sync` snapshot — and status is the field that goes
+  stale, so a recent sync looks most authoritative exactly where it is wrong. The read is
+  bounded by `[work_sync].queue`, else `[work_sync].scope`, else the pinned workspace,
+  and the skill says which bound it used; the queue is scope × status, never a List of
+  its own. It also says what an empty result does and does not prove: a status name
+  undefined in a list reads as `0 tasks` just like an empty queue, `tasks` distinguishes
+  the two on an empty `--status` result and `query` does not. From `pipeline`'s report of
+  2026-09-15 (`unclear-step`).
+
 ## 0.9.0 — 2026-09-11
 
 ### Added
